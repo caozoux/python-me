@@ -1,0 +1,105 @@
+
+#=========================================================================
+#                  output         and        input
+#=========================================================================
+#>>>>>>>>>>>>>>>> zfill repr
+'-3.14'.zfill(7)
+'-003.14'
+
+>>> s = 'Hello, world.'
+>>> str(s)
+'Hello, world.'
+>>> repr(s)
+"'Hello, world.'"
+>>> str(1.0/7.0)
+'0.142857142857'
+>>> repr(1.0/7.0)
+'0.14285714285714285'
+
+
+#>>>>>>>>>>>>>>>> print and format
+>>> print 'We are the {} who say "{}!"'.format('knights', 'Ni')
+We are the knights who say "Ni!"
+print '{0} and {1}'.format('spam', 'eggs')
+print 'This {food} is {adjective}.'.format(
+...
+food='spam', adjective='absolutely horrible')
+
+
+
+#>>>>>>>>>>>>>>>> open read readline seek with ... as ...
+f = open('workfile', 'w')
+>>> print f
+<open file 'workfile', mode 'w' at 80a0960>
+
+
+
+>>> f.read()
+'This is the entire file.\n'
+
+>>> f.readline()
+'This is the first line of the file.\n'
+>>> f.readline()
+'Second line of the file\n'
+>>> f.readline()
+''
+
+
+>>>
+>>>
+>>>
+>>>
+'5'
+>>>
+>>>
+'d'
+f = open('workfile', 'r+')
+f.write('0123456789abcdef')
+f.seek(5)
+# Go to the 6th byte in the file
+f.read(1)
+f.seek(-3, 2) # Go to the 3rd byte before the end
+f.read(1)
+
+
+>>> with open('workfile', 'r') as f:
+...
+read_data = f.read()
+>>> f.closed
+True
+
+
+#>>>>>>>>>>>>>>>> except finnaly
+import sys
+try:
+    f = open('myfile.txt')
+    s = f.readline()
+    i = int(s.strip())
+except IOError as e:
+    print "I/O error({0}): {1}".format(e.errno, e.strerror)
+except ValueError:
+    print "Could not convert data to an integer."
+except:
+    print "Unexpected error:", sys.exc_info()[0]
+raise
+
+
+
+The raise statement allows the programmer to force a specified exception to occur. For example:
+>>> raise NameError('HiThere')
+Traceback (most recent call last):
+File "<stdin>", line 1, in ?
+NameError: HiThere
+
+
+The try statement has another optional clause which is intended to define clean-up actions that must be executed
+under all circumstances. For example:
+>>> try:
+...
+raise KeyboardInterrupt
+... finally:
+...
+print 'Goodbye, world!'
+...
+Goodbye, world!
+KeyboardInterrupt

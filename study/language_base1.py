@@ -17,7 +17,6 @@ def while_lan():
     for w in words:
         print(w, len(w))
 
-
     for w in words[:]:
         if len(w) > 6:
             words.insert(0, w)
@@ -78,7 +77,6 @@ def cheeseshop(kind, *arguments, **keywords):
 #shopkeeper : Michael Palin
 #sketch : Cheese Shop Sketch
 
-# a ? b : c
 def make_incrementor(n):
         return lambda x: x + n
 
