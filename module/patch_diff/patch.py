@@ -22,9 +22,11 @@ def get_git_lot(path, save_name = "gitlog"):
     return
 
 
-def find_path_diff_for_file(s_dir, d_dir, filename, show_mode):
+def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time=""):
     "show_mode 1: show debug information"
     #print(s_dir, "  ", d_dir)
+    #运行的git command
+    git_cmd = "git log --pretty=oneline "
     if os.path.exists(s_dir) and os.path.exists(d_dir):
         s_file= s_dir + "/" + filename;
         d_file= d_dir + "/" + filename;
@@ -40,7 +42,10 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode):
                 #print("~~~~~~~~~~~~~~log commit:"+s_file,)
                 #print('\033[0m')
                 #执行git log --pretty=oneline 去查看源文件修改记录
-                cmd1= "cd "+ s_dir +"; "+"git log --pretty=oneline "+ filename + "| cut -b 42-"
+                if time != "":
+                    git_cmd += "--since=" + time + " "
+                #cmd1= "cd "+ s_dir +"; "+"git log --pretty=oneline "+ filename + "| cut -b 42-"
+                cmd1= "cd "+ s_dir +"; "+ git_cmd + filename + "| cut -b 42-"
                 s_cont = excule_cmd_pr(cmd1, 0)
 
                 ss_cont=(s_cont.replace("\n","^")).split("^")
@@ -50,7 +55,8 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode):
                 #print('\033[1;31;40m')
                 #print("~~~~~~~~~~~~~~log commit:"+d_file,)
                 #print('\033[0m')
-                cmd1= "cd "+ d_dir +"; "+"git log --pretty=oneline "+ filename + "| cut -b 42-"
+                #cmd1= "cd "+ d_dir +"; "+"git log --pretty=oneline "+ filename + "| cut -b 42-"
+                cmd1= "cd "+ d_dir +"; "+ git_cmd + filename + "| cut -b 42-"
                 d_cont = excule_cmd_pr(cmd1, 0)
 
                 dd_cont=(d_cont.replace("\n","^")).split("^")
@@ -100,7 +106,15 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode):
                 for i in range(len(ss_rec_list)):
                     if ss_rec_list[i] == 0:
                         if len(ss_cont[i]):
-                            print(ss_cont[i])
+                            #再次检测是否有pick的patch
+                            #print(ss_cont[i])
+                            commit_diff_id = ss_cont[i][:40]
+                            cmd1= "cd "+ s_dir +"; "+"git show " + commit_diff_id
+                            print(ss_cont[i][:40])
+                            cont = os.popen(cmd1).read()
+                            #print(cont)
+                            #print(ss_cont[i][:40])
+
             else:
                 if not os.path.exists(s_file):
                     print("file not exit :" + s_file)
@@ -119,6 +133,8 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode):
 
 
 if __name__ == "__main__":
+    #gitlog的时间
+    cmd_time=""
     #get_git_lot("/export/disk1T1/bsp_work/TI_AM335X/kernel-3.10.x")
     if len(sys.argv) == 1:
         exit()
@@ -157,7 +173,16 @@ if __name__ == "__main__":
             print("src: " + gitpath1)
             print("dst: " + gitpath2)
             print("start diff file: " + sys.argv[2]);
-            find_path_diff_for_file(gitpath1, gitpath2, sys.argv[2], 0)
+
+            #是否指定了时间
+            if len(sys.argv) > 3:
+                if sys.argv[3].startswith('--'):
+                    option = sys.argv[3][2:]
+                    if option == 'time':
+                        cmd_time = sys.argv[4]
+
+
+            find_path_diff_for_file(gitpath1, gitpath2, sys.argv[2], 0, cmd_time)
             exit()
     else:
         print("no enough argments")
