@@ -72,7 +72,8 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time="", auto
                     cmd2= "cd "+ s_dir +"; "+"git show " + commit_diff_id + " | grep Upstream"
                     cont = os.popen(cmd2).read()
 
-                    #print(commit_diff_id)
+                    print(commit_diff_id)
+                    #print(line)
                     #有upstream的patch
                     if cont != "":
                         upstream_commit = cont [-43:-2]
@@ -83,8 +84,8 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time="", auto
                         #print(gitshow_cont+ " 5" + gitshow_cont[:5])
 
                         if gitshow_cont[:5] == "":
-                            #print(commit_diff_id + " lost upstream patch," + upstream_commit) 
-                            print(line)
+                            print(commit_diff_id + " lost upstream patch," + upstream_commit) 
+                            #print(line)
                             format_patch(s_dir, commit_diff_id, patch_number)
                             patch_number += 1
                             pass
@@ -92,7 +93,7 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time="", auto
                             #print(line)
                             #print("lost upstream patch" + line)
                             #print("patch is exit")
-                            #print("is upstream patch," + cont + upstream_commit) 
+                            print("is upstream patch," + cont + upstream_commit) 
                             #print(commit_diff_id + "upstream patch," + upstream_commit) 
                             pass
                     else:
@@ -103,13 +104,13 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time="", auto
 
                         #print(gitshow_cont) 
                         if gitshow_cont[:5] == "":
-                            #print("find lost patch" + line)
-                            print(line)
+                            print("find lost patch")
+                            #print(line)
                             format_patch(s_dir, commit_diff_id, patch_number)
                             patch_number += 1
 
                         else:
-                            #print("patch is exit")
+                            print("patch is exit")
                             pass
 
                 #print(s_cont)
