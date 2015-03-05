@@ -4,6 +4,7 @@ import sys
 rootdir ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/cach/patch100/"
 kernel_dir="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/patches_ti"
 git_targ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/shortlog"
+git_targ="/extend/disk1G1/work/github/linux-stable/shortlog"
 
 #for parent,dirnames,filenames in os.walk(rootdir):    #三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
 #    for dirname in  dirnames:                       #输出文件夹信息
@@ -30,22 +31,50 @@ for filename in file_list.readlines():
     for line in cont.readlines():
         if readline_cnt == 3:
             need_find = line[27:-1]
+        elif readline_cnt == 4:
+            if len(line) <= 2:
+                pass
+            else:
+                #extand_cont=line[:-1]
+                #need_find = need_find + extand_cont
+                #print(extand_cont)
+                pass
+            need_find =(need_find.replace("\"","\\\""))
+            need_find =(need_find.replace("$","\$"))
+            need_find =(need_find.replace("[","\["))
+            need_find =(need_find.replace("]","\]"))
             cmd = "cat " + git_targ + " | grep \"" + need_find + "\""
+            print(cmd)
             find_grep = os.popen(cmd).read()
+            print(cmd)
             print(need_find)
             if find_grep !="":
                 print(find_grep[:-1])
                 print("it is exist")
                 #删除他们
                 os.system("rm " + filename)
-            #cmd = "cat " + filename[:-1]+ " | grep \"+++ \""
-            #modef_file_name = os.popen(cmd).read()
-            #print(modef_file_name[6:-1])
-            #print(cmd)
-            #检测文件是否三有效的
-
-            #print(cmd)
+                break
+        else:
+            if readline_cnt > 6:
+                break
         readline_cnt +=1
+
+    #there is dts file?
+    #+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+    if os.path.exists(filename[:-1]):
+        cmd1 ="cat " + filename[:-1] + " | grep \"+++ \"" + " | grep \".dts$\""
+        cont = os.popen(cmd1).read()
+        if cont != "":
+            print(cmd1)
+            os.system("rm " + filename)
+
+
+    if os.path.exists(filename[:-1]):
+        cmd1 ="cat " + filename[:-1] + " | grep \"+++ \"" + " | grep \".dtsi$\""
+        cont = os.popen(cmd1).read()
+        if cont != "":
+            print(cmd1)
+            os.system("rm " + filename)
     
     #print(line[:8])
 
