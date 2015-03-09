@@ -4,7 +4,7 @@ import sys
 rootdir ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/cach/patch100/"
 kernel_dir="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/patches_ti"
 git_targ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/shortlog"
-git_targ="/extend/disk1G1/work/github/linux-stable/shortlog"
+#git_targ="/extend/disk1G1/work/github/linux-stable/shortlog"
 
 #for parent,dirnames,filenames in os.walk(rootdir):    #三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
 #    for dirname in  dirnames:                       #输出文件夹信息

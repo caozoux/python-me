@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import sys
 import re,time
@@ -51,7 +52,7 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time="", auto
             cmd="diff -p" + " " + s_file + " " + d_file
             cont = os.popen(cmd).read()
             str_len=len(cont)
-
+            print(cmd)
             if str_len > 20:
                 #print('\033[1;31;40m')
                 #print("~~~~~~~~~~~~~~log commit:"+s_file,)
@@ -206,8 +207,10 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time="", auto
             else:
                 if not os.path.exists(s_file):
                     print("file not exit :" + s_file)
-                if not os.path.exists(d_file):
+                elif not os.path.exists(d_file):
                     print("file not exit :" + d_file)
+                else:
+                    print("the file is the same, don't need to compare")
         else:
             if not os.path.exists(s_dir):
                 print("file not exit :" + s_dir)
