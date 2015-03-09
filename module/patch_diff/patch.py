@@ -228,6 +228,9 @@ if __name__ == "__main__":
     #gitlog的时间
     cmd_time=""
     autor_name=""
+    print('\033[1;31;40m',end="")
+    print("~~~~~~~~~~~~~~log commit:")
+    print('\033[0m',end="")
     #get_git_lot("/export/disk1T1/bsp_work/TI_AM335X/kernel-3.10.x")
     if len(sys.argv) == 1:
         exit()
@@ -257,7 +260,6 @@ if __name__ == "__main__":
             line_cnt = 0;
             if os.path.exists("config"):
                 f = open('config', 'r')
-
                 for line in f.readlines(): 
                     if line_cnt == 0:
                         gitpath1 = line[:-1]
