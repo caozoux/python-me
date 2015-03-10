@@ -1,10 +1,9 @@
 import os
 import os.path
 import sys
-rootdir ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/cach/patch100/"
+rootdir ="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/patches"
 kernel_dir="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/patches_ti"
-git_targ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/shortlog"
-#git_targ="/extend/disk1G1/work/github/linux-stable/shortlog"
+git_targ="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/shortlog"
 
 #for parent,dirnames,filenames in os.walk(rootdir):    #三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
 #    for dirname in  dirnames:                       #输出文件夹信息
@@ -65,17 +64,16 @@ for filename in file_list.readlines():
         cmd1 ="cat " + filename[:-1] + " | grep \"+++ \"" + " | grep \".dts$\""
         cont = os.popen(cmd1).read()
         if cont != "":
-            print(cmd1)
-            os.system("rm " + filename)
+            #print(cmd1)
+            #os.system("rm " + filename)
+            pass
 
 
     if os.path.exists(filename[:-1]):
         cmd1 ="cat " + filename[:-1] + " | grep \"+++ \"" + " | grep \".dtsi$\""
         cont = os.popen(cmd1).read()
         if cont != "":
-            print(cmd1)
-            os.system("rm " + filename)
+            #print(cmd1)
+            #os.system("rm " + filename)
+            pass
     
-    #print(line[:8])
-
-    #(cherry picked from commit
