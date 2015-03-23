@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schools>
+    <School Name="XiDian">
+        <Class Id="030612">
+            <Student Name="salomon">
+                <Scores>
+                    <Math>98</Math>
+                    <English>85</English>
+                    <physics>89</physics>
+                </Scores>
+            </Student>
+            <Student Name="Jupiter">
+                <Scores>
+                    <Math>74</Math>
+                    <English>83</English>
+                    <physics>69</physics>
+                </Scores>
+            </Student>
+        </Class>
+        <Class Id="030611">
+            <Student Name="Venus">
+                <Scores>
+                    <Math>98</Math>
+                    <English>85</English>
+                    <physics>89</physics>
+                </Scores>
+            </Student>
+            <Student Name="Mars">
+                <Scores>
+                    <Math>74</Math>
+                    <English>83</English>
+                    <physics>69</physics>
+                </Scores>
+            </Student>
+        </Class>
+    </School>
+</Schools>
