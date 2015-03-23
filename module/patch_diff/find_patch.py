@@ -1,9 +1,14 @@
+#!/usr/bin/env python
 import os
 import os.path
 import sys
+from clrpr import clrprt
+
 rootdir ="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/patches"
 kernel_dir="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/patches_ti"
-git_targ="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/shortlog"
+#git_targ="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/shortlog"
+git_targ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/shortlog"
+#git_targ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/shortlog_sdk"
 
 #for parent,dirnames,filenames in os.walk(rootdir):    #三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
 #    for dirname in  dirnames:                       #输出文件夹信息
@@ -45,11 +50,10 @@ for filename in file_list.readlines():
             cmd = "cat " + git_targ + " | grep \"" + need_find + "\""
             print(cmd)
             find_grep = os.popen(cmd).read()
-            print(cmd)
             print(need_find)
             if find_grep !="":
                 print(find_grep[:-1])
-                print("it is exist")
+                clrprt.printc("it is exist")
                 #删除他们
                 os.system("rm " + filename)
                 break
@@ -60,7 +64,7 @@ for filename in file_list.readlines():
 
     #there is dts file?
     #+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-    if os.path.exists(filename[:-1]):
+    if os.path.exists(filename[:-1]) and 0:
         cmd1 ="cat " + filename[:-1] + " | grep \"+++ \"" + " | grep \".dts$\""
         cont = os.popen(cmd1).read()
         if cont != "":
@@ -69,7 +73,7 @@ for filename in file_list.readlines():
             pass
 
 
-    if os.path.exists(filename[:-1]):
+    if os.path.exists(filename[:-1]) and 0:
         cmd1 ="cat " + filename[:-1] + " | grep \"+++ \"" + " | grep \".dtsi$\""
         cont = os.popen(cmd1).read()
         if cont != "":

@@ -4,10 +4,10 @@ import os
 import sys
 import subprocess
 
-patch_src="/extend/disk1G1/work/ti-am334x/ti-linux-kernel/"
-patch_dst="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/"
-
-
+#patch_src="/extend/disk1G1/work/ti-am334x/ti-linux-kernel/"
+#patch_dst="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/"
+#global patch_src
+#global patch_dst
 
 def path_modefy_files(filename):
     "print the modefy files in one patch"
@@ -17,16 +17,19 @@ def path_modefy_files(filename):
     cmdout=os.popen(cmd).read()
     print(cmdout)
 
-def cmp_file(filename):
+def cmp_file(filename,src,dst):
     "cmp the file,if the same, return 0"
-    src_file=patch_src+filename
-    dst_file=patch_dst+filename
-    cmd="diff -q "+src_file+" "+dst_file
-    print(cmd)
-    cmdout=os.popen(cmd).read()
-    if not cmdout =="":
-        return 1
-    return 0
+    src_file=src+filename
+    dst_file=dst+filename
+    if os.path.exists(src_file) and os.path.exists(dst_file):
+        cmd="diff -q "+src_file+" "+dst_file
+        print("           "+cmd)
+        cmdout=os.popen(cmd).read()
+        if not cmdout =="":
+            return 1
+        else:
+            return 0
+    return 1
 
 def git_apply(patchname,src,dst):
     "git apply the patchname, if success, return 0"
@@ -35,6 +38,12 @@ def git_apply(patchname,src,dst):
         print(patchname+" isn't exist")
         return 1
 
+    patch_src=src
+    patch_dst=dst
+
+    #print(patch_dst)
+    #print(patch_src)
+    #exit()
     cmd="cat "+patchname+" | grep \"+++ \""+" | cut -b 7-"
     #cmdout=os.popen(cmd).read()
     #print(cmdout)
@@ -44,7 +53,7 @@ def git_apply(patchname,src,dst):
     for line in cmdout.readlines():
         filename=line[:-1]
         #file is deferent
-        if not cmp_file(filename):
+        if not cmp_file(filename,patch_src,patch_dst):
             samefile_num += 1
         files_num += 1
 
@@ -73,4 +82,4 @@ if __name__ == "__main__":
         exit()
 
     patchname=sys.argv[1]
-    git_apply(patchname,patch_src, patch_dst)
+    git_apply(patchname,src, dst)

@@ -3,8 +3,8 @@ import os
 import sys,time
 import gitApply
 
-patch_src="/extend/disk1G1/work/ti-am334x/ti-linux-kernel/"
-patch_dst="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/"
+patch_src="/export/disk1T1/bsp_work/TI_AM335X/TI_SDK/SDK8/board-support/linux-3.14.26-g2489c02/"
+patch_dst="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/"
 
 if len(sys.argv) <= 1:
     print("argments is less")
@@ -23,12 +23,12 @@ cmdout=os.popen(cmd)
 
 for line in cmdout.readlines():
     patchname = line[:-1]
-    time.sleep(1)
+    #time.sleep(1)
     print(patchname)
 
     #git am successfully
     if not gitApply.git_apply(patchname,patch_src, patch_dst):
-        os.system("mv "+patchname+ " apply_suc")
+        os.system("mv "+patchname+ " apply_src")
         
 
         

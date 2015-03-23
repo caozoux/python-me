@@ -1,8 +1,19 @@
 import os
 
 #Ñɫ´ò
-def printc(dictArg, color="red"):
-    print('\033[1;31;40m',end="")
-    print(dictArg)
-    print('\033[0m',end="")
+def printc(dictArg, color="r"):
+    "support color:  \
+    r: red \
+    g: green \
+    y: yellow"
+    if color == "r":
+        print('\033[1;31;40m',end="")
+    elif color == "g":
+        print('\033[1;32;40m',end="")
+    elif color == "y":
+        print('\033[1;33;40m',end="")
+
+    print(dictArg,end="")
+    print('\033[0m')
+    return 
 

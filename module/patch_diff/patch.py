@@ -2,7 +2,7 @@
 import os
 import sys
 import re,time
-#import commands
+from clrpr import clrprt
 
 def excule_cmd_pr(cmd, is_show):
     cont = os.popen(cmd).read()
@@ -74,7 +74,6 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time="", auto
                     cont = os.popen(cmd2).read()
 
                     print(commit_diff_id)
-                    #print(line)
                     #有upstream的patch
                     if cont != "":
                         upstream_commit = cont [-43:-2]
@@ -82,20 +81,14 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time="", auto
                         #cmd2= "cd "+ d_dir +"; "+"git show -s --format=%s " + upstream_commit + " 2>/dev/null"
                         cmd2= "cd "+ d_dir +"; "+"git show -s --format=%s " + upstream_commit + " 2>/dev/null"
                         gitshow_cont = os.popen(cmd2).read()
-                        #print(gitshow_cont+ " 5" + gitshow_cont[:5])
 
                         if gitshow_cont[:5] == "":
-                            print(commit_diff_id + " lost upstream patch," + upstream_commit) 
-                            #print(line)
+                            clrprt.printc(commit_diff_id + " lost upstream patch," + upstream_commit) 
                             format_patch(s_dir, commit_diff_id, patch_number)
                             patch_number += 1
                             pass
                         else:
-                            #print(line)
-                            #print("lost upstream patch" + line)
-                            #print("patch is exit")
                             print("is upstream patch," + cont + upstream_commit) 
-                            #print(commit_diff_id + "upstream patch," + upstream_commit) 
                             pass
                     else:
 
@@ -103,11 +96,10 @@ def find_path_diff_for_file(s_dir, d_dir, filename, show_mode = 0, time="", auto
                         cmd2= "cd "+ d_dir +"; "+"git show -s --format=%s " + commit_diff_id + " 2>/dev/null"
                         gitshow_cont = os.popen(cmd2).read()
 
-                        #print(gitshow_cont) 
                         if gitshow_cont[:5] == "":
-                            print("find lost patch")
+                            clrprt.printc(commit_diff_id+" lost patch")
                             #print(line)
-                            format_patch(s_dir, commit_diff_id, patch_number)
+                            #format_patch(s_dir, commit_diff_id, patch_number)
                             patch_number += 1
 
                         else:
@@ -228,9 +220,9 @@ if __name__ == "__main__":
     #gitlog的时间
     cmd_time=""
     autor_name=""
-    print('\033[1;31;40m',end="")
-    print("~~~~~~~~~~~~~~log commit:")
-    print('\033[0m',end="")
+    #print('\033[1;31;40m',end="")
+    #print("~~~~~~~~~~~~~~log commit:")
+    #print('\033[0m',end="")
     #get_git_lot("/export/disk1T1/bsp_work/TI_AM335X/kernel-3.10.x")
     if len(sys.argv) == 1:
         exit()
@@ -267,9 +259,9 @@ if __name__ == "__main__":
                         gitpath2 = line[:-1]
                     line_cnt += 1
 
-            print("src: " + gitpath1)
-            print("dst: " + gitpath2)
-            print("start diff file: " + sys.argv[2]);
+            clrprt.printc("src: " + gitpath1, "y")
+            clrprt.printc("dst: " + gitpath2, "y")
+            clrprt.printc("start diff file: " + sys.argv[2], "y");
 
             #是否指定了时间
             if len(sys.argv) > 3:
