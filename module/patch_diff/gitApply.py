@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 import os
-import sys
+import sys,time
 import subprocess
+from clrpr import clrprt
 
 #patch_src="/extend/disk1G1/work/ti-am334x/ti-linux-kernel/"
 #patch_dst="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/"
@@ -31,6 +32,86 @@ def cmp_file(filename,src,dst):
             return 0
     return 1
 
+def get_linuxmail_patch(patchname,maildir,  curdir="", cmp_upstream="\[ Upstream commit "):
+    "throught the patchname, then get the same patch \
+    through kernle mailline. \
+    argments: \
+        patchname: the patch name \
+        maildir: the mailline dir \
+        curdir: the format patch out"
+
+    #get the commit id in upstream
+    if curdir=="":
+        cmd="pwd"
+        curdir=os.popen(cmd).read()
+    
+    retstr=""
+    upstream_commit_num=0
+    commitid=""
+    cmd="cat "+patchname+" | grep \""+cmp_upstream+"\""
+    cmdout=os.popen(cmd)
+    for line in cmdout.readlines():
+
+        if line == "":
+            if upstream_commit_num==0:
+                return "";
+            else:
+                if upstream_commit_num>1:
+                    clrprt.printc("patch: "+patchname+" need your check")
+                    return ""
+                else:
+                    return retstr
+        else:
+            commitid=line[18:-3]
+            #clrprt.printc(commitid)
+            cmd="cd "+maildir+"; "+"git show "+commitid
+            cmdout1=os.popen(cmd).read()
+            upstream_commit_num += 1
+            cmd="cd "+maildir+"; "+"git format-patch -1 "+commitid+" -o "+curdir
+            #print(cmd)
+            retstr=os.popen(cmd).read()
+
+    return retstr
+
+def format_linuxmail_patch(patchname):
+    "add  commit $commit upstream \
+     to mailpatch"
+    commitid=""
+
+    #patch need to format
+    cmd="sed -n 6p "+patchname
+    cmdout=os.popen(cmd).read()
+    if cmdout[:6] == "commit":
+        clrprt.printc(patchname+" is formated, please check")
+        return 
+    
+    cmd="sed -n 7p "+patchname
+    cmdout=os.popen(cmd).read()
+    if cmdout[:6] == "commit":
+        clrprt.printc(patchname+" is formated, please check")
+        return 
+
+    #get patch commit id
+    cmd="sed -n 1p "+patchname
+    cmdout=os.popen(cmd).read()
+    commitid=cmdout[6:46]
+
+    cmd="sed -n 5p "+patchname
+    cmdout=os.popen(cmd).read()
+
+    print(len(cmdout))
+    if len(cmdout)==1:
+        #sed -i '5 acommit 5bb9cbaa622a2bbde8e307d4e0528dd2c8212a6a upstream\n'
+        cmd="sed -i '5 acommit "+commitid+" upstream\\n'"+" "+patchname
+        #print(cmd)
+        if os.system(cmd):
+            clrprt.printc(cmd+" is failed")
+    else:
+        cmd="sed -i '6 acommit "+commitid+" upstream\\n'"+" "+patchname
+        #print(cmd)
+        if os.system(cmd):
+            clrprt.printc(cmd+" is failed")
+
 def git_apply(patchname,src,dst):
     "git apply the patchname, if success, return 0"
 
@@ -41,12 +122,7 @@ def git_apply(patchname,src,dst):
     patch_src=src
     patch_dst=dst
 
-    #print(patch_dst)
-    #print(patch_src)
-    #exit()
     cmd="cat "+patchname+" | grep \"+++ \""+" | cut -b 7-"
-    #cmdout=os.popen(cmd).read()
-    #print(cmdout)
     cmdout=os.popen(cmd)
     files_num=0
     samefile_num=0
@@ -66,11 +142,10 @@ def git_apply(patchname,src,dst):
     p=subprocess.Popen(cmd, stdin = subprocess.PIPE, \
         stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)
     p.wait()
+    #git apply fail
     if p.returncode:
         errout=p.stderr.read()
-        #print(p.stderr.read())
         print(errout)
-        
         return 1
     else:
         print(patchname+" apply successfully")

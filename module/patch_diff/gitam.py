@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.4
 import os
 import sys,time
 import gitApply
@@ -29,6 +29,9 @@ for line in cmdout.readlines():
     #git am successfully
     if not gitApply.git_apply(patchname,patch_src, patch_dst):
         os.system("mv "+patchname+ " apply_src")
+    else:
+        print(patchname+ "： git apply failed")
+        #exit()
         
 
         
