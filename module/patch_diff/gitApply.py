@@ -73,6 +73,21 @@ def get_linuxmail_patch(patchname,maildir,  curdir="", cmp_upstream="\[ Upstream
 
     return retstr
 
+def format_sdk_patch(patchname,context):
+    "add sdk patch context"
+    linecnt=""
+    cmd="cat "+patchname+" | grep -n \"^---$\" | cut -d : -f 1"
+    cmdout=os.popen(cmd).read()
+    if cmdout == "":
+        return
+    else:
+        linecnt=cmdout[:-1]
+        cmd="sed -i '"+linecnt+" i"+context+"' "+patchname
+        print(patchname)
+        if os.system(cmd):
+            clrprt.printc(cmd+" is failed")
+
+
 def format_linuxmail_patch(patchname):
     "add  commit $commit upstream \
      to mailpatch"
