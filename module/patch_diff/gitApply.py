@@ -10,6 +10,18 @@ from clrpr import clrprt
 #global patch_src
 #global patch_dst
 
+def runcmd(cmd, cmdshow=0):
+    if cmdshow:
+        print(cmd)
+    return os.popen(cmd).read()
+
+def context_cut_filt(contex,d_arg,f_arg, cmdshow=0):
+    "run the command echo $contex | cut -d d_arg -f f_arg"
+    cmd="echo \""+contex+"\" | cut -d "+d_arg+" -f "+f_arg
+    if cmdshow:
+        print(cmd)
+    return os.popen(cmd).read()
+
 def path_modefy_files(filename):
     "print the modefy files in one patch"
     if not os.path.exists(filename):
@@ -73,8 +85,37 @@ def get_linuxmail_patch(patchname,maildir,  curdir="", cmp_upstream="\[ Upstream
 
     return retstr
 
-def format_sdk_patch(patchname,context):
-    "add sdk patch context"
+def back_sdk_patch(patchname):
+    " delete the line commit * upstream"
+    cmd="cat "+patchname+" | grep -n \"\[zou: Original patch taken from\""
+    cmdout=os.popen(cmd)
+    for line in cmdout.readlines():
+        if line == "":
+            #clrprt.printc("it is invailb files")
+            return
+        else:
+            number=context_cut_filt(line[:-1],":","1", 1)
+            cmd="sed -i \""+number[:-1]+"d\" "+patchname
+            print(cmd)
+            if os.system(cmd):
+                clrprt.printc(cmd+" is failed")
+            if os.system(cmd):
+                clrprt.printc(cmd+" is failed")
+            if os.system(cmd):
+                clrprt.printc(cmd+" is failed")
+
+
+def format_sdk_patch(patchname, context, checkcontext):
+    "add sdk patch context \
+     context: sdk commit \
+     checkcontext: if has the checkcontxt, just return"
+
+    out=runcmd("cat "+patchname+" | grep -n \""+checkcontext+"\"",1)
+    if not out=="":
+        return
+    out=runcmd("cat "+patchname+" | grep -n \" upstream$\"")
+    if not out=="":
+        return
     linecnt=""
     cmd="cat "+patchname+" | grep -n \"^---$\" | cut -d : -f 1"
     cmdout=os.popen(cmd).read()
@@ -87,6 +128,64 @@ def format_sdk_patch(patchname,context):
         if os.system(cmd):
             clrprt.printc(cmd+" is failed")
 
+def back_linuxmail_patch(patchname):
+    " delete the line commit * upstream"
+    cmd="cat "+patchname+" | grep -n \"upstream$\""
+    cmdout=os.popen(cmd).read()
+    if cmdout == "":
+        #clrprt.printc("it is invailb files")
+        return
+    else:
+        if cmdout[0]== "6" or cmdout[0]=="7" or cmdout[0]=="8" or cmdout[0]=="9":
+            cmd="sed -i \"6,7d\" "+patchname
+            if os.system(cmd):
+                clrprt.printc(cmd+" is failed")
+        else:
+            clrprt.printc("it is invailb files")
+
+
+def replace_mailine_patch(patchname, mailine_path="/home/wrsadmin/github/linux-stable"):
+    "replace the patchname by using the mailine"
+    inter_num=5
+    cmdout=runcmd("cat "+patchname+" | grep -n \"upstream$\"")
+    if not cmdout == "":
+        clrprt.printc(patchname+" has upstream commit")
+        return
+
+    cmdout=runcmd("cat "+patchname+" | grep -n \"Subject:\" | cut -d ] -f 2")
+    commit_context=cmdout[:-1]
+    cmd="sed -n '5p' "+patchname
+    cmdout2=os.popen(cmd).read()
+    if len(cmdout2)<2:
+        pass
+    else:
+        commit_context = commit_context + cmdout2[:-1]
+        inter_num += 1
+
+    shortlog=mailine_path+"/shortlog "
+    cmdout2=runcmd("cat "+shortlog+" | grep -n "+"\""+commit_context+"\"")
+    if len(cmdout2) > 10:
+        clrprt.printc(patchname+" find upstream")
+        number=runcmd("echo \""+cmdout2[:-1]+"\" | cut -d : -f 1")
+        number=str((int(number[:-1])-3))
+        out=runcmd("sed -n '"+number+"p' "+shortlog)
+        commitid=out[7:-1]
+        out=runcmd("git -C "+mailine_path+" format-patch -1 "+commitid+" -o "+runcmd("pwd"))
+        runcmd("cp "+out[:-1]+" "+patchname, 1)
+
+        f=open(patchname, 'r')
+        number=0
+        for line in f.readlines():
+            number += 1
+            #print(line[:-1]+"number: "+str(number)+"len: "+str(len(line)))
+            if len(line) == 1:
+                cmd="sed -i '"+str(number)+" acommit "+commitid+" upstream\\n'"+" "+patchname
+                if os.system(cmd):
+                    clrprt.printc(cmd+" is failed")
+                break
+
+            
+        #runcmd("sed -i '"+str(inter_num)+" acommit "+commitid+" upstream\\n'"+" "+patchname
 
 def format_linuxmail_patch(patchname):
     "add  commit $commit upstream \
@@ -94,36 +193,75 @@ def format_linuxmail_patch(patchname):
     commitid=""
 
     #patch need to format
-    cmd="sed -n 6p "+patchname
-    cmdout=os.popen(cmd).read()
-    if cmdout[:6] == "commit":
-        clrprt.printc(patchname+" is formated, please check")
-        return 
+    #cmd="sed -n 6p "+patchname
+    #cmdout=os.popen(cmd).read()
+    #if cmdout[:6] == "commit":
+    #    clrprt.printc(patchname+" is formated, please check")
+    #    return 
     
-    cmd="sed -n 7p "+patchname
-    cmdout=os.popen(cmd).read()
-    if cmdout[:6] == "commit":
-        clrprt.printc(patchname+" is formated, please check")
-        return 
+    #cmd="sed -n 7p "+patchname
+    #cmdout=os.popen(cmd).read()
+    #if cmdout[:6] == "commit":
+    #    clrprt.printc(patchname+" is formated, please check")
+    #    return 
 
     #get patch commit id
-    cmd="sed -n 1p "+patchname
-    cmdout=os.popen(cmd).read()
-    commitid=cmdout[6:46]
+    #cmd="sed -n 1p "+patchname
+    #cmdout=os.popen(cmd).read()
+    #commitid=cmdout[6:46]
 
-    cmd="sed -n 5p "+patchname
-    cmdout=os.popen(cmd).read()
+    #cmd="sed -n 5p "+patchname
+    #cmdout=os.popen(cmd).read()
 
-    print(len(cmdout))
-    if len(cmdout)==1:
-        #sed -i '5 acommit 5bb9cbaa622a2bbde8e307d4e0528dd2c8212a6a upstream\n'
-        cmd="sed -i '5 acommit "+commitid+" upstream\\n'"+" "+patchname
-        #print(cmd)
-        if os.system(cmd):
-            clrprt.printc(cmd+" is failed")
+    #print(len(cmdout))
+    #if len(cmdout)==1:
+    #    #sed -i '5 acommit 5bb9cbaa622a2bbde8e307d4e0528dd2c8212a6a upstream\n'
+    #    cmd="sed -i '5 acommit "+commitid+" upstream\\n'"+" "+patchname
+    #    #print(cmd)
+    #    if os.system(cmd):
+    #        clrprt.printc(cmd+" is failed")
+    #else:
+    #    cmd="sed -i '6 acommit "+commitid+" upstream\\n'"+" "+patchname
+    #    #print(cmd)
+    #    if os.system(cmd):
+    #        clrprt.printc(cmd+" is failed")
+    #cmd="grep -n \"Subject:\" -R . | cut -d ] -f 2"
+    #cmd1="cat "+patchname+" | grep -n \"Subject:\""
+    #cmdout1=os.popen(cmd1).read()
+    #line_cnt=cmdout1[0]
+    #print(cmdout1)
+#判断是否已经有了upstream commit
+    inter_num=5
+    cmd="cat "+patchname+" | grep -n \"upstream$\""
+    cmdout=os.popen(cmd).read()
+    if not cmdout == "":
+        clrprt.printc(patchname+" has upstream commit")
+        return
+    cmd="cat "+patchname+" | grep -n \"Subject:\" | cut -d ] -f 2"
+    cmdout=os.popen(cmd).read()
+    commit_context=cmdout[:-1]
+    #print(commit_context)
+    cmd="sed -n '5p' "+patchname
+    cmdout2=os.popen(cmd).read()
+    #print(cmdout2)
+    if len(cmdout2)<2:
+        pass
     else:
-        cmd="sed -i '6 acommit "+commitid+" upstream\\n'"+" "+patchname
-        #print(cmd)
+        commit_context = commit_context + cmdout2[:-1]
+        inter_num += 1
+    #print(commit_context)
+
+    cmd="cat /home/wrsadmin/github/linux-stable/shortlog "+" | grep -n "+"\""+commit_context+"\""
+    cmdout2=os.popen(cmd).read()
+    if len(cmdout2) > 10:
+        #print(cmdout2)
+        clrprt.printc(patchname+" find upstream")
+        number=runcmd("echo \""+cmdout2[:-1]+"\" | cut -d : -f 1")
+        #print(number)
+        number=str((int(number[:-1])-3))
+        out=runcmd("sed -n '"+number+"p' "+"/home/wrsadmin/github/linux-stable/shortlog")
+        commitid=out[7:-1]
+        cmd="sed -i '"+str(inter_num)+" acommit "+commitid+" upstream\\n'"+" "+patchname
         if os.system(cmd):
             clrprt.printc(cmd+" is failed")
 
