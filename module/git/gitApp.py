@@ -216,25 +216,24 @@ def format_linuxmail_patch(patchname):
     cmdout2=os.popen(cmd).read()
     if len(cmdout2) > 10:
         #print(cmdout2)
-        clrprt.printc(patchname+" find upstream")
+        clrprt.info(patchname+" find upstream")
         number=runcmd("echo \""+cmdout2[:-1]+"\" | cut -d : -f 1")
-        #print(number)
         number=str((int(number[:-1])-3))
         out=runcmd("sed -n '"+number+"p' "+"/home/wrsadmin/github/linux-stable/shortlog")
         commitid=out[7:-1]
         cmd="sed -i '"+str(inter_num)+" acommit "+commitid+" upstream\\n'"+" "+patchname
         if os.system(cmd):
-            clrprt.printc(cmd+" is failed")
+            clrprt.err(cmd+" is failed")
 
-def check_patch_format(patchname,mailine="/fstlink/github/linux-stable/", show = 0):
+def check_patch_format(patchname, cmdshow=0, mailine="/fstlink/kernel-3.14.x/scripts/checkpatch.pl "):
     " use the kernel/scripte/checkpath.pya \
       to check the patch"
-    
-    if os.system("/export/ti/kernel-3.14.x/scripts/checkpatch.pl "+patchname):
-        clrprt(patchname+" patch error")
+    if os.system(mailine+patchname):
+        clrprt.err(patchname+" patch error")
         return 1;
     else:
-        print(patchname+ " pass");
+        if not cmdshow == 0:
+            clrprt.info(patchname+ " pass");
         return 0;
 
 
