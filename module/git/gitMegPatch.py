@@ -8,7 +8,7 @@ g_patchname=""
 def file_find_context_line(file,context):
     "it return the number, which find the context"
     context=context.replace("*","\\*")
-    log=os.popen("cat "+file+" | grep -n \""+context+"\"").read()
+    log=os.popen("cat "+file+" | grep -n \""+context.replace("[","\[")+"\"").read()
     return log.split(":")[0]
 
 def file_get_line(file,line):
