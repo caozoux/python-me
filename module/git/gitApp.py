@@ -25,10 +25,14 @@ def context_cut_filt(contex,d_arg,f_arg, cmdshow=0):
 def path_modefy_files(filename):
     "print the modefy files in one patch"
     if not os.path.exists(filename):
+        clrprt.printc(filename+" no find");
         return
+    #clrprt.printc(filename);
     cmd="cat "+filename+" | grep \"+++ \""+" | cut -b 7-"
     cmdout=os.popen(cmd).read()
-    print(cmdout)
+
+    #print(cmdout)
+    return cmdout
 
 def cmp_file(filename,src,dst):
     "cmp the file,if the same, return 0"
@@ -187,6 +191,43 @@ def replace_mailine_patch(patchname, mailine_path="/home/wrsadmin/github/linux-s
             
         #runcmd("sed -i '"+str(inter_num)+" acommit "+commitid+" upstream\\n'"+" "+patchname
 
+def is_mailine(patchname, mailgitlog="home/wrsadmin/github/linux-stable/shortlog", debug=0):
+    "add  commit $commit upstream \
+     to mailpatch"
+    commitid=""
+
+    inter_num=5
+    cmd="cat "+patchname+" | grep -n \"upstream$\""
+    cmdout=os.popen(cmd).read()
+    if not cmdout == "":
+        clrprt.printc(patchname+" has upstream commit")
+        return 0
+    cmd="cat "+patchname+" | grep -n \"Subject:\" | cut -d ] -f 2"
+    cmdout=os.popen(cmd).read()
+    commit_context=cmdout[:-1]
+    #print(commit_context)
+    cmd="sed -n '5p' "+patchname
+    cmdout2=os.popen(cmd).read()
+
+    if len(cmdout2)<2:
+        pass
+    else:
+        commit_context = commit_context + cmdout2[:-1]
+        inter_num += 1
+
+    if (debug):
+        print("%-20s %-20s"%(commit_context, patchname))
+
+    commit_context =(commit_context.replace("\"","\\\""))
+    commit_context =(commit_context.replace("$","\$"))
+    commit_context =(commit_context.replace("[","\["))
+    commit_context =(commit_context.replace("]","\]"))
+    cmd="cat "+ mailgitlog+" | grep -n "+"\""+ commit_context+"\""
+    cmdout2=os.popen(cmd).read()
+    if len(cmdout2) > 10:
+        return 1
+    return 0
+
 def format_linuxmail_patch(patchname):
     "add  commit $commit upstream \
      to mailpatch"
@@ -236,4 +277,83 @@ def check_patch_format(patchname, cmdshow=0, mailine="/fstlink/kernel-3.14.x/scr
             clrprt.info(patchname+ " pass");
         return 0;
 
+def cmp_shortlog(sdklog, dstlog):
+    "find the log patch in dstlog from sdklog"
+    cmd="cat sdklog"
+    cmdout=os.popen(cmd)
+    number
+    for line in cmdout.readlines():
+        if [ line[:7] == "commit" ]:
+            print("find commit :"+line[9:-1])
 
+
+def remove_exit_patch(target_dir, patch_dir):
+    "it patches has been exited in target_dir, remove them in patch_dir"
+    if len(sys.argv) == 1:
+        print("$target_dir $patch_dir")
+        print("$target_dir: the root git")
+        print("$patch_dir: patches directory")
+        exit()
+
+    rootdir=sys.argv[1]
+    git_targ="/export/ti/kernel-3.14.x/shortlog"
+    cmd="ls " + rootdir +"/*.patch | sort"
+    file_list = os.popen(cmd)
+    for filename in file_list.readlines():
+        #print(line)
+        #if line [:7]
+        cmd1 ="cat " + filename
+        cont = os.popen(cmd1)
+        print(filename[:-1])
+
+        readline_cnt = 0
+        for line in cont.readlines():
+            if readline_cnt == 3:
+                need_find = line[27:-1]
+            elif readline_cnt == 4:
+                if len(line) <= 2:
+                    pass
+                else:
+                    #extand_cont=line[:-1]
+                    #need_find = need_find + extand_cont
+                    #print(extand_cont)
+                    pass
+                need_find =(need_find.replace("\"","\\\""))
+                need_find =(need_find.replace("$","\$"))
+                need_find =(need_find.replace("[","\["))
+                need_find =(need_find.replace("]","\]"))
+                if need_find == "":
+                    continue
+                cmd = "cat " + git_targ + " | grep \"" + need_find + "\""
+                print(cmd)
+                find_grep = os.popen(cmd).read()
+                print(need_find)
+                if find_grep !="":
+                    print(find_grep[:-1])
+                    clrprt.printc("it is exist")
+                    #删除他们
+                    os.system("rm " + filename)
+                    break
+            else:
+                if readline_cnt > 6:
+                    break
+            readline_cnt +=1
+
+        #there is dts file?
+        #+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+        if os.path.exists(filename[:-1]) and 0:
+            cmd1 ="cat " + filename[:-1] + " | grep \"+++ \"" + " | grep \".dts$\""
+            cont = os.popen(cmd1).read()
+            if cont != "":
+                #print(cmd1)
+                #os.system("rm " + filename)
+                pass
+
+
+        if os.path.exists(filename[:-1]) and 0:
+            cmd1 ="cat " + filename[:-1] + " | grep \"+++ \"" + " | grep \".dtsi$\""
+            cont = os.popen(cmd1).read()
+            if cont != "":
+                #print(cmd1)
+                #os.system("rm " + filename)
+                pass

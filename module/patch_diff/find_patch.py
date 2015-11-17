@@ -4,10 +4,10 @@ import os.path
 import sys
 from clrpr import clrprt
 
-rootdir ="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/patches"
+rootdir ="/export/disk1T1/bsp_work/IOT-REV2/git/git.freescale.com.ppc.sdk.linux/cach"
 kernel_dir="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/patches_ti"
 #git_targ="/extend/disk1G1/work/ti-am334x/kernel-3.14.x/shortlog"
-git_targ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/shortlog"
+git_targ="/export/ti/kernel-3.14.x/shortlog"
 #git_targ="/export/disk1T1/bsp_work/TI_AM335X/kernel-3.14.x/shortlog_sdk"
 
 #for parent,dirnames,filenames in os.walk(rootdir):    #三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
@@ -47,6 +47,8 @@ for filename in file_list.readlines():
             need_find =(need_find.replace("$","\$"))
             need_find =(need_find.replace("[","\["))
             need_find =(need_find.replace("]","\]"))
+            if need_find == "":
+                continue
             cmd = "cat " + git_targ + " | grep \"" + need_find + "\""
             print(cmd)
             find_grep = os.popen(cmd).read()
@@ -81,3 +83,4 @@ for filename in file_list.readlines():
             #os.system("rm " + filename)
             pass
     
+

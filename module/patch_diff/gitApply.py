@@ -85,25 +85,6 @@ def get_linuxmail_patch(patchname,maildir,  curdir="", cmp_upstream="\[ Upstream
 
     return retstr
 
-def back_sdk_patch(patchname):
-    " delete the line commit * upstream"
-    cmd="cat "+patchname+" | grep -n \"\[zou: Original patch taken from\""
-    cmdout=os.popen(cmd)
-    for line in cmdout.readlines():
-        if line == "":
-            #clrprt.printc("it is invailb files")
-            return
-        else:
-            number=context_cut_filt(line[:-1],":","1", 1)
-            cmd="sed -i \""+number[:-1]+"d\" "+patchname
-            print(cmd)
-            if os.system(cmd):
-                clrprt.printc(cmd+" is failed")
-            if os.system(cmd):
-                clrprt.printc(cmd+" is failed")
-            if os.system(cmd):
-                clrprt.printc(cmd+" is failed")
-
 
 def format_sdk_patch(patchname, context, checkcontext):
     "add sdk patch context \
@@ -127,21 +108,6 @@ def format_sdk_patch(patchname, context, checkcontext):
         print(patchname)
         if os.system(cmd):
             clrprt.printc(cmd+" is failed")
-
-def back_linuxmail_patch(patchname):
-    " delete the line commit * upstream"
-    cmd="cat "+patchname+" | grep -n \"upstream$\""
-    cmdout=os.popen(cmd).read()
-    if cmdout == "":
-        #clrprt.printc("it is invailb files")
-        return
-    else:
-        if cmdout[0]== "6" or cmdout[0]=="7" or cmdout[0]=="8" or cmdout[0]=="9":
-            cmd="sed -i \"6,7d\" "+patchname
-            if os.system(cmd):
-                clrprt.printc(cmd+" is failed")
-        else:
-            clrprt.printc("it is invailb files")
 
 
 def replace_mailine_patch(patchname, mailine_path="/home/wrsadmin/github/linux-stable"):
@@ -192,44 +158,6 @@ def format_linuxmail_patch(patchname):
      to mailpatch"
     commitid=""
 
-    #patch need to format
-    #cmd="sed -n 6p "+patchname
-    #cmdout=os.popen(cmd).read()
-    #if cmdout[:6] == "commit":
-    #    clrprt.printc(patchname+" is formated, please check")
-    #    return 
-    
-    #cmd="sed -n 7p "+patchname
-    #cmdout=os.popen(cmd).read()
-    #if cmdout[:6] == "commit":
-    #    clrprt.printc(patchname+" is formated, please check")
-    #    return 
-
-    #get patch commit id
-    #cmd="sed -n 1p "+patchname
-    #cmdout=os.popen(cmd).read()
-    #commitid=cmdout[6:46]
-
-    #cmd="sed -n 5p "+patchname
-    #cmdout=os.popen(cmd).read()
-
-    #print(len(cmdout))
-    #if len(cmdout)==1:
-    #    #sed -i '5 acommit 5bb9cbaa622a2bbde8e307d4e0528dd2c8212a6a upstream\n'
-    #    cmd="sed -i '5 acommit "+commitid+" upstream\\n'"+" "+patchname
-    #    #print(cmd)
-    #    if os.system(cmd):
-    #        clrprt.printc(cmd+" is failed")
-    #else:
-    #    cmd="sed -i '6 acommit "+commitid+" upstream\\n'"+" "+patchname
-    #    #print(cmd)
-    #    if os.system(cmd):
-    #        clrprt.printc(cmd+" is failed")
-    #cmd="grep -n \"Subject:\" -R . | cut -d ] -f 2"
-    #cmd1="cat "+patchname+" | grep -n \"Subject:\""
-    #cmdout1=os.popen(cmd1).read()
-    #line_cnt=cmdout1[0]
-    #print(cmdout1)
 #判断是否已经有了upstream commit
     inter_num=5
     cmd="cat "+patchname+" | grep -n \"upstream$\""
@@ -304,6 +232,50 @@ def git_apply(patchname,src,dst):
         print(patchname+" apply successfully")
         return 0
 
+def cmp_shortlog(sdklog, dstlog):
+    "find the log patch in dstlog from sdklog"
+    cmd="cat "+sdklog
+    cmdout=os.popen(cmd)
+    flag_commit = 0
+    flag_number = -1 
+    commit_id ="";
+    for line in cmdout.readlines():
+        if line[:6] == "commit":
+            commit_id = line[6:-1]
+            #print("find commit :"+line[10:-1])
+            flag_commit = 1
+            flag_number = 0 
+        if flag_number >= 0:
+            flag_number += 1;
+        if flag_number >= 4:
+            if line[0] == 'M':
+                pass
+            else:
+                flag_number = -1;
+                #print(line[:-1])
+                #commit_id = line[10:-1]
+                cmd1="cat "+dstlog + " | grep " + "\""+line[:-1]+"\""
+                cmd1out = os.popen(cmd1).read();
+                if cmd1out != "":
+                    pass
+                    #print(line[:-1])
+                else:
+                    print(line[:-1]+ " commitid: "+commit_id)
+def format_patch(mode,git_dir,out_dir,arg1,arg2):
+    "git format patch"
+    "mode: author: generat log file to record the patch of author"
+        "arg1: author name"
+    "mode: frm: format list patches from log file"
+        "arg1: log name"
+        "arg2: patch out dir"
+    #generate git log
+    if mode == "author":
+        runcmd("git -C "+git_dir+"  --author="+arg1+" > git_author_log")
+    else if mode == "frm"
+        pass
+
+
+           
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
         print("argments is less")

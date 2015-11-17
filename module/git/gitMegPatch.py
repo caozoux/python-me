@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 import os
 import sys,time
 import subprocess
@@ -8,7 +8,11 @@ g_patchname=""
 def file_find_context_line(file,context):
     "it return the number, which find the context"
     context=context.replace("*","\\*")
+    context=context.replace("$","\$")
+    print("cat "+file+" | grep -n \""+context.replace("[","\[")+"\"")
     log=os.popen("cat "+file+" | grep -n \""+context.replace("[","\[")+"\"").read()
+    if log == "":
+        return "-1"
     return log.split(":")[0]
 
 def file_get_line(file,line):
@@ -40,6 +44,9 @@ def git_find_conflit_palce(patch,file,start,end):
     start_cmp=os.popen("sed -n '"+start+"p' "+patch+" | cut -d @ -f 5").read()[1:-1]
     print(file)
     num=file_find_context_line(file,start_cmp)
+    if num == -1:
+        print("error: "+start_cmp+" no find");
+        return 0;
     return int(num)
     
 def git_conflit_cmpare_git(patch,file, patch_start,patch_end, file_start):
@@ -138,6 +145,8 @@ def git_applay(patchname):
             end_num=get_patch_part_start_end(filename, start_num) #patch end line for conflict
             start_num=get_patch_part_start_end(filename, start_num,1) #patch line start for conflict
             conflic_line=git_find_conflit_palce(g_patchname,filename,start_num,end_num)
+            if conflic_line == 0:
+                exit();
             print(start_num+","+end_num+" patch:"+g_patchname)
             print(str(conflic_line)+" srcfile:"+filename)
             git_conflit_cmpare_git(g_patchname,filename,str(start_num),str(end_num),str(conflic_line))
