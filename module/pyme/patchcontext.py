@@ -5,15 +5,31 @@ class patchModifyItem:
     def __init__(self, line, start):
         self.mStartLine= line;
         self.mStart= start;
+        self.mPItemConList=[]
+        #how many lines added in this item
+        self.mAddNumber=0
+        self.mDelNumber=0
+        self.mType=""
+        self.mCmpStartline=0
 
     def setFile(self, ofile):
         self.mFile = ofile;
+
+    def bindPatchModifyFile(self, obj):
+        self.mOPatch=obj;
+
     def setGitNum(self, num):
         self.mSrcNum = num;
 
-    def anaalysis(self, patchFileList):
-        patchItemEnd = ["@@ ", "dif", "-- "]
+    def setItemType(self,type):
+        self.mType=type
+
+    def analysis(self, patchFileList):
         "patchFileList: patch context lines list"
+        patchItemEnd = ["@@ ", "dif", "-- "]
+        self.mPItemConList.append(patchFileList[self.mStart][:-1]);
+
+        #get the range of patch item
         for index in range(self.mStart+1, len(patchFileList)):
             line = patchFileList[index]
             if line[:3] == patchItemEnd[0] \
@@ -21,11 +37,84 @@ class patchModifyItem:
                or line[:3] == patchItemEnd[2] :
                 self.mEnd=index-1;
                 break;
+            self.mPItemConList.append(line[:-1]);
+            if line[0] == '+':
+                self.mAddNumber += 1
+            elif line[0] == '-':
+                self.mDelNumber += 1
 
-        pass;
+        #set file type: Makefile CFILE HFILE KCONFIG
+        list=re.split('/+',self.mOPatch.mFilename)
+
+        #set patch item type
+        filetype=list[-1]
+        if filetype == "Makefile":
+            self.setItemType("Makefile")
+        elif filetype[-2:-1] == ".c":
+            self.setItemType("CFILE")
+        elif filetype[-2:-1] == ".h":
+            self.setItemType("HFILE")
+        elif filetype == "Kconfig":
+            self.setItemType("KCONFIG")
+
+        for i in range(1,len(self.mPItemConList)):
+            pass;
+
+    def showItemAddDelpart(self, srcstart, patchstart):
+        "flag : \
+            1: merge "
+        oFileFilter = FileFilter(self.mOPatch.mFilename)
+
+        startline = patchstart
+        for i in range(len(self.mPItemConList)):
+            line = self.mPItemConList[i]
+            if line[0] == '+':
+                print "add new---> ",line
+                print ""
+            elif line[0] == ' ':
+                print line[1:], srcstart
+                print oFileFilter.getLine(srcstart)
+                srcstart += 1
+            elif line[0] == '-':
+                print line[1:], srcstart
+                print oFileFilter.getLine(srcstart)
+                srcstart += 1
+
+    def showSrcAndItem(self):
+        startlist=[]
+        ostartobj=[]
+        endlist=[]
+        oendobj=[]
+
+        oFileFilter = FileFilter(self.mOPatch.mFilename)
+        for i in range(1,4):
+            startlist.append(self.mPItemConList[i][1:])
+            mfileitem1 = oFileFilter.searchByWholeLine(startlist[i-1])
+            if mfileitem1:
+                ostartobj.append(mfileitem1)
+
+            endlist.append(self.mPItemConList[i-4][1:])
+            mfileitem1 = oFileFilter.searchByWholeLine(endlist[i-1])
+            if mfileitem1:
+                oendobj.append(mfileitem1)
+
+        if len(ostartobj) == 3:
+            if ostartobj[1].mLineNumber - ostartobj[0].mLineNumber == 1:
+                if ostartobj[2].mLineNumber - ostartobj[1].mLineNumber == 1:
+                    self.mCmpStartline = ostartobj[0].mLine
+                    pass;
+            elif ostartobj[2].mLineNumber - ostartobj[1].mLineNumber == 1:
+                self.mCmpStartline = ostartobj[2].mLineNumber-2
+            else:
+                print "can't find start three lines"
+                return
+
+        self.showItemAddDelpart(self.mCmpStartline,0)
 
     def dump(self):
         print self.mStartLine, self.mStart, self.mEnd, self.mSrcNum
+        for line in self.mPItemConList:
+            print line;
 
 #patch modify file name
 class patchModifyFile:
@@ -74,7 +163,8 @@ class patchcontext:
                 patchitem = patchModifyItem(obj.mLine, obj.mLineNumber)
                 patchitem.setFile(self.mPatchName)
                 patchitem.setGitNum(re.sub(',.*$',"",re.sub('^@@ -', "", obj.mLine)))
-                patchitem.anaalysis(self.omfile.mFileLines)
+                patchitem.bindPatchModifyFile(objp)
+                patchitem.analysis(self.omfile.mFileLines)
                 self.mPatchItem.append(patchitem)
 
     def analysis(self):

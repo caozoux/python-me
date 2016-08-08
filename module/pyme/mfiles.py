@@ -21,6 +21,8 @@ class FileFilterResLine:
     def __init__(self, linenumber, line):
         self.mLineNumber = linenumber;
         self.mLine = line;
+    def dump(self):
+        print self.mLineNumber," :",self.mLine
 
 class FileFilter:
     mFileName=""
@@ -35,6 +37,45 @@ class FileFilter:
                 mobj = FileFilterResLine(linenumber, result.group(0));
                 return mobj;
         return "";
+
+    def searchByWholeLine(self,str):
+        for linenumber in range(len(self.mFileLines)):
+            if str ==  self.getLine(linenumber)[:-1]:
+                mobj = FileFilterResLine(linenumber, str);
+                return mobj;
+        return "";
+    def getLine(self, index):
+        return self.mFileLines[index]
+
+    def searchByLine1(self,patern):
+        objlist=[]
+        for linenumber in range(len(self.mFileLines)):
+            result = re.search(patern, self.getLine(linenumber));
+            if result:
+                mobj = FileFilterResLine(linenumber, result.group(0));
+                objlist.append(mobj)
+
+        return objlist;
+
+    def searchByRange(self,patern, start, end):
+        objlist=[]
+        for linenumber in range(start, end):
+            result = re.search(patern, self.getLine(linenumber));
+            if result:
+                mobj = FileFilterResLine(linenumber, result.group(0));
+                objlist.append(mobj)
+        return objlist;
+
+    def searchByMultiLines(self,linelist):
+        objlist=[]
+        startline = linelist[0]
+
+        for linenumber in range(len(self.mFileLines)):
+            if startline == self.getLine(linenumber)[:-1] \
+                and linelist[1] == self.getLine(linenumber)[:-1] \
+                and linelist[2] == self.getLine(linenumber)[:-1]:
+
+                    return self.getLine(linenumber);
 
     def getLine(self, index):
         return self.mFileLines[index]
