@@ -30,6 +30,9 @@ class FileFilter:
         self.mFileName = filename;
         self.mFileLines = open(filename).readlines();
 
+    def getLineCnt(self):
+        return len(self.mFileLines)
+
     def searchByLine(self,patern):
         for linenumber in range(len(self.mFileLines)):
             result = re.search(patern, self.getLine(linenumber));
@@ -48,6 +51,10 @@ class FileFilter:
         return self.mFileLines[index]
 
     def searchByLine1(self,patern):
+        "return:                \
+            FileFilterResLine: mLineNumber: lineNumber; \
+                               mLine:       line context"
+
         objlist=[]
         for linenumber in range(len(self.mFileLines)):
             result = re.search(patern, self.getLine(linenumber));
