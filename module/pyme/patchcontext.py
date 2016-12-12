@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 from mfiles import *;
+import colorprint;
 
 class patchModifyItem:
     def __init__(self, line, start):
@@ -25,7 +26,7 @@ class patchModifyItem:
         self.mType=type
 
     def analysis(self, patchFileList):
-        "patchFileList: patch context lines list"
+        "analysis the item of patch and format to list"
         patchItemEnd = ["@@ ", "dif", "-- "]
         self.mPItemConList.append(patchFileList[self.mStart][:-1]);
 
@@ -112,18 +113,29 @@ class patchModifyItem:
         self.showItemAddDelpart(self.mCmpStartline,0)
 
     def dump(self):
-        print self.mStartLine, self.mStart, self.mEnd, self.mSrcNum
+        colorprint.warn("patch item: "+self.mStartLine)
+        #print self.mStartLine, self.mStart, self.mEnd, self.mSrcNum
         for line in self.mPItemConList:
-            print line;
+            print "   "+line;
 
-#patch modify file name
+#diff iterm of patch 
 class patchModifyFile:
     def __init__(self, start, end):
         self.start = start;
         self.end   = end;
+        self.mPatchItem=[]
 
     def setFileName(self, filename):
         self.mFilename = filename
+
+    def addPatchItem(self, oPatchItem):
+        self.mPatchItem.append(oPatchItem)
+
+    def dump(self):
+        colorprint.info("file: "+self.mFilename)
+        colorprint.info("start:"+str(self.start)+" end:"+str(self.end))
+        for obj in self.mPatchItem:
+            obj.dump()
 
 class patchcontext:
 
@@ -135,27 +147,36 @@ class patchcontext:
         self.mFiles=[]
         # patch modify items list
         self.mPatchItem=[]
+
     def formatPatchMFileToList(self):
+        "save one diff item of patch to patchModifyFile"
+
         varlist = self.omfile.searchByLine1("diff --git a.*$")
-        for index in range(len(varlist)-1):
-            obj = patchModifyFile(varlist[index].mLineNumber, varlist[index+1].mLineNumber-1)
+        for index in range(len(varlist)):
+            if index+1 < len(varlist):
+                obj = patchModifyFile(varlist[index].mLineNumber, varlist[index+1].mLineNumber-1)
+            else:
+                res = self.omfile.searchByWholeLine("-- ")
+                obj = patchModifyFile(varlist[index].mLineNumber, res.mLineNumber)
+
             res = re.sub('diff --git a.*\w b/', "", varlist[index].mLine)
             if res:
                 obj.setFileName(res)
             else:
                 obj.setFileName("")
-            self.mFiles.append(obj)
+
         #handle last patch modify file
-        obj = patchModifyFile(varlist[len(varlist)-1].mLineNumber, len(self.omfile.mFileLines))
         res = re.sub('diff --git a.*\w b/', "", varlist[index].mLine)
         if res:
             obj.setFileName(res)
         else:
             obj.setFileName("")
+
         self.mFiles.append(obj)
 
-    #format the patch modify item to obj list patchModifyItem
-    def formatPatchMItemToList(self):
+    #format the patch, the modified files of patch saved into mFiles
+    #the diff item of patch of mFIles saved into mPatchItem
+    def formatPatch(self):
         self.formatPatchMFileToList();
         for objp in self.mFiles:
             varlist = self.omfile.searchByRange("^@@.*$",objp.start,objp.end)
@@ -166,10 +187,12 @@ class patchcontext:
                 patchitem.bindPatchModifyFile(objp)
                 patchitem.analysis(self.omfile.mFileLines)
                 self.mPatchItem.append(patchitem)
+                objp.addPatchItem(patchitem)
 
     def analysis(self):
-        self.formatPatchMFileToList();
-        self.formatPatchMItemToList();
+        "format the patch, split the patch to list objesc by modifed files \
+        very modified files will create a patchModifyItem obj, it save the all diff timer of this file"
+        self.formatPatch();
 
     def findPatchItemByLine(self, line):
         for item in self.mPatchItem:
@@ -178,10 +201,12 @@ class patchcontext:
         return "";
 
     def dump(self):
-        for obj in self.mPatchItem:
-            objp = obj.ofile;
-            print "modify filename: ",objp.mFilename, " range in patch:", objp.start,"~", objp.end
-            print "patch item: ", obj.mSrcNum
+        for obj in self.mFiles:
+            oPatchItem = obj.mPatchItem;
+            obj.dump()
+            #objp = obj.mfile;
+            #print "modify filename: ",objp.mFilename, " range in patch:", objp.start,"~", objp.end
+            #print "patch item: ", obj.mSrcNum
 
 if __name__ == "__main__":
     test = patchcontext("/fslink/ti/kernel-4.1.x/patches/0195-dma-mv_memcpy-initial-driver-for-efficient-splice-me.patch")
