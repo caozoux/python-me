@@ -1,6 +1,8 @@
 #!/usr/bin/env python2.7
 from mfiles import *;
 import colorprint;
+import leveldbg;
+import patchop;
 
 class patchModifyItem:
     def __init__(self, line, start):
@@ -70,14 +72,14 @@ class patchModifyItem:
         for i in range(len(self.mPItemConList)):
             line = self.mPItemConList[i]
             if line[0] == '+':
-                print "add new---> ",line
+                colorprint.warn(line+"       <----add new")
                 print ""
             elif line[0] == ' ':
-                print line[1:], srcstart
+                #print line[1:], srcstart
                 print oFileFilter.getLine(srcstart)
                 srcstart += 1
             elif line[0] == '-':
-                print line[1:], srcstart
+                #print line[1:], srcstart
                 print oFileFilter.getLine(srcstart)
                 srcstart += 1
 
@@ -102,7 +104,8 @@ class patchModifyItem:
         if len(ostartobj) == 3:
             if ostartobj[1].mLineNumber - ostartobj[0].mLineNumber == 1:
                 if ostartobj[2].mLineNumber - ostartobj[1].mLineNumber == 1:
-                    self.mCmpStartline = ostartobj[0].mLine
+                    #self.mCmpStartline = ostartobj[0].mLine
+                    self.mCmpStartline = ostartobj[0].mLineNumber
                     pass;
             elif ostartobj[2].mLineNumber - ostartobj[1].mLineNumber == 1:
                 self.mCmpStartline = ostartobj[2].mLineNumber-2
@@ -112,11 +115,91 @@ class patchModifyItem:
 
         self.showItemAddDelpart(self.mCmpStartline,0)
 
+    def dump_patch(self):
+        startlist=[]
+        ostartobj=[]
+        endlist=[]
+        oendobj=[]
+        #patchItemTarg save the patch item targe::@ -1825,7 +1825,7 @@ config FB_PS3_DEFAULT_SIZE_M
+        patchItemTarg=""
+        oFileFilter = FileFilter(self.mOPatch.mFilename)
+        #1 no conflict, 1 line1 and line2 is okay 
+        #2 line2 and line3 is okay
+        #3 line1 and line3 is okay
+        #4 just and line1 is okay
+        #5 just and line2 is okay
+        #6 just and line3 is okay
+        fristCmp_conflict_mode = 0
+
+        #search this in patch file:@ -1825,7 +1825,7 @@ config FB_PS3_DEFAULT_SIZE_M
+        patchItemTarg = re.sub('^@.*@@\s', "", self.mPItemConList[0][1:])
+        mfileitem1 = oFileFilter.searchByWholeLine(patchItemTarg)
+        if mfileitem1 == "":
+            colorprint.err(self.mStartLine)
+            colorprint.err("ERR:TAG:-->"+patchItemTarg+"<--NOT FIND")
+            return
+
+        #mfileitem1 = oFileFilter.searchByWholeLine(startlist[0])
+        #if mfileitem1:
+        #    ostartobj.append(mfileitem1)
+
+        #patch three lines
+        for i in range(1,4):
+            if self.mPItemConList[i][-1] != "\n":
+                startlist.append(self.mPItemConList[i][1:]+"\n")
+            else:
+                startlist.append(self.mPItemConList[i][1:])
+
+            if self.mPItemConList[i-4][-1] != "\n":
+                endlist.append(self.mPItemConList[i-4][1:]+"\n")
+            else:
+                endlist.append(self.mPItemConList[i-4][1:])
+
+        #start check the start three line 
+        #trt to compare the patch three lines with src file, then get set fristCmp_conflict_mode value
+
+        #patch 3s lines
+        s_srcCmp = oFileFilter.searchByMultiLines(startlist)
+        if s_srcCmp:
+            ostartobj.append(oFileFilter.getLine(int(s_srcCmp)))
+            ostartobj.append(oFileFilter.getLine(int(s_srcCmp)+1))
+            ostartobj.append(oFileFilter.getLine(int(s_srcCmp)+2))
+
+        for i in range(0,3):
+            #print "%-70s%-20s" %(startlist[i], ostartobj[i].mLine)
+            if startlist[i] != ostartobj[i]:
+                colorprint.err("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
+            else:
+                colorprint.info("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
+
+        for i in range(4, len(self.mPItemConList)-3):
+            colorprint.warn("{:<85}".format(self.mPItemConList[i])+"{:<20}".format("||  "))
+            #print  self.mPItemConList[i]
+
+        #patch 3e lines
+        s_endCmp = oFileFilter.searchByMultiLines(endlist)
+        if s_endCmp:
+            oendobj.append(oFileFilter.getLine(int(s_endCmp)))
+            oendobj.append(oFileFilter.getLine(int(s_endCmp)+1))
+            oendobj.append(oFileFilter.getLine(int(s_endCmp)+2))
+
+        for i in range(0,3):
+            #print "%-70s%-20s" %(startlist[i], ostartobj[i].mLine)
+            if endlist[i] != oendobj[i]:
+                colorprint.err("{0:90}".format(endlist[i][1:-1])+"{0:20}".format("||  "+oendobj[i][1:-1]))
+            else:
+                colorprint.info("{0:90}".format(endlist[i][1:-1])+"{0:20}".format("||  "+oendobj[i][1:-1]))
+        exit()
+
     def dump(self):
         colorprint.warn("patch item: "+self.mStartLine)
-        #print self.mStartLine, self.mStart, self.mEnd, self.mSrcNum
-        for line in self.mPItemConList:
-            print "   "+line;
+        for i in range(1,4):
+            colorprint.info("   "+self.mPItemConList[i])
+        #for line in self.mPItemConList:
+        for i in range(4,len(self.mPItemConList)-3):
+            print "   "+self.mPItemConList[i];
+        for i in range(1,4):
+            colorprint.info("   "+self.mPItemConList[i-4])
 
 #diff iterm of patch 
 class patchModifyFile:
@@ -151,6 +234,7 @@ class patchcontext:
     def formatPatchMFileToList(self):
         "save one diff item of patch to patchModifyFile"
 
+        leveldbg.dbg("dbg formatPatchMFileToList+")
         varlist = self.omfile.searchByLine1("diff --git a.*$")
         for index in range(len(varlist)):
             if index+1 < len(varlist):
@@ -161,24 +245,21 @@ class patchcontext:
 
             res = re.sub('diff --git a.*\w b/', "", varlist[index].mLine)
             if res:
+                print "dbg find file:"+res
                 obj.setFileName(res)
+                self.mFiles.append(obj)
             else:
                 obj.setFileName("")
 
-        #handle last patch modify file
-        res = re.sub('diff --git a.*\w b/', "", varlist[index].mLine)
-        if res:
-            obj.setFileName(res)
-        else:
-            obj.setFileName("")
-
-        self.mFiles.append(obj)
+        leveldbg.dbg("dbg formatPatchMFileToList-")
 
     #format the patch, the modified files of patch saved into mFiles
-    #the diff item of patch of mFIles saved into mPatchItem
+    #the diff item of patch of mFiles saved into mPatchItem
     def formatPatch(self):
+        leveldbg.dbg("dbg formatPatch+") #dbg
         self.formatPatchMFileToList();
         for objp in self.mFiles:
+            leveldbg.dbg("dbg "+objp.mFilename)
             varlist = self.omfile.searchByRange("^@@.*$",objp.start,objp.end)
             for obj in varlist:
                 patchitem = patchModifyItem(obj.mLine, obj.mLineNumber)
@@ -188,6 +269,7 @@ class patchcontext:
                 patchitem.analysis(self.omfile.mFileLines)
                 self.mPatchItem.append(patchitem)
                 objp.addPatchItem(patchitem)
+        leveldbg.dbg("dbg formatPatch-")
 
     def analysis(self):
         "format the patch, split the patch to list objesc by modifed files \
@@ -207,6 +289,10 @@ class patchcontext:
             #objp = obj.mfile;
             #print "modify filename: ",objp.mFilename, " range in patch:", objp.start,"~", objp.end
             #print "patch item: ", obj.mSrcNum
+
+    def dump_patch(self):
+        for oPatchModifyItem in self.mPatchItem:
+            oPatchModifyItem.dump_patch()
 
 if __name__ == "__main__":
     test = patchcontext("/fslink/ti/kernel-4.1.x/patches/0195-dma-mv_memcpy-initial-driver-for-efficient-splice-me.patch")
