@@ -8,7 +8,7 @@ class patchModifyItem:
     def __init__(self, line, start):
         self.mStartLine= line;
         self.mStart= start;
-        self.mPItemConList=[]
+        self.mPItemConList=[]  #it is the context of patch item
         #how many lines added in this item
         self.mAddNumber=0
         self.mDelNumber=0
@@ -133,8 +133,8 @@ class patchModifyItem:
 
         #search this in patch file:@ -1825,7 +1825,7 @@ config FB_PS3_DEFAULT_SIZE_M
         patchItemTarg = re.sub('^@.*@@\s', "", self.mPItemConList[0][1:])
-        mfileitem1 = oFileFilter.searchByWholeLine(patchItemTarg)
-        if mfileitem1 == "":
+        oCmpLine= oFileFilter.searchByWholeLine(patchItemTarg)
+        if oCmpLine== "":
             colorprint.err(self.mStartLine)
             colorprint.err("ERR:TAG:-->"+patchItemTarg+"<--NOT FIND")
             return
@@ -143,6 +143,7 @@ class patchModifyItem:
         #if mfileitem1:
         #    ostartobj.append(mfileitem1)
 
+        print("{:=<80}".format(self.mOPatch.mFilename)+"{:=<80}".format(self.mPItemConList[0][1:]))
         #patch three lines
         for i in range(1,4):
             if self.mPItemConList[i][-1] != "\n":
@@ -158,23 +159,35 @@ class patchModifyItem:
         #start check the start three line 
         #trt to compare the patch three lines with src file, then get set fristCmp_conflict_mode value
 
-        #patch 3s lines
+        #patch 3s lines, it is start cmp line number
         s_srcCmp = oFileFilter.searchByMultiLines(startlist)
         if s_srcCmp:
             ostartobj.append(oFileFilter.getLine(int(s_srcCmp)))
             ostartobj.append(oFileFilter.getLine(int(s_srcCmp)+1))
             ostartobj.append(oFileFilter.getLine(int(s_srcCmp)+2))
+        else:
+            s_srcCmp = patchcontext.patchConflict3Ls(self, startlist)
+            if s_srcCmp == -1:
+                colorprint.err("not find the patch item start");
+                self.dump()
+                return 0;
 
-        for i in range(0,3):
-            #print "%-70s%-20s" %(startlist[i], ostartobj[i].mLine)
-            if startlist[i] != ostartobj[i]:
-                colorprint.err("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
-            else:
-                colorprint.info("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
-
+        patch_src_line = []
         for i in range(4, len(self.mPItemConList)-3):
-            colorprint.warn("{:<85}".format(self.mPItemConList[i])+"{:<20}".format("||  "))
-            #print  self.mPItemConList[i]
+            line = self.mPItemConList[i]
+            if line[0] == "-":
+                patch_src_line.append(line)
+
+        #for i in range(0,3):
+            ##print "%-70s%-20s" %(startlist[i], ostartobj[i].mLine)
+            #if startlist[i] != ostartobj[i]:
+                #colorprint.err("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
+            #else:
+                #colorprint.info("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
+
+        #for i in range(4, len(self.mPItemConList)-3):
+            #line = self.mPItemConList[i]
+            #colorprint.warn("{:<85}".format(self.mPItemConList[i])+"{:<20}".format("||  "))
 
         #patch 3e lines
         s_endCmp = oFileFilter.searchByMultiLines(endlist)
@@ -183,13 +196,55 @@ class patchModifyItem:
             oendobj.append(oFileFilter.getLine(int(s_endCmp)+1))
             oendobj.append(oFileFilter.getLine(int(s_endCmp)+2))
 
+        #for i in range(0,3):
+            ##print "%-70s%-20s" %(startlist[i], ostartobj[i].mLine)
+            #if endlist[i] != oendobj[i]:
+                #colorprint.err("{0:90}".format(endlist[i][1:-1])+"{0:20}".format("||  "+oendobj[i][1:-1]))
+            #else:
+                #colorprint.info("{0:90}".format(endlist[i][1:-1])+"{0:20}".format("||  "+oendobj[i][1:-1]))
+
+        for i in range(0,3):
+            #print "%-70s%-20s" %(startlist[i], ostartobj[i].mLine)
+            if startlist[i] != ostartobj[i]:
+                colorprint.err("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
+            else:
+                colorprint.info("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
+
+        pushdown_cnt = 3 
+        i = int(s_srcCmp)+3 #start cmp line number
+        srcSandELines=[] #it save the lines of src file between item 3S and 3E
+        srcLine=""  #it save the src context of one line
+        patchLine="" #it save the patch context of one line
+
+        for i in range(int(s_srcCmp), int(s_endCmp)):
+            srcSandELines.append(oFileFilter.getLine(i))
+
+        for i in range(4, len(self.mPItemConList)-3):
+            patchLine = self.mPItemConList[i]
+            if patchLine[0] == "-":
+                for j in range(pushdown_cnt, len(srcSandELines)):
+                    if patchLine[1:] == srcSandELines[j]:
+                        colorprint.info("{:<90}".format(patchLine[1:-1])+"{:<20}".format("||  "+srcSandELines[i][:-1]))
+                        pushdown_cnt = j
+                        continue
+            elif patchLine[0] == "+":
+                colorprint.warn("{:<90}".format(patchLine[:-1].replace("\t","    "))+"{:<20}".format(">>  "))
+                #colorprint.warn(patchLine[:-1])
+            elif patchLine[0] == " ":
+                colorprint.info("{:<90}".format(patchLine[:-1]))
+            else:
+                colorprint.err("err: patch is not right")
+                return
+
+        for i  in range(pushdown_cnt, len(srcSandELines)):
+            colorprint.err("{:<90}".format("")+"{:<20}".format("<<  "+srcSandELines[i]))
+
         for i in range(0,3):
             #print "%-70s%-20s" %(startlist[i], ostartobj[i].mLine)
             if endlist[i] != oendobj[i]:
                 colorprint.err("{0:90}".format(endlist[i][1:-1])+"{0:20}".format("||  "+oendobj[i][1:-1]))
             else:
                 colorprint.info("{0:90}".format(endlist[i][1:-1])+"{0:20}".format("||  "+oendobj[i][1:-1]))
-        exit()
 
     def dump(self):
         colorprint.warn("patch item: "+self.mStartLine)
@@ -291,8 +346,55 @@ class patchcontext:
             #print "patch item: ", obj.mSrcNum
 
     def dump_patch(self):
+        #colorprint.info("{:<90}".format(self.mPatchName)+"{:<20}".format("||  "+self.mFiles))
+        print self.omfile.mFileName
         for oPatchModifyItem in self.mPatchItem:
             oPatchModifyItem.dump_patch()
+
+    @staticmethod
+    def patchConflict3Ls(oPatchModifyItem, L3s):
+        oLine1 = ""
+        oLine2 = ""
+        oLine3 = ""
+        nStartLine = 0;
+
+        oFileFilter = FileFilter(oPatchModifyItem.mOPatch.mFilename)
+
+        patchItemTarg = re.sub('^@.*@@\s', "", oPatchModifyItem.mPItemConList[0][1:])
+        mfileitem1 = oFileFilter.searchByWholeLine(patchItemTarg)
+        if mfileitem1 == "":
+            colorprint.err("patchConflict3Ls ERR:TAG:-->"+patchItemTarg+"<--NOT FIND")
+            return -1;
+        nStartLine = mfileitem1.mLineNumber;
+
+        s_src = oFileFilter.searchByMultiLines(L3s)
+        if s_src:
+            return s_src
+        else:
+            oLine1 =oFileFilter.searchByWholeLine(L3s[0], nStartLine)
+            if oLine1:
+                return oLine1.mLineNumber
+            else:
+                oLine2 =oFileFilter.searchByWholeLine(L3s[1], nStartLine)
+                if oLine2:
+                    if oLine2.mLineNumber>1:
+                        return oLine2.mLineNumber-1
+                    else:
+                        return oLine2.mLineNumber
+                else:
+                    oLine3 =oFileFilter.searchByWholeLine(L3s[2], nStartLine)
+                    if oLine3:
+                        if oLine3.mLineNumber>2:
+                            return oLine1.mLineNumber-2
+                        else:
+                            return oLine1.mLineNumber
+                    else:
+                        return -1;
+                    return -1
+
+    @staticmethod
+    def patchConflict3es(gitsrc, commit, shorLogBuf):
+        pass
 
 if __name__ == "__main__":
     test = patchcontext("/fslink/ti/kernel-4.1.x/patches/0195-dma-mv_memcpy-initial-driver-for-efficient-splice-me.patch")
