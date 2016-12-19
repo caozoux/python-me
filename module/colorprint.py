@@ -18,3 +18,10 @@ def err(dictArg, color="r"):
     print dictArg,
     print '\033[0m'
     return
+
+def blue(dictArg, color="r"):
+    "r: red"
+    print '\033[1;34;34m',
+    print dictArg,
+    print '\033[0m'
+    return

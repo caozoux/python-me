@@ -4,7 +4,6 @@ import getopt
 import re
 
 
-
 class fileDirList:
     filelist = []
     def __init__(self, dir):
@@ -29,6 +28,10 @@ class FileFilter:
     def __init__(self, filename):
         self.mFileName = filename;
         self.mFileLines = open(filename).readlines();
+        if os.path.exists(filename):
+            pass
+        else:
+            raise IOError(filename+"file isn't found")
 
     def getLineCnt(self):
         return len(self.mFileLines)
@@ -41,8 +44,8 @@ class FileFilter:
                 return mobj;
         return "";
 
-    def searchByWholeLine(self,str):
-        for linenumber in range(len(self.mFileLines)):
+    def searchByWholeLine(self,str, startline=0):
+        for linenumber in range(startline, len(self.mFileLines)):
             if str ==  self.getLine(linenumber)[:-1]:
                 mobj = FileFilterResLine(linenumber, str);
                 return mobj;
@@ -73,16 +76,18 @@ class FileFilter:
                 objlist.append(mobj)
         return objlist;
 
-    def searchByMultiLines(self,linelist):
+    def searchByMultiLines(self,linelist, n_startNum = 0):
         objlist=[]
         startline = linelist[0]
 
-        for linenumber in range(len(self.mFileLines)):
-            if startline == self.getLine(linenumber)[:-1] \
-                and linelist[1] == self.getLine(linenumber)[:-1] \
-                and linelist[2] == self.getLine(linenumber)[:-1]:
+        for linenumber in range(n_startNum, len(self.mFileLines)):
+            if startline == self.getLine(linenumber) \
+                and linelist[1] == self.getLine(linenumber+1) \
+                and linelist[2] == self.getLine(linenumber+2):
 
-                    return self.getLine(linenumber);
+                    return str(linenumber)
+
+        return ""
 
     def getLine(self, index):
         return self.mFileLines[index]
