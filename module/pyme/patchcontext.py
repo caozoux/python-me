@@ -36,6 +36,33 @@ class patchModifyItem:
     def setItemType(self,type):
         self.mType=type
 
+    def rmInPatch(self):
+        "rm this modify item in patch file"
+        needRmFileTag=0
+        oFileFilter = FileFilter(self.mFile)
+
+        #show the patch item
+        for i in range(self.mStart, self.mEnd):
+            line = oFileFilter.getLine(i)
+            print line[:-1]
+        answer=raw_input("are you sure to rm these y/n?:")
+        if answer == "y":
+            line = oFileFilter.getLine(self.mStart-1)
+            res=re.search("^\+\+\+ b*", line)
+            if res:
+                line = oFileFilter.getLine(self.mEnd+1)
+                res=re.search("^diff \-\-git a", line)
+                if res:
+                    needRmFileTag=1
+
+        os.system("sed -i \""+str(self.mStart+1)+","+str(self.mEnd+1)+"d\" "+self.mFile)
+        if needRmFileTag == 1:
+            for i in range(self.mStart-4, self.mStart):
+                print oFileFilter.getLine(i)[:-1]
+            answer=raw_input("are you sure to rm these, the file patch will be ignore y/n?:")
+            if answer == "y":
+                os.system("sed -i \""+str(self.mStart-4)+","+str(self.mStart)+"d\" "+self.mFile)
+
     def analysis(self, patchFileList):
         "analysis the item of patch and format to list"
         patchItemEnd = ["@@ ", "dif", "-- "]

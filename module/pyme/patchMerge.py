@@ -128,8 +128,21 @@ class patchMerge:
         patchMerge.check3Lines(endlist, oFileFilter.mFileName, "./")
 
     @staticmethod
+    def rmItem(oPatchModifyItem):
+        "remove this patch item in patch"
+        oPatchModifyItem.rmInPatch()
+
+    @staticmethod
     def mergeItem(oPatchModifyItem, target_git_dir):
         patchMerge.check3SInSrc(oPatchModifyItem, target_git_dir)
         patchMerge.check3SInDstc(oPatchModifyItem, target_git_dir)
-
+        
+        print ("what do you want to handle:")
+        print "1. rm this item."
+        print "2. exit it"
+        answer=raw_input("select: ")
+        if answer == "1":
+            patchMerge.rmItem(oPatchModifyItem);
+        elif answer == "2":
+            print "you select 2"
         
