@@ -4,6 +4,15 @@ import colorprint;
 import leveldbg;
 import patchop;
 
+class patchConflictLines:
+    def __init__(self):
+        self.mP_SLNumber_n=0 #the lines number start in patch
+        self.mP_ELNumber_n=0 #the lines number end in patch
+        self.mS_SLNumber_n=0 #the lines number start in code file
+        self.mS_ELNumber_n=0 #the lines number end in code file 
+        self.mPLines_ls=[]   # list lines of patch
+        self.mSLines_ls=[]   # list lines of code file
+         
 #patchModifyItem
 #bindPatchModifyFile(self, obj):
 #setGitNum(self, num):
@@ -13,6 +22,9 @@ import patchop;
 #dump_patch(self)
 #  print the patch context and confilct with code file
 #dump(self)
+#
+#rmInPatch(self):
+#    rm this item in patch file 
 class patchModifyItem:
     def __init__(self, line, start):
         self.mStartLine= line;
@@ -23,6 +35,13 @@ class patchModifyItem:
         self.mDelNumber=0
         self.mType=""
         self.mCmpStartline=0
+        self.mOSrcLines=[]  #it the patch item code line that is exist in src file
+        self.mLStartList_s=[] #it save the 3S lines of patch item
+        self.mLEndList_s=[]   #it save the 3E lines of patch item
+        self.mLoStartList_s=[] #it save the 3S lines of code file
+        self.mLoEndList_s=[]   #it save the 3E lines of code file
+        self.mSrcLineS_n=0     #it save the 3S lines Start number of code file
+        self.mSrcLineE_n=0     #it save the 3S lines Start number of code file
 
     def setFile(self, ofile):
         self.mFile = ofile;
@@ -35,6 +54,118 @@ class patchModifyItem:
 
     def setItemType(self,type):
         self.mType=type
+
+    def saveModifyItem(self):
+        print self.mFile, self.mStart
+        oFileFilter = FileFilter(self.mFile) 
+        for i in range(len(self.mPItemConList)):
+            line = oFileFilter.getLine(i+self.mStart)
+            if line[:-1] != self.mPItemConList[i]:
+                print "is different"
+                print line[:-1],  self.mPItemConList[i]
+                os.system("sed -i 's/"+line[:-1]+"/"+self.mPItemConList[i].replace("/","\/")+"/' "+self.mFile);
+
+    def getSrcCode(self):
+        "get the line list of \"-xxxx\" code in patch item"
+
+        if len(self.mOSrcLines) !=0:
+            return;
+
+        lineList=[]
+        for line in self.mPItemConList:
+            if line[0] == "-" or line[0] == " ":
+                self.mOSrcLines.append(line);
+
+    def findInSrcCode(self, line_s):
+        "get the line list of \"-xxxx\" code in patch item"
+        for i in range(len(self.mOSrcLines)):
+            line = self.mOSrcLines[i]
+            #print line[1:], line_s
+            if line[1:] == line_s:
+                return i
+        return -1;
+
+    def rePatchSrc(self):
+        "replace the conflict line with src code"
+        print_out=""
+        pushdown_cnt_src = 0
+        pushdown_cnt_patch = 4
+        pushdown_cnt_src_last = 0
+        pushdown_cnt_patch_last = 4
+        srcSandELines=[] #it save the lines of src file between item 3S and 3E
+        srcLine=""  #it save the src context of one line
+        patchLine="" #it save the patch context of one line
+        oFileFilter = FileFilter(self.mOPatch.mFilename)
+        cmp_cnt=[]
+        for i in range(int(self.mSrcLineS_n)+3, int(self.mSrcLineE_n)):
+            line = oFileFilter.getLine(i);
+            srcSandELines.append(line)
+            res=self.findInSrcCode(line[:-1])
+            if res != -1:
+                for j in range(pushdown_cnt_patch, len(self.mPItemConList)-3):
+                    patchLine = self.mPItemConList[j]
+                    if patchLine[1:] == line[:-1]:
+                        find_cnt=[]
+                        find_cnt.append(i-(int(self.mSrcLineS_n)+3))
+                        find_cnt.append(j)
+                        cmp_cnt.append(find_cnt)
+                        pushdown_cnt_patch = j
+                        pushdown_cnt_src = i-(int(self.mSrcLineS_n)+3);
+
+        last_num_s = 0
+        last_num_p = 3
+        for i in range(len(cmp_cnt)):
+            size=0
+            obj_s = cmp_cnt[i]
+            if (obj_s[0]-last_num_s) > (obj_s[1]-last_num_p):
+                size=obj_s[0]-last_num_s
+            else:
+                size=obj_s[1]-last_num_p
+
+            #print obj_s[0], obj_s[1], size
+            for i in range(size):
+                if i == (size-1):
+                    line_s = srcSandELines[obj_s[0]]
+                    line_p = self.mPItemConList[obj_s[1]]
+                    colorprint.blue("{:<90}".format("PASS "+line_p.replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
+                else:
+                    
+                    if i < (obj_s[0]-last_num_s):
+                        line_s = srcSandELines[i+last_num_s+1]
+                    else:
+                        line_s=""
+                    
+                    if i < (obj_s[1]-last_num_p):
+                        line_p = self.mPItemConList[i+last_num_p+1]
+                    else:
+                        line_p=""
+                    
+                    colorprint.err("{:<90}".format(line_p.replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
+                    print "1. replace: ",line_p
+                    print "   with : ",line_s[:-1]
+                    print "2. rm: ",line_p
+
+                    answer=raw_input("select:")
+                    if answer == "1":
+                        print("it will be replaced by "+line_s[:-1])
+                        answer_a =raw_input("you ensure y/n:")
+                        if answer_a == "y":
+                            self.mPItemConList[i+last_num_p+1] = self.mPItemConList[i+last_num_p+1][0] + line_s[:-1]
+                    elif answer == "2":
+                            self.mPItemConList.remove(i+last_num_p+1)
+                    else:
+                        return
+
+            last_num_s = obj_s[0]
+            last_num_p = obj_s[1]
+
+        self.dump_patch()
+        answer=raw_input("Do you want to save y/n:")
+        if answer == "y":
+            self.saveModifyItem()
+        else:
+            return
+
 
     def rmInPatch(self):
         "rm this modify item in patch file"
@@ -138,25 +269,18 @@ class patchModifyItem:
 
 
     def dump_patch(self):
-        startlist=[]
-        ostartobj=[]
-        endlist=[]
-        oendobj=[]
         #patchItemTarg save the patch item targe::@ -1825,7 +1825,7 @@ config FB_PS3_DEFAULT_SIZE_M
         patchItemTarg=""
+
         try:
             oFileFilter = FileFilter(self.mOPatch.mFilename)
         except IOError:
             colorprint.err(self.mOPatch.mFilename+" isn't found")
             #self.dump()
             return
-        #1 no conflict, 1 line1 and line2 is okay 
-        #2 line2 and line3 is okay
-        #3 line1 and line3 is okay
-        #4 just and line1 is okay
-        #5 just and line2 is okay
-        #6 just and line3 is okay
-        fristCmp_conflict_mode = 0
+
+        print "dump patch:"
+        self.getSrcCode()
 
         #search this in patch file:@ -1825,7 +1825,7 @@ config FB_PS3_DEFAULT_SIZE_M
         patchItemTarg = re.sub('^@.*@@\s', "", self.mPItemConList[0][1:])
@@ -166,97 +290,124 @@ class patchModifyItem:
             colorprint.err("ERR:TAG:-->"+patchItemTarg+"<--NOT FIND")
             return
 
-        #mfileitem1 = oFileFilter.searchByWholeLine(startlist[0])
-        #if mfileitem1:
-        #    ostartobj.append(mfileitem1)
-
         print("{:=<80}".format(self.mOPatch.mFilename)+"{:=<80}".format(self.mPItemConList[0][1:]))
         #patch three lines
         for i in range(1,4):
             if self.mPItemConList[i][-1] != "\n":
-                startlist.append(self.mPItemConList[i][1:]+"\n")
+                self.mLStartList_s.append(self.mPItemConList[i][1:]+"\n")
             else:
-                startlist.append(self.mPItemConList[i][1:])
+                self.mLStartList_s.append(self.mPItemConList[i][1:])
 
             if self.mPItemConList[i-4][-1] != "\n":
-                endlist.append(self.mPItemConList[i-4][1:]+"\n")
+                self.mLEndList_s.append(self.mPItemConList[i-4][1:]+"\n")
             else:
-                endlist.append(self.mPItemConList[i-4][1:])
-
-        #start check the start three line 
-        #trt to compare the patch three lines with src file, then get set fristCmp_conflict_mode value
+                self.mLEndList_s.append(self.mPItemConList[i-4][1:])
 
         #patch 3s lines, it is start cmp line number
-        s_srcCmp = oFileFilter.searchByMultiLines(startlist)
-        if s_srcCmp:
-            ostartobj.append(oFileFilter.getLine(int(s_srcCmp)))
-            ostartobj.append(oFileFilter.getLine(int(s_srcCmp)+1))
-            ostartobj.append(oFileFilter.getLine(int(s_srcCmp)+2))
+        self.mSrcLineS_n = oFileFilter.searchByMultiLines(self.mLStartList_s)
+        if self.mSrcLineS_n:
+            self.mLoStartList_s.append(oFileFilter.getLine(int(self.mSrcLineS_n)))
+            self.mLoStartList_s.append(oFileFilter.getLine(int(self.mSrcLineS_n)+1))
+            self.mLoStartList_s.append(oFileFilter.getLine(int(self.mSrcLineS_n)+2))
         else:
-            s_srcCmp = patchcontext.patchConflict3Ls(self, startlist)
-            if s_srcCmp == -1:
+            self.mSrcLineS_n = patchcontext.patchConflict3Ls(self, self.mLStartList_s)
+            if self.mSrcLineS_n == -1:
                 colorprint.err("not find the patch item start");
                 self.dump()
                 return 0;
 
-        patch_src_line = []
-        for i in range(4, len(self.mPItemConList)-3):
-            line = self.mPItemConList[i]
-            if line[0] == "-":
-                patch_src_line.append(line)
-
         for i in range(0,3):
-            #print "%-70s%-20s" %(startlist[i], ostartobj[i].mLine)
-            if startlist[i] != ostartobj[i]:
-                colorprint.err("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
+            #print "%-70s%-20s" %(self.mLStartList_s[i], self.mLoStartList_s[i].mLine)
+            if self.mLStartList_s[i] != self.mLoStartList_s[i]:
+                colorprint.err("{:<90}".format(self.mLStartList_s[i][1:-1])+"{:<20}".format("||  "+self.mLoStartList_s[i][1:-1]))
             else:
-                colorprint.info("{:<90}".format(startlist[i][1:-1])+"{:<20}".format("||  "+ostartobj[i][1:-1]))
+                colorprint.info("{:<90}".format(self.mLStartList_s[i][1:-1])+"{:<20}".format("||  "+self.mLoStartList_s[i][1:-1]))
 
         #patch 3e lines
-        s_endCmp = oFileFilter.searchByMultiLines(endlist)
-        if s_endCmp:
-            oendobj.append(oFileFilter.getLine(int(s_endCmp)))
-            oendobj.append(oFileFilter.getLine(int(s_endCmp)+1))
-            oendobj.append(oFileFilter.getLine(int(s_endCmp)+2))
+        self.mSrcLineE_n = oFileFilter.searchByMultiLines(self.mLEndList_s)
+        if self.mSrcLineE_n:
+            self.mLoEndList_s.append(oFileFilter.getLine(int(self.mSrcLineE_n)))
+            self.mLoEndList_s.append(oFileFilter.getLine(int(self.mSrcLineE_n)+1))
+            self.mLoEndList_s.append(oFileFilter.getLine(int(self.mSrcLineE_n)+2))
 
         print_out=""
-        pushdown_cnt = 0
-        i = int(s_srcCmp)+3 #start cmp line number
+        pushdown_cnt_src = 0
+        pushdown_cnt_patch = 4
+        pushdown_cnt_src_last = 0
+        pushdown_cnt_patch_last = 4
+        i = int(self.mSrcLineS_n)+3 #start cmp line number
         srcSandELines=[] #it save the lines of src file between item 3S and 3E
         srcLine=""  #it save the src context of one line
         patchLine="" #it save the patch context of one line
 
         var=0
-        #let the first conflict to print, then set the var of pushdown_cnt 
-        for i in range(int(s_srcCmp)+3, int(s_endCmp)):
+        cmp_cnt=[]
+        for i in range(int(self.mSrcLineS_n)+3, int(self.mSrcLineE_n)):
             line = oFileFilter.getLine(i);
-            #srcSandELines.append(oFileFilter.getLine(i))
             srcSandELines.append(line)
-            #print_out = "{:<90}".format("")+"{:<20}".format("<<  "+line)
-            for j in range(4, len(self.mPItemConList)-3):
-                patchLine = self.mPItemConList[j]
-                if patchLine[1:] == line:
-                    var = j
-                    pushdown_cnt = i;
-                    print_out = "{:<90}".format("")+"{:<20}".format("||  "+line)
-                    break;
+            res=self.findInSrcCode(line[:-1])
+            if res != -1:
+                for j in range(pushdown_cnt_patch, len(self.mPItemConList)-3):
+                    patchLine = self.mPItemConList[j]
+                    if patchLine[1:] == line[:-1]:
+                        find_cnt=[]
+                        find_cnt.append(i-(int(self.mSrcLineS_n)+3))
+                        find_cnt.append(j)
+                        cmp_cnt.append(find_cnt)
+                        pushdown_cnt_patch = j
+                        pushdown_cnt_src = i-(int(self.mSrcLineS_n)+3);
 
-        if pushdown_cnt == 0:
+        last_num_s = 0
+        last_num_p = 3
+        for i in range(len(cmp_cnt)):
+            size=0
+            obj_s = cmp_cnt[i]
+
+            if (obj_s[0]-last_num_s) > (obj_s[1]-last_num_p):
+                size=obj_s[0]-last_num_s
+            else:
+                size=obj_s[1]-last_num_p
+
+            #print obj_s[0], obj_s[1], size
+            for i in range(size):
+                if i == (size-1):
+                    line_s = srcSandELines[obj_s[0]]
+                    line_p = self.mPItemConList[obj_s[1]]
+                    colorprint.blue("{:<90}".format(line_p.replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
+                else:
+                    if i < (obj_s[0]-last_num_s):
+                        line_s = srcSandELines[i+last_num_s+1]
+                    else:
+                        line_s=""
+
+                    if i < (obj_s[1]-last_num_p):
+                        line_p = self.mPItemConList[i+last_num_p+1]
+                    else:
+                        line_p=""
+                    colorprint.err("{:<90}".format(line_p.replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
+
+            last_num_s = obj_s[0]
+            last_num_p = obj_s[1]
+
+        if pushdown_cnt_src == 0:
             #not find any match src line in patch item,
             #print all lines 
             for i in range(len(srcSandELines)):
                 colorprint.err("{:<90}".format("")+"{:<20}".format("<<  "+srcSandELines[i][:-1]))
-            pushdown_cnt = len(srcSandELines);
+            pushdown_cnt_src = len(srcSandELines);
 
+        #print "zz",pushdown_cnt_patch, len(self.mPItemConList)-3
         #contine to show the conflict
-        for i in range(4, len(self.mPItemConList)-3):
+        for i in range(pushdown_cnt_patch, len(self.mPItemConList)-4):
             patchLine = self.mPItemConList[i]
             if patchLine[0] == "-":
-                for j in range(pushdown_cnt, len(srcSandELines)):
+                for j in range(pushdown_cnt_src, len(srcSandELines)):
                     if patchLine[1:] == srcSandELines[j]:
-                        colorprint.info("{:<90}".format(patchLine[1:-1])+"{:<20}".format("||  "+srcSandELines[i][:-1]))
-                        pushdown_cnt = j
-                        continue
+                        colorprint.info("{:<90}".format(patchLine[:-1])+"{:<20}".format("||  "+srcSandELines[i][:-1]))
+                        pushdown_cnt_src = j
+                    else:
+                        colorprint.info("{:<90}".format(patchLine[1:-1])+"{:<20}".format("||  "))
+                    continue
             elif patchLine[0] == "+":
                 colorprint.warn("{:<90}".format(patchLine[:-1].replace("\t","    "))+"{:<20}".format(">>  "))
                 #colorprint.warn(patchLine[:-1])
@@ -266,15 +417,15 @@ class patchModifyItem:
                 colorprint.err("err: patch is not right")
                 return
 
-        for i  in range(pushdown_cnt, len(srcSandELines)):
-            colorprint.err("{:<90}".format("")+"{:<20}".format("<<  "+srcSandELines[i]))
+        #for i  in range(pushdown_cnt_patch, len(srcSandELines)):
+            #colorprint.err("{:<90}".format("")+"{:<20}".format("<<  "+srcSandELines[i]))
 
         for i in range(0,3):
-            #print "%-70s%-20s" %(startlist[i], ostartobj[i].mLine)
-            if endlist[i] != oendobj[i]:
-                colorprint.err("{0:90}".format(endlist[i][1:-1])+"{0:20}".format("||  "+oendobj[i][1:-1]))
+            #print "%-70s%-20s" %(self.mLStartList_s[i], self.mLoStartList_s[i].mLine)
+            if self.mLEndList_s[i] != self.mLoEndList_s[i]:
+                colorprint.err("{0:90}".format(self.mLEndList_s[i][1:-1])+"{0:20}".format("||  "+self.mLoEndList_s[i][1:-1]))
             else:
-                colorprint.info("{0:90}".format(endlist[i][1:-1])+"{0:20}".format("||  "+oendobj[i][1:-1]))
+                colorprint.info("{0:90}".format(self.mLEndList_s[i][1:-1])+"{0:20}".format("||  "+self.mLoEndList_s[i][1:-1]))
 
     def dump(self):
         colorprint.warn("patch item: "+self.mStartLine)
