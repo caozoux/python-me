@@ -76,18 +76,29 @@ class FileFilter:
                 objlist.append(mobj)
         return objlist;
 
-    def searchByMultiLines(self,linelist, n_startNum = 0):
+    def searchByMultiLines(self,linelist, n_startNum = 0, lines_cnt=3):
         objlist=[]
         startline = linelist[0]
-
+        is_same_cnt = 0
         for linenumber in range(n_startNum, len(self.mFileLines)):
-            if startline == self.getLine(linenumber) \
-                and linelist[1] == self.getLine(linenumber+1) \
-                and linelist[2] == self.getLine(linenumber+2):
-
-                    return str(linenumber)
-
+            is_same_cnt = 0
+            for i in range(lines_cnt):
+                if linelist[i] == self.getLine(linenumber+i):
+                    is_same_cnt += 1
+                    if is_same_cnt == lines_cnt:
+                        return str(linenumber)
+                    continue
+                else:
+                    break
         return ""
+        #for linenumber in range(n_startNum, len(self.mFileLines)):
+            #if startline == self.getLine(linenumber) \
+                #and linelist[1] == self.getLine(linenumber+1) \
+                #and linelist[2] == self.getLine(linenumber+2):
+
+                    #return str(linenumber)
+
+        #return ""
 
     def getLine(self, index):
         return self.mFileLines[index]
