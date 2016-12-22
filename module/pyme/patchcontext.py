@@ -4,15 +4,122 @@ import colorprint;
 import leveldbg;
 import patchop;
 
-class patchConflictLines:
-    def __init__(self):
+class patchConflictItem:
+    def __init__(self, patchName, srcfile):
+        self.mSrcFile_s=srcfile #src file name
+        self.mPatch_s=patchName #patch file name
         self.mP_SLNumber_n=0 #the lines number start in patch
         self.mP_ELNumber_n=0 #the lines number end in patch
         self.mS_SLNumber_n=0 #the lines number start in code file
         self.mS_ELNumber_n=0 #the lines number end in code file 
         self.mPLines_ls=[]   # list lines of patch
         self.mSLines_ls=[]   # list lines of code file
-         
+
+    def setPatchContext(self, startNum, size):
+        oFileFilter = FileFilter(self.mPatch_s)
+        self.mP_SLNumber_n=startNum;
+        self.mP_ELNumber_n=startNum+size;
+        for i in range(size):
+            line = oFileFilter.getLine(i+startNum)
+            self.mPLines_ls.append(line)
+
+    def setFileContext(self, startNum, size):
+        oFileFilter = FileFilter(self.mSrcFile_s)
+        self.mS_SLNumber_n=startNum;
+        self.mS_ELNumber_n=startNum+size;
+        #print startNum, size
+        for i in range(size):
+            line = oFileFilter.getLine(i+startNum)
+            self.mSLines_ls.append(line)
+
+    def isConflict(self):
+        psize_n=self.mP_ELNumber_n-self.mP_SLNumber_n;
+        ssize_n=self.mS_ELNumber_n-self.mS_SLNumber_n;
+        line_max_size=max(psize_n,ssize_n)
+
+        for i in range(line_max_size):
+            if i < len(self.mPLines_ls):
+                line_p =self.mPLines_ls[i]
+            else:
+                line_p=""
+
+            if i < len(self.mSLines_ls):
+                line_s =self.mSLines_ls[i]
+            else:
+                line_s=""
+
+            if line_p[1:-1] != line_s[:-1]:
+                return 1
+        return 0
+
+    def save(self):
+        "save this modifoed to patch"
+        #for i in range(self.mP_ELNumber_n-self.mP_SLNumber_n):
+        size = (self.mP_ELNumber_n-self.mP_SLNumber_n)
+        #os.system("sed -i '"+str(self.mS_SLNumber_n)+","+str(self.mP_ELNumber_n)+"d "+self.mPatch_s)
+        #print("sed -i '"+str(self.mP_SLNumber_n+1)+",+"+str(self.mP_ELNumber_n-self.mP_SLNumber_n-1)+"d' "+self.mPatch_s)
+        os.system("sed -i '"+str(self.mP_SLNumber_n+1)+",+"+str(self.mP_ELNumber_n-self.mP_SLNumber_n-1)+"d' "+self.mPatch_s)
+        for i in range(len(self.mPLines_ls)):
+            line=self.mPLines_ls[i].replace("/","\/")
+            os.system("sed -r -i '"+str(self.mP_SLNumber_n+i)+"a \\ \\"+line[1:]+"' "+self.mPatch_s)
+
+    def reConflictLines(self):
+        "it replace the conflictLines with user select"
+
+        psize_n=self.mP_ELNumber_n-self.mP_SLNumber_n;
+        ssize_n=self.mS_ELNumber_n-self.mS_SLNumber_n;
+        line_max_size=max(psize_n,ssize_n)
+
+        for i in range(line_max_size):
+            if i < len(self.mPLines_ls):
+                line_p =self.mPLines_ls[i]
+            else:
+                line_p=""
+
+            if i < len(self.mSLines_ls):
+                line_s =self.mSLines_ls[i]
+            else:
+                line_s=""
+            if line_p[1:-1] != line_s[:-1]:
+                colorprint.err("Err:{:<90}".format("     "+line_p[:-1].replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
+                print "1. replace with src file"
+                print "2. remove it"
+                answer_a =raw_input("select: ")
+                if answer_a == "1":
+                    if line_s == "":
+                        self.mSLines_ls.append(self.mSLines_ls[i][0]+line_s)
+                    else:
+                        self.mPLines_ls[i] = self.mPLines_ls[i][0]+line_s
+                        self.save()
+                        exit()
+                elif answer_a == "2":
+                    pass
+                else:
+                    return 
+
+    def dump(self):
+        #print "patchConflictItem dump:"
+        psize_n=self.mP_ELNumber_n-self.mP_SLNumber_n;
+        ssize_n=self.mS_ELNumber_n-self.mS_SLNumber_n;
+        line_max_size=max(psize_n,ssize_n)
+
+        for i in range(line_max_size):
+            if i < len(self.mPLines_ls):
+                line_p =self.mPLines_ls[i]
+            else:
+                line_p=""
+
+            if i < len(self.mSLines_ls):
+                line_s =self.mSLines_ls[i]
+            else:
+                line_s=""
+            if line_p[1:-1] == line_s[:-1]:
+                colorprint.blue("{:<90}".format("PASS "+line_p[:-1].replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
+            else:
+                colorprint.err("{:<90}".format("     "+line_p[:-1].replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
+
+        return
+
 #patchModifyItem
 #bindPatchModifyFile(self, obj):
 #setGitNum(self, num):
@@ -89,7 +196,7 @@ class patchModifyItem:
         "replace the conflict line with src code"
         print_out=""
         pushdown_cnt_src = 0
-        pushdown_cnt_patch = 4
+        pushdown_cnt_patch = 1
         pushdown_cnt_src_last = 0
         pushdown_cnt_patch_last = 4
         srcSandELines=[] #it save the lines of src file between item 3S and 3E
@@ -97,74 +204,56 @@ class patchModifyItem:
         patchLine="" #it save the patch context of one line
         oFileFilter = FileFilter(self.mOPatch.mFilename)
         cmp_cnt=[]
-        for i in range(int(self.mSrcLineS_n)+3, int(self.mSrcLineE_n)):
+
+
+        # start compare the patch with code file, splite the different to cmp_cnt
+        for i in range(int(self.mSrcLineS_n), int(self.mSrcLineE_n)+3):
             line = oFileFilter.getLine(i);
             srcSandELines.append(line)
             res=self.findInSrcCode(line[:-1])
             if res != -1:
-                for j in range(pushdown_cnt_patch, len(self.mPItemConList)-3):
+                for j in range(pushdown_cnt_patch, len(self.mPItemConList)):
                     patchLine = self.mPItemConList[j]
                     if patchLine[1:] == line[:-1]:
                         find_cnt=[]
-                        find_cnt.append(i-(int(self.mSrcLineS_n)+3))
+                        find_cnt.append(i-(int(self.mSrcLineS_n)))
                         find_cnt.append(j)
                         cmp_cnt.append(find_cnt)
                         pushdown_cnt_patch = j
-                        pushdown_cnt_src = i-(int(self.mSrcLineS_n)+3);
+                        pushdown_cnt_src = i-(int(self.mSrcLineS_n));
+                        break
 
         last_num_s = 0
-        last_num_p = 3
+        last_num_p = 1
         for i in range(len(cmp_cnt)):
             size=0
             obj_s = cmp_cnt[i]
-            if (obj_s[0]-last_num_s) > (obj_s[1]-last_num_p):
-                size=obj_s[0]-last_num_s
-            else:
-                size=obj_s[1]-last_num_p
-
-            #print obj_s[0], obj_s[1], size
-            for i in range(size):
-                if i == (size-1):
-                    line_s = srcSandELines[obj_s[0]]
-                    line_p = self.mPItemConList[obj_s[1]]
-                    colorprint.blue("{:<90}".format("PASS "+line_p.replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
-                else:
-                    
-                    if i < (obj_s[0]-last_num_s):
-                        line_s = srcSandELines[i+last_num_s+1]
-                    else:
-                        line_s=""
-                    
-                    if i < (obj_s[1]-last_num_p):
-                        line_p = self.mPItemConList[i+last_num_p+1]
-                    else:
-                        line_p=""
-                    
-                    colorprint.err("{:<90}".format(line_p.replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
-                    print "1. replace: ",line_p
-                    print "   with : ",line_s[:-1]
-                    print "2. rm: ",line_p
-
-                    answer=raw_input("select:")
-                    if answer == "1":
-                        print("it will be replaced by "+line_s[:-1])
-                        answer_a =raw_input("you ensure y/n:")
-                        if answer_a == "y":
-                            self.mPItemConList[i+last_num_p+1] = self.mPItemConList[i+last_num_p+1][0] + line_s[:-1]
-                    elif answer == "2":
-                            self.mPItemConList.remove(i+last_num_p+1)
-                    else:
-                        return
-
+            oPatchConflictItem = patchConflictItem(self.mFile, self.mOPatch.mFilename)
+            oPatchConflictItem.setPatchContext(last_num_p+self.mStart,obj_s[1]-last_num_p)
+            oPatchConflictItem.setFileContext(last_num_s+(int(self.mSrcLineS_n)),obj_s[0]-last_num_s)
+            oPatchConflictItem.dump()
             last_num_s = obj_s[0]
             last_num_p = obj_s[1]
 
+            if oPatchConflictItem.isConflict():
+                print "1. replace"
+                print "2. rm item"
+
+                answer=raw_input("select:")
+                if answer == "1":
+                    oPatchConflictItem.reConflictLines()
+                elif answer == "2":
+                    self.mPItemConList.remove(i+last_num_p+1)
+                    answer=raw_input("Do you want to save y/n:")
+                    if answer == "y":
+                        self.saveModifyItem()
+                    else:
+                        return
+                else:
+                    return
+        return
         self.dump_patch()
-        answer=raw_input("Do you want to save y/n:")
-        if answer == "y":
-            self.saveModifyItem()
-        else:
-            return
+
 
 
     def rmInPatch(self):
@@ -288,7 +377,12 @@ class patchModifyItem:
         if oCmpLine== "":
             colorprint.err(self.mStartLine)
             colorprint.err("ERR:TAG:-->"+patchItemTarg+"<--NOT FIND")
-            return
+            self.dump()
+            answer=raw_input("Do you want to continue y/n? ")
+            if answer == "y":
+                pass
+            else:
+                return
 
         print("{:=<80}".format(self.mOPatch.mFilename)+"{:=<80}".format(self.mPItemConList[0][1:]))
         #patch three lines
@@ -315,6 +409,10 @@ class patchModifyItem:
                 colorprint.err("not find the patch item start");
                 self.dump()
                 return 0;
+            else:
+                self.mLoStartList_s.append(oFileFilter.getLine(int(self.mSrcLineS_n)))
+                self.mLoStartList_s.append(oFileFilter.getLine(int(self.mSrcLineS_n)+1))
+                self.mLoStartList_s.append(oFileFilter.getLine(int(self.mSrcLineS_n)+2))
 
         for i in range(0,3):
             #print "%-70s%-20s" %(self.mLStartList_s[i], self.mLoStartList_s[i].mLine)
@@ -342,6 +440,7 @@ class patchModifyItem:
 
         var=0
         cmp_cnt=[]
+        #for i in range(int(self.mSrcLineS_n)+3, int(self.mSrcLineE_n)):
         for i in range(int(self.mSrcLineS_n)+3, int(self.mSrcLineE_n)):
             line = oFileFilter.getLine(i);
             srcSandELines.append(line)
@@ -537,6 +636,9 @@ class patchcontext:
         oLine1 = ""
         oLine2 = ""
         oLine3 = ""
+        len1=0
+        len2=0
+        len3=0
         nStartLine = 0;
 
         oFileFilter = FileFilter(oPatchModifyItem.mOPatch.mFilename)
@@ -544,34 +646,47 @@ class patchcontext:
         patchItemTarg = re.sub('^@.*@@\s', "", oPatchModifyItem.mPItemConList[0][1:])
         mfileitem1 = oFileFilter.searchByWholeLine(patchItemTarg)
         if mfileitem1 == "":
-            colorprint.err("patchConflict3Ls ERR:TAG:-->"+patchItemTarg+"<--NOT FIND")
-            return -1;
-        nStartLine = mfileitem1.mLineNumber;
+            colorprint.warn("Warning: patchConflict3Ls TAG:-->"+patchItemTarg+"<--NOT FIND")
+            nStartLine = 0;
+        else:
+            nStartLine = mfileitem1.mLineNumber;
 
         s_src = oFileFilter.searchByMultiLines(L3s)
         if s_src:
             return s_src
         else:
-            oLine1 =oFileFilter.searchByWholeLine(L3s[0], nStartLine)
+            len1=len(L3s[0])
+            len2=len(L3s[1])
+            len3=len(L3s[2])
+
+            #first search L3s0/L3s1, then L3s1/L3s2
+            for i in range(2):
+                line2List=[]
+                line2List.append(L3s[0+i])
+                line2List.append(L3s[1+i])
+                s_src = oFileFilter.searchByMultiLines(line2List,0,2)
+                if s_src:
+                    return str(int(s_src)-i)
+
+            #try to find max len in L3s
+            index = 0
+            size=0
+            for i  in range(3):
+                if len(L3s[i]) > size:
+                    size = len(L3s[i])
+                    index = i
+
+            oLine1 =oFileFilter.searchByWholeLine(L3s[index], nStartLine)
             if oLine1:
                 return oLine1.mLineNumber
-            else:
-                oLine2 =oFileFilter.searchByWholeLine(L3s[1], nStartLine)
-                if oLine2:
-                    if oLine2.mLineNumber>1:
-                        return oLine2.mLineNumber-1
-                    else:
-                        return oLine2.mLineNumber
-                else:
-                    oLine3 =oFileFilter.searchByWholeLine(L3s[2], nStartLine)
-                    if oLine3:
-                        if oLine3.mLineNumber>2:
-                            return oLine1.mLineNumber-2
-                        else:
-                            return oLine1.mLineNumber
-                    else:
-                        return -1;
-                    return -1
+
+            for i in range(3):
+                if len(L3s[i]) < 3:
+                    continue
+                oLine1 =oFileFilter.searchByWholeLine(L3s[i], nStartLine)
+                if oLine1:
+                    return oLine1.mLineNumber
+        return -1
 
     @staticmethod
     def patchConflict3es(gitsrc, commit, shorLogBuf):
