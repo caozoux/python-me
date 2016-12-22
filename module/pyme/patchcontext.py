@@ -427,6 +427,16 @@ class patchModifyItem:
             self.mLoEndList_s.append(oFileFilter.getLine(int(self.mSrcLineE_n)))
             self.mLoEndList_s.append(oFileFilter.getLine(int(self.mSrcLineE_n)+1))
             self.mLoEndList_s.append(oFileFilter.getLine(int(self.mSrcLineE_n)+2))
+        else:
+            self.mSrcLineE_n= patchcontext.patchConflict3Ls(self, self.mLEndList_s)
+            if self.mSrcLineE_n== -1:
+                colorprint.err("not find the patch item start");
+                self.dump()
+                return 0;
+            else:
+                self.mLoEndList_s.append(oFileFilter.getLine(int(self.mSrcLineE_n)))
+                self.mLoEndList_s.append(oFileFilter.getLine(int(self.mSrcLineE_n)+1))
+                self.mLoEndList_s.append(oFileFilter.getLine(int(self.mSrcLineE_n)+2))
 
         print_out=""
         pushdown_cnt_src = 0
@@ -440,7 +450,6 @@ class patchModifyItem:
 
         var=0
         cmp_cnt=[]
-        #for i in range(int(self.mSrcLineS_n)+3, int(self.mSrcLineE_n)):
         for i in range(int(self.mSrcLineS_n)+3, int(self.mSrcLineE_n)):
             line = oFileFilter.getLine(i);
             srcSandELines.append(line)
