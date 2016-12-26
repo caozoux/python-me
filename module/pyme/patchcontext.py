@@ -440,93 +440,44 @@ class patchModifyItem:
 
         print_out=""
         pushdown_cnt_src = 0
-        pushdown_cnt_patch = 4
+        #pushdown_cnt_patch = 4
+        pushdown_cnt_patch = 1
         pushdown_cnt_src_last = 0
         pushdown_cnt_patch_last = 4
         i = int(self.mSrcLineS_n)+3 #start cmp line number
         srcSandELines=[] #it save the lines of src file between item 3S and 3E
         srcLine=""  #it save the src context of one line
         patchLine="" #it save the patch context of one line
-
-        var=0
         cmp_cnt=[]
-        for i in range(int(self.mSrcLineS_n)+3, int(self.mSrcLineE_n)):
+
+        # start compare the patch with code file, splite the different to cmp_cnt
+        for i in range(int(self.mSrcLineS_n), int(self.mSrcLineE_n)+3):
             line = oFileFilter.getLine(i);
             srcSandELines.append(line)
             res=self.findInSrcCode(line[:-1])
             if res != -1:
-                for j in range(pushdown_cnt_patch, len(self.mPItemConList)-3):
+                for j in range(pushdown_cnt_patch, len(self.mPItemConList)):
                     patchLine = self.mPItemConList[j]
                     if patchLine[1:] == line[:-1]:
                         find_cnt=[]
-                        find_cnt.append(i-(int(self.mSrcLineS_n)+3))
+                        find_cnt.append(i-(int(self.mSrcLineS_n)))
                         find_cnt.append(j)
                         cmp_cnt.append(find_cnt)
                         pushdown_cnt_patch = j
-                        pushdown_cnt_src = i-(int(self.mSrcLineS_n)+3);
+                        pushdown_cnt_src = i-(int(self.mSrcLineS_n));
+                        break
 
         last_num_s = 0
-        last_num_p = 3
+        last_num_p = 1
         for i in range(len(cmp_cnt)):
             size=0
             obj_s = cmp_cnt[i]
-
-            if (obj_s[0]-last_num_s) > (obj_s[1]-last_num_p):
-                size=obj_s[0]-last_num_s
-            else:
-                size=obj_s[1]-last_num_p
-
-            #print obj_s[0], obj_s[1], size
-            for i in range(size):
-                if i == (size-1):
-                    line_s = srcSandELines[obj_s[0]]
-                    line_p = self.mPItemConList[obj_s[1]]
-                    colorprint.blue("{:<90}".format(line_p.replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
-                else:
-                    if i < (obj_s[0]-last_num_s):
-                        line_s = srcSandELines[i+last_num_s+1]
-                    else:
-                        line_s=""
-
-                    if i < (obj_s[1]-last_num_p):
-                        line_p = self.mPItemConList[i+last_num_p+1]
-                    else:
-                        line_p=""
-                    colorprint.err("{:<90}".format(line_p.replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
-
+            oPatchConflictItem = patchConflictItem(self.mFile, self.mOPatch.mFilename)
+            oPatchConflictItem.setPatchContext(last_num_p+self.mStart,obj_s[1]-last_num_p)
+            oPatchConflictItem.setFileContext(last_num_s+(int(self.mSrcLineS_n)),obj_s[0]-last_num_s)
+            oPatchConflictItem.dump()
             last_num_s = obj_s[0]
             last_num_p = obj_s[1]
-
-        if pushdown_cnt_src == 0:
-            #not find any match src line in patch item,
-            #print all lines 
-            for i in range(len(srcSandELines)):
-                colorprint.err("{:<90}".format("")+"{:<20}".format("<<  "+srcSandELines[i][:-1]))
-            pushdown_cnt_src = len(srcSandELines);
-
-        #print "zz",pushdown_cnt_patch, len(self.mPItemConList)-3
-        #contine to show the conflict
-        for i in range(pushdown_cnt_patch, len(self.mPItemConList)-4):
-            patchLine = self.mPItemConList[i]
-            if patchLine[0] == "-":
-                for j in range(pushdown_cnt_src, len(srcSandELines)):
-                    if patchLine[1:] == srcSandELines[j]:
-                        colorprint.info("{:<90}".format(patchLine[:-1])+"{:<20}".format("||  "+srcSandELines[i][:-1]))
-                        pushdown_cnt_src = j
-                    else:
-                        colorprint.info("{:<90}".format(patchLine[1:-1])+"{:<20}".format("||  "))
-                    continue
-            elif patchLine[0] == "+":
-                colorprint.warn("{:<90}".format(patchLine[:-1].replace("\t","    "))+"{:<20}".format(">>  "))
-                #colorprint.warn(patchLine[:-1])
-            elif patchLine[0] == " ":
-                colorprint.info("{:<90}".format(patchLine[:-1]))
-            else:
-                colorprint.err("err: patch is not right")
-                return
-
-        #for i  in range(pushdown_cnt_patch, len(srcSandELines)):
-            #colorprint.err("{:<90}".format("")+"{:<20}".format("<<  "+srcSandELines[i]))
 
         for i in range(0,3):
             #print "%-70s%-20s" %(self.mLStartList_s[i], self.mLoStartList_s[i].mLine)
