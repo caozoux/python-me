@@ -15,83 +15,11 @@ import sanbeiWeb
 
 from urllib2 import Request, urlopen, URLError, HTTPError                       #导入urllib2模块
 from io import StringIO
+import sys
+import MySQLdb
  
 TRANS_URL='http://fanyi.baidu.com/v2transapi'
 ORIGIN_HOST='fanyi.baidu.com'
- 
-class Result:
-    def __init__(self, src, dest, meanings=None):
-        self.src=src
-        self.dest=dest
-        self.meanings=meanings
-
-    def parse_from_json(json_data):
-        trans_data=json_data['trans_result']['data'][0]
-        try:
-            dict_data=json_data['dict_result']['simple_means']['symbols'][0]['parts']
-            means=list()
-            for item in dict_data:
-                tmp=item['means']
-                if isinstance(tmp[0],dict):
-                    for t_item in tmp:
-                        means.append(t_item['word_mean'])
-                else:
-                    means.append(tmp)
-        except KeyError:
-            means=None
-        return Result(trans_data['src'],trans_data['dst'],means)
-
-    def show(self,file=sys.stdout):
-        str_template='<<<translate\n%s--->%s\n<<<meaning\n%s'
-        print(str_template % (self.src, self.dest, self.meanings))
-
-
-def handle_result(content):
-    json_data=json.loads(content)
-    Result.parse_from_json(json_data).show()
-
-def compose_request(word):
-    r"""
-    compose urllib.request.Request object accordingly
-
-    """
-    body=StringIO()
-    body.write('from=en&to=zh' if is_eng(word) else 'from=zh&to=en')
-    body.write('&')
-    body.write(urllib.parse.urlencode({'query': word }, encoding='utf-8'))
-    body.write('&transtype=trans&simple_means_flag=3')
-    body=body.getvalue()
-
-    headers={'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
-        'X-Requested-With':'XMLHttpRequest'
-        }
-    return urllib.request.Request(TRANS_URL, body.encode(encoding='utf-8'), headers=headers, origin_req_host=ORIGIN_HOST, method='POST')
-
-def is_eng(word):
-    r"""
-    determine whether the unicode char is english or not
-
-    >>> is_eng('hello')
-    True
- 
-    >>> is_eng('你好')
-    False
- 
-    >>> is_eng('\'')
-    True
- 
-    >>> is_eng('‘')
-    False
- 
-    """
-    for uchar in word:
-        if len(uchar.encode('utf-8'))==1:
-            continue
-        else:
-            return False
-    return True
-
-
 
 class enDown:
     def __init__(self):
@@ -142,3 +70,42 @@ class enDown:
                 ret=obj.getEnglishChinese(word)
                 if ret:
                     return ret
+
+class englishMange:
+    def __inif__(self):
+        pass
+
+    def initial(self):
+        self.o_enDown = enDown()
+        self.o_enDown.initial()
+        self.db = MySQLdb.connect("localhost","root","w123456","english" )
+        self.cursor = self.db.cursor()
+
+    def isHas(self,word):
+        sql='select * from englishWords where name ="'+word+'"'
+        try:
+            # 执行sql语句
+            self.cursor.execute(sql)
+            results = self.cursor.fetchall()
+            if len(results) >= 1:
+                return results[0];
+        except:
+            print "err: sql find"
+            # Rollback in case there is any error
+            self.db.rollback()
+
+        return ""
+
+    def getEnglishAudio(self, word):
+        res=self.isHas(word)
+        if res:
+            return res[2]
+
+        return self.o_enDown.getEnglishAudio(word)
+
+    def getEnglishChinese(self, word):
+        res=self.isHas(word)
+        if res:
+            return res[3]
+
+        return self.o_enDown.getEnglishChinese(word)
