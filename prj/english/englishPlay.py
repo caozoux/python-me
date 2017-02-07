@@ -41,8 +41,14 @@ if options.enFileList:
     lines = open(options.enFileList).readlines()
     for line in  lines:
         word=line[:-1]
-        audio_link = o_en.getEnglishAudio(word)
-        en_chinese = o_en.getEnglishChinese(word)
+        o_list=o_en.getEnglishAudioAndCh(word)
+        if not o_list:
+            print "err: exit"
+            exit()
+        audio_link = o_list[0]
+        en_chinese = o_list[1]
+        #audio_link = o_en.getEnglishAudio(word)
+        #en_chinese = o_en.getEnglishChinese(word)
         res = re.search("\w*.mp3",audio_link)
         if res:
             print res.group(0)

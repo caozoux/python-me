@@ -81,6 +81,17 @@ class englishMange:
         self.db = MySQLdb.connect("localhost","root","w123456","english" )
         self.cursor = self.db.cursor()
 
+    def insertWordDb(self, word, audio_link, chinese):
+        sql='insert into englishWords values(0, "'+word+'","'+audio_link.encode('utf-8')+'","'+chinese.encode('utf-8')+'", "")'
+        try:
+            # 执行sql语句
+            self.cursor.execute(sql)
+            self.db.commit()
+        except:
+            print "err: insert"
+            # Rollback in case there is any error
+            self.db.rollback()
+
     def isHas(self,word):
         sql='select * from englishWords where name ="'+word+'"'
         try:
@@ -95,6 +106,28 @@ class englishMange:
             self.db.rollback()
 
         return ""
+
+    def getEnglishAudioAndCh(self, word):
+        o_ret=[]
+        res=self.isHas(word)
+        if res:
+            o_ret.append(res[2])
+            o_ret.append(res[3])
+            return o_ret
+        audio_link=self.o_enDown.getEnglishAudio(word)
+        if audio_link:
+            o_ret.append(audio_link)
+        else:
+            return ""
+
+        en_chinese = self.o_enDown.getEnglishChinese(word)
+        if en_chinese:
+            o_ret.append(en_chinese)
+        else:
+            return ""
+
+        self.insertWordDb(word,audio_link,en_chinese)
+        return o_ret
 
     def getEnglishAudio(self, word):
         res=self.isHas(word)
