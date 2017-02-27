@@ -39,30 +39,29 @@ if options.enWord:
 #curl -o /export/disk1T/save/english/accident.mp3 http://media.shanbay.com/audio/uk/accidental.mp3
 if options.enFileList:
     lines = open(options.enFileList).readlines()
-    for line in  lines:
-        word=line[:-1]
-        o_list=o_en.getEnglishAudioAndCh(word)
-        if not o_list:
-            print "err: exit"
-            exit()
-        audio_link = o_list[0]
-        en_chinese = o_list[1]
-        #audio_link = o_en.getEnglishAudio(word)
-        #en_chinese = o_en.getEnglishChinese(word)
-        res = re.search("\w*.mp3",audio_link)
-        if res:
-            print res.group(0)
-            audio_file="/export/disk1T/save/english/"+res.group(0)
-            if os.path.exists(audio_file):
-                print "find "+audio_file
-            else:
-                os.system("curl -o "+audio_file+" "+audio_link)
-        print audio_link
-        print en_chinese.encode('utf-8')
-        os.system("notify-send "+word+" "+en_chinese.encode('utf-8'))
-        for i in range(8):
-            os.system("play "+audio_file)
-            if i/3 == 0:
-                os.system("notify-send "+word+" "+en_chinese.encode('utf-8'))
-            time.sleep(3)
+    while 1:
+        for line in  lines:
+            word=line[:-1]
+            o_list=o_en.getEnglishAudioAndCh(word)
+            if not o_list:
+                print "err: exit"
+                exit()
+            audio_link = o_list[0]
+            en_chinese = o_list[1]
+            #audio_link = o_en.getEnglishAudio(word)
+            #en_chinese = o_en.getEnglishChinese(word)
+            res = re.search("\w*.mp3",audio_link)
+            if res:
+                print res.group(0)
+                audio_file="/export/disk1T/save/english/"+res.group(0)
+                if os.path.exists(audio_file):
+                    print "find "+audio_file
+                else:
+                    os.system("curl -o "+audio_file+" "+audio_link)
+            print audio_link
+            print en_chinese.encode('utf-8')
+            os.system("notify-send "+word+" "+en_chinese.encode('utf-8'))
+            for i in range(5):
+                os.system("play "+audio_file)
+                time.sleep(3)
 

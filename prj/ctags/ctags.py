@@ -42,7 +42,7 @@ parser.add_option("-s", "--srcdir", action="store",type="string", default="", de
                   help="src directory name", metavar="DERECTORY")
 
 parser.add_option("-o", "--out",
-                  action="store", type="string", dest="outDir",
+                  action="store", type="string", dest="outDir", default="",
                   help="-m -f file", metavar="filename"
                   )
 (options, args) = parser.parse_args()

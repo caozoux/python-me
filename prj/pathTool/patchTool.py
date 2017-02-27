@@ -11,6 +11,17 @@ import re;
 
 opatch = []
 
+def threadSearch(buf, start, end):
+    print "start: ", start, " end:", end
+    for index in range(start,end):
+        commit = patchop.patchFilter.getCommit(options.patchdir+opatch.filelist[index][:-1])
+	#print commit+ "patch:"+opatch.filelist[index][:-1]
+        print opatch.filelist[index][:-1]+"commit--> "+commit[:-1]
+        result = re.search(commit, buf);
+        if result:
+            colorprint.info(" find "+opatch.filelist[index][:-1]+": "+commit[:-1]+":")
+            print("  findpatch:  "+opatch.filelist[index][:-1])
+
 parser = OptionParser()
 
 parser.add_option("-j", "--thread",
@@ -32,23 +43,13 @@ parser.add_option("-e", "--getinsortlog",
                   help="-e -s file -d patchdir to find the existes patch in shortlog",
                   )
 
-parser.add_option("-j", "--thread",
-                  action="store", type="int", default="1", dest="threadsCount",
-                  help="how many threads to run",
-                  )
-
-parser.add_option("-m", "--no-merge",
-                  action="store_false", type="int", default=False, dest="noMerge",
-                  help="how many threads to run",
-                  )
-
-parser.add_option("-m", "--formatpatch",
-                  action="store_false", type="string", default="", dest="formatPatch",
+parser.add_option("--fm", "--formatpatch",
+                  action="store", type="string", default="", dest="formatPatch",
                   help="-m commit -s shortlog -d patchOutDir, format one patch by commit, comment can be id or comment",
                   )
 
-parser.add_option("-mx", "--commitlist",
-                  action="store_false", type="string", default="", dest="commitlist",
+parser.add_option("--mx", "--commitlist",
+                  action="store", type="string", default="", dest="commitlist",
                   help="-mx commitListFile -s shortlog -d patchOutDir, format patches by commitlist, comment can be id or comment",
                   )
 
@@ -95,12 +96,3 @@ if options.commitlist:
     for itme in fileLines:
         print item
 
-def threadSearch(buf, start, end):
-    print "start: ", start, " end:", end
-    for index in range(start,end):
-        commit = patchop.patchFilter.getCommit(options.patchdir+opatch.filelist[index][:-1])
-	print commit+ "patch:"+opatch.filelist[index][:-1]
-        result = re.search(commit, buf);
-        if result:
-            colorprint.info(opatch.filelist[index][:-1])
-            colorprint.info("find commit:  "+commit)

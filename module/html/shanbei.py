@@ -36,7 +36,7 @@ def baidu_translate():
         print 'loads Json error.'
         print e
 
-    key = u"trans_result" 
+    key = u"trans_result"
     if key in js:
         dst = js["trans_result"][0]["dst"]                     #取得翻译后的文本结果
         outStr = dst
