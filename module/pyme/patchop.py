@@ -11,7 +11,10 @@ class patchFilter:
         ret = ofile.searchByLine("Subject.*$")
         commitStartLine = re.sub(r'Subject.*]\s',"", ret.mLine)
         commitEndLine=ofile.getLine(ret.mLineNumber+1)
-        return commitStartLine + commitEndLine;
+        if commitEndLine[:4] == "MIME":
+            return commitStartLine;
+        else:
+            return commitStartLine + commitEndLine;
 
 
 class patchOperation:

@@ -60,7 +60,7 @@ if options.showConflict:
     patchname = options.patchname
     oPatchContext = patchcontext.patchcontext(patchname)
     oPatchContext.analysis()
-    #oPatchContext.dump_patch()
+    oPatchContext.dump_patch()
 
     print patchname
     list = patchop.patchOperation.patchOpApply(patchname, flag=1)

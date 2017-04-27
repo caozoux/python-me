@@ -4,6 +4,7 @@
 from pyme  import mfiles;
 from pyme  import patchop;
 from optparse import OptionParser;
+from patch import patchbase;
 import multiprocessing;
 import colorprint;
 import os;
@@ -15,8 +16,10 @@ def threadSearch(buf, start, end):
     print "start: ", start, " end:", end
     for index in range(start,end):
         commit = patchop.patchFilter.getCommit(options.patchdir+opatch.filelist[index][:-1])
-	#print commit+ "patch:"+opatch.filelist[index][:-1]
-        print opatch.filelist[index][:-1]+"commit--> "+commit[:-1]
+        #commit=commit.replace("(","\(").replace(")","\)").replace(".", "\.").replace("[", "\[").replace("]", "\]")
+        commit= re.escape(commit)
+	print commit+ "patch:"+opatch.filelist[index][:-1]
+        print opatch.filelist[index][:-1]+" commit:{"+commit[:-1]+"}"
         result = re.search(commit, buf);
         if result:
             colorprint.info(" find "+opatch.filelist[index][:-1]+": "+commit[:-1]+":")
@@ -40,7 +43,7 @@ parser.add_option("-d", "--patchdir",
 
 parser.add_option("-e", "--getinsortlog",
                   action="store_true",  dest="cmp",
-                  help="-e -s file -d patchdir to find the existes patch in shortlog",
+                  help="-j2 -e -s file -d patchdir to find the existes patch in shortlog",
                   )
 
 parser.add_option("--fm", "--formatpatch",
@@ -53,10 +56,20 @@ parser.add_option("--mx", "--commitlist",
                   help="-mx commitListFile -s shortlog -d patchOutDir, format patches by commitlist, comment can be id or comment",
                   )
 
+parser.add_option("--ck", "--checktargetfile",
+                  action="store", type="string", default="", dest="checktargetfile",
+                  help="--ck $targetlist(it is *.o files list), check the target is exist in current prj",
+                  )
+
+parser.add_option("--gt", "--getfilesfrompatches",
+                  action="store", type="string", default="", dest="getfilesfrompatches",
+                  help="--gt $patchdir $outdir, get the modified files by patches, then check the *.c is exists in $outdir"
+                  )
+
 (options, args) = parser.parse_args()
 
-bufShortLog = open(options.shortlog).read()
-if options.threadsCount > 1 and options.cmp:
+if options.threadsCount > 0 and options.cmp:
+    bufShortLog = open(options.shortlog).read()
     opatch = mfiles.fileDirList(options.patchdir)
 
     if (options.patchdir[-1:] == "/"):
@@ -93,6 +106,57 @@ if options.commitlist:
          exit(1)
 
     fileLines = open(options.commitlist).readlines()
-    for itme in fileLines:
-        print item
+    size = len(fileLines)
+    for number in range(size):
+        os.system("git format-patch --start-number "+str(size-number)+" -1 "+fileLines[number][:-1]+" -o "+options.patchdir)
 
+
+
+if options.checktargetfile:
+    if os.path.exists(options.checktargetfile):
+        lines = open(options.checktargetfile).readlines()
+        for line in lines:
+            filename=line[:-2]+"c"
+            if os.path.exists(filename):
+                print filename, " is exist"
+            else:
+                print filename, " is not exist"
+
+if options.getfilesfrompatches:
+    patches = os.popen("ls "+options.getfilesfrompatches).readlines()
+    for line in patches:
+        patchname = options.getfilesfrompatches+"/"+line[:-1]
+        files=patchbase.PatchBase.getFilesFromPatch(patchname)
+
+        cfiles_cnt=0
+        chead_cnt=0
+        others_cnt=0
+        cfiles_nobuilt_cnt=0
+        dts_cnt=0
+
+        for file in files:
+            if file[-2:] == ".c":
+                cfiles_cnt += 1
+                if os.path.exists(file[:-2]+ ".o"):
+                    print patchname, file[:-2]+".o", " is built"
+                    break;
+                else:
+                    cfiles_nobuilt_cnt += 1
+                    print patchname, file, " is not built"
+            elif file[-2:] == ".h":
+                chead_cnt += 1
+            elif file[-4:] == ".dts":
+                dts_cnt += 1
+            elif file[-5:] == ".dtsi":
+                dts_cnt += 1
+            else:
+                others_cnt += 1
+        if cfiles_cnt > 0:
+            if cfiles_cnt == cfiles_nobuilt_cnt:
+                print "note: ", patchname, " maybe can remove"
+        else:
+            if dts_cnt == 0:
+                if chead_cnt > 0:
+                    print "note: ", patchname, " just have head file"
+                else:
+                    print "note: ", patchname, " just have other file"
