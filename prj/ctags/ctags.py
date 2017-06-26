@@ -55,6 +55,7 @@ if options.srcDir=="":
 commonSrcDir=[
 "drivers/base/",
 "include/linux/",
+"include/asm-generic/"
 "kernel/",
 "mm/",
 "arch/arm/common/",
@@ -68,7 +69,7 @@ else:
     tagFiles = generateCtagFiles(options.srcDir, options.srcDir)
 
 for item in commonSrcDir:
-    list=os.popen("find "+options.srcDir+"/"+item).readlines();
+    list=os.popen("find "+options.srcDir+"/"+item+" -name \"*.[chS]\"").readlines();
     tagFiles.extend(list)
 
 for line in tagFiles:
@@ -79,3 +80,5 @@ os.system("cd "+options.srcDir+"&& rm tags cscope.* -f")
 f = open(cscopefile,"w+")
 f.writelines(tagFiles)
 f.close();
+os.system("ctags -L cscope.files")
+os.system("cscope -bkq -i cscope.files")
