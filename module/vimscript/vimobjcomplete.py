@@ -7,16 +7,21 @@ import re
 #class ObjCompleteManger; 
 
 class ObjCompleteHead(object):
-    def __init__(self, filename, head):
+    def __init__(self, filename, head, manager_obj):
         self.filename= filename
         self.headline=head;
         self.head=self.headline.split('\t')[0]
+        self.m_manager = manager_obj
         #self.headnote=self.headline.split('\t')[1]
     def dump(self):
         """TODO: Docstring for dump.
         :returns: TODO
         """
-        print self.head
+        print self.head 
+        ret =  self.m_manager.getExtern(self.head)
+        if ret:
+            print "extern:"
+            print ret
 
 
 class ObjCompleteManger(object):
@@ -37,7 +42,7 @@ class ObjCompleteManger(object):
         self.filebuf= open(self.filename).read()
         self.externfilebuf= open(self.externfilename).read()
         for line in self.listlines:
-            obj = ObjCompleteHead(self.filename, line)
+            obj = ObjCompleteHead(self.filename, line, self)
             head=line.split('\t')[0]
             self.headlist.append(head)
             self.headObjList.append(obj)

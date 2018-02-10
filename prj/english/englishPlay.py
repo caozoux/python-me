@@ -26,6 +26,10 @@ parser.add_option("-e", "--englishword", action="store",type="string", default="
                   help="english word", metavar="DERECTORY")
 parser.add_option("-l", "--wordlist", action="store",type="string", default="", dest="enFileList",
                   help="the file of list of english word", metavar="DERECTORY")
+parser.add_option("-n", "--cnt",
+                  action="store", type="int", default="1", dest="count",
+                  help="count of clycel play",
+                  )
 (options, args) = parser.parse_args()
 
 o_en = englishHtml.englishMange()
@@ -40,7 +44,7 @@ if options.enWord:
 if options.enFileList:
     lines = open(options.enFileList).readlines()
     while 1:
-        for line in  lines:
+        for line in lines:
             word=line[:-1]
             o_list=o_en.getEnglishAudioAndCh(word)
             if not o_list:
@@ -58,10 +62,13 @@ if options.enFileList:
                     print "find "+audio_file
                 else:
                     os.system("curl -o "+audio_file+" "+audio_link)
+            else:
+                continue
+
             print audio_link
             print en_chinese.encode('utf-8')
             os.system("notify-send "+word+" "+en_chinese.encode('utf-8'))
-            for i in range(5):
+            for i in range(options.count):
                 os.system("play "+audio_file)
                 time.sleep(3)
 
