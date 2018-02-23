@@ -10,19 +10,19 @@ import re;
 import os;
 
 archArm=[
-"arch/arm/common/",
-"arch/arm/kernel/",
+"arch/arm/common",
+"arch/arm/kernel",
 "arch/arm/mm/"
 ]
 
 commonSrcDir=[
-"drivers/base/",
-"drivers/of/",
-"include/linux/",
-"include/asm-generic/"
-"kernel/",
-"mm/",
-"init/",
+"drivers/base",
+"drivers/of",
+"include/linux",
+"include/asm-generic",
+"kernel",
+"mm",
+"init",
 ]
 
 def generateFindArgs(srcDir, outDir, ignore_dirs):
@@ -32,9 +32,9 @@ def generateFindArgs(srcDir, outDir, ignore_dirs):
     for objs in ignore_dirs:
         if flags_first == 0:
             flags_first = 1
-            find_ignore_path_args = find_ignore_path_args+" \""+outDir+objs+"\" "
+            find_ignore_path_args = find_ignore_path_args+" \""+outDir+"/"+objs+"\" "
         else:
-            find_ignore_path_args = find_ignore_path_args+" -o -path \""+outDir+objs+"\" "
+            find_ignore_path_args = find_ignore_path_args+" -o -path \""+outDir+"/"+objs+"\" "
     find_ignore_path_args = find_ignore_path_args+" \) -prune -o -name \"*.o\" -print"
     res="find "+outDir+" "+find_ignore_path_args
     return res 
@@ -84,13 +84,14 @@ def generateCtagFilesV2(srcDir,outDir, targeDir):
     tagFilelist=[]
     # here get the the file list with ignoring the targeDir
     findcmd=generateFindArgs(srcDir, outDir, targeDir)
+    print findcmd
     filelist=os.popen(findcmd).readlines()
     objFilelist = generatSrcFilesByObjs(srcDir, outDir, filelist)
-    print objFilelist
+    #print objFilelist
     tagFilelist = generateTargetFiles(srcDir, targeDir)
     allFilelist.extend(objFilelist)
     allFilelist.extend(tagFilelist)
-    print allFilelist
+    #print allFilelist
 
     return allFilelist
 
@@ -136,15 +137,15 @@ if options.srcDir=="":
     print "     err, not provide src dir"
     exit();
 
-if options.srcDir[:1] == "/":
+if options.srcDir[-1] == "/":
+    arg_srcDir=options.srcDir[:-1]
+else:
     arg_srcDir=options.srcDir
-else:
-    arg_srcDir=options.srcDir+"/"
 
-if options.outDir[:1] == "/":
-    arg_outDir=options.outDir
+if options.outDir[-1] == "/":
+    arg_outDir=options.outDir[:-1]
 else:
-    arg_outDir=options.outDir+"/"
+    arg_outDir=options.outDir
 
 cscopefile=options.srcDir+"/"+"cscope.files"
 tagFiles = generateCtagFilesV2(arg_srcDir, arg_outDir, commonSrcDir)
