@@ -28,7 +28,10 @@ def get_cpuidle_sysfs(cpuid):
     """
     cpuid_sysfs="/sys/devices/system/cpu/cpu?/cpuidle"
     cpuid_sysfs=cpuid_sysfs.replace("?", str(cpuid))
-    return cpuid_sysfs
+    if os.path.exists(cpuid_sysfs):
+        return cpuid_sysfs
+	
+    return ""
 
 def get_cpuid_cstate_ctrl_sysf_diction(cpuid):
     """return the cstate control sysfs diction
@@ -36,6 +39,9 @@ def get_cpuid_cstate_ctrl_sysf_diction(cpuid):
     ctrl_dic={}
 
     cpuid_sysfs=get_cpuidle_sysfs(cpuid)
+    if not cpuid_sysfs:
+        return ""
+	
     for name in os.listdir(cpuid_sysfs):
 
         #state0 is poll state, we not need it
@@ -60,7 +66,7 @@ def get_cpuid_cstate_sysfs(cpuid, cstate):
     """
     diction=get_cpuid_cstate_ctrl_sysf_diction(cpuid)
 
-    if diction.has_key(cstate):
+    if diction and diction.has_key(cstate):
         return diction[cstate]
     return ""
 
@@ -113,11 +119,11 @@ def cstate_control(cpuid, cstate, enable, show=1):
 
     cpuid_cstate_sysfs=get_cpuid_cstate_sysfs(cpuid, cstate)
     if not cpuid_cstate_sysfs:
-        print("ERROR: not find cpu cstate: ", cstate)
-        return 0
+        print("ERROR: not find cpu cstate: %s"%cstate)
+        return 1
 
     if not enable_cpuid_cstate(cpuid_cstate_sysfs, enable):
-        return 0;
+        return 1;
 
     if show:
         if enable:
@@ -185,10 +191,15 @@ def test_c6_cstate(cpu_nums, enable):
 
     if enable:
         #enable all mask cpu C6
-        cstate_control_mask(rand_val, "C6", 1)
+        ret=cstate_control_mask(rand_val, "C6", 1)
     else:
         #disable all mask cpu C6
-        cstate_control_mask(rand_val, "C6", 0)
+        ret=cstate_control_mask(rand_val, "C6", 0)
+
+    if ret:
+        print("ERROR: cstate control failed")
+        return 1
+
     time.sleep(1)
 
     #update time to cputime_old_dic
@@ -252,7 +263,10 @@ def test_c6_cstate(cpu_nums, enable):
 #dump_cpustate_info(0)
 #print get_cpuid_cstate_ctrl_sysf_diction(0)
 #test_signal_cpu_c6(0)
-#while 1:
-#    test_c6_cstate(24, 1)
-#    test_c6_cstate(24, 0)
+while 1:
+    if test_c6_cstate(96, 1):
+        break
+	
+    if test_c6_cstate(96, 0):
+        break
 
