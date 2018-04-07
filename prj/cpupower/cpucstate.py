@@ -197,10 +197,50 @@ def dump_cpustate_info(cpuid):
         print "%7s(%s/%s/%s)"%(cpuid_cstate_list['name'], cstate_en_str, cpuid_cstate_list['time'],cpuid_cstate_list['usage']),
     print ""
 
+def test_turbost(cpuid):
+    """test signal cpu turbost 
+    """
+    cpu_freq_sysfs="/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"
+    cpuid_freq_sysfs=cpu_freq_sysfs.replace("?", str(cpuid))
+
+    if not os.path.exists(cpuid_freq_sysfs):
+        print "ERROR: not find cpu freq sys interface"
+        return 1
+
+    cpu_cnt=cpu_count()
+    ret=cstate_control_mask((1<<cpu_cnt)-1, "C6", 1)
+    if ret:
+        print("ERROR: cstate control failed")
+        return 1
+
+    os.system("echo \"scale=5000; 4*a(1)\" | bc -l -q&"); 
+    bc_id=os.popen("pidof \"bc\"").read()
+    if not bc_id:
+        print "ERROR: run bc failed"
+        return 1
+
+    bc_id=os.popen("pidof \"bc\"").read()
+    if not bc_id:
+        print "ERROR: bc id not found"
+        return 1
+
+    bc_id=bc_id[:-1]
+    if os.system("taskset -cp "+str(cpuid)+" "+bc_id):
+        print "ERROR: taskset bind to CPU"+str(cpuid)+" failed"
+        os.system("kill -p "+bc_id)
+
+    #poll cpu freq
+    poll_time=5
+    while poll_time>0:
+        print "CPU"+str(cpuid)+" freq: "+read_sysfs(cpuid_freq_sysfs)[:-1]
+        time.sleep(1)
+        poll_time -= 1
+
+    os.system("kill "+bc_id)
 
 def test_c6_cstate(cpu_nums, enable):
     """test all cpu cstate c6 control
-       enable: 1 - C6 enable, 0 - C6 disable  
+       enable: 1 - C6 enable, 0 - C6 disable
     """
 
     cputime_old_dic={}
@@ -304,6 +344,11 @@ parser.add_option("-t", "--test",
                   help="-t run the cycle cstate test",
                   )
 
+parser.add_option("-b", "--turbost",
+                  action="store", type="string", dest="turbost", default="",
+                  help="-b cpuid , run turbost test for cpuid",
+                  )
+
 parser.add_option("-s", "--show",
                   action="store_true",  dest="cstate_show",
                   help="-s show machine support all cstate"
@@ -311,7 +356,7 @@ parser.add_option("-s", "--show",
 (options, args) = parser.parse_args()
 
 if options.info:
-    print "CPU      Cstate(enable/time/usage)"
+    print "CPU      cstate(enable/time/usage)"
     for cpuid in range(cpu_count()):
         dump_cpustate_info(cpuid)
     exit()
@@ -325,6 +370,15 @@ if options.test:
 
         if test_c6_cstate(cpu_cnt, 0):
             break
+    exit()
+
+if options.turbost:
+    cpu_cnt=cpu_count()
+    cpuid=int(options.turbost)
+    if cpuid >= cpu_cnt:
+        print "ERROR: CPU%s is not found"%options.dis_cpuid
+        exit()
+    test_turbost(int(cpuid))
     exit()
 
 if options.dis_cpuid:
