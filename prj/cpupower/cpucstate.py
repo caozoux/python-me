@@ -68,8 +68,13 @@ def get_cpuid_cstate_sysfs(cpuid, cstate):
     """
     diction=get_cpuid_cstate_ctrl_sysf_diction(cpuid)
 
-    if diction and diction.has_key(cstate):
-        return diction[cstate]
+    if cstate.find("C6") >= 0:
+        for cstate_name in diction.keys():
+            if cstate_name.find("C6") >= 0:
+                return diction[cstate_name]
+    else:
+        if diction and diction.has_key(cstate):
+            return diction[cstate]
     return ""
 
 def read_cstate_sysfs(cpuid, cstate, name):
@@ -313,11 +318,12 @@ if options.info:
 
 
 if options.test:
+    cpu_cnt=cpu_count()
     while 1:
-        if test_c6_cstate(24, 1):
+        if test_c6_cstate(cpu_cnt, 1):
             break
 
-        if test_c6_cstate(24, 0):
+        if test_c6_cstate(cpu_cnt, 0):
             break
     exit()
 
