@@ -6,6 +6,8 @@ import time
 import random
 from optparse import OptionParser
 from multiprocessing import cpu_count
+from multiprocessing import Process
+import csctrl
 
 def read_sysfs(sysfs_file):
     """read sysfs value
@@ -25,6 +27,13 @@ def write_sysfs(sysfs_file, str_v):
         fd.write(str_v)
         fd.close()
 
+def process_run():
+    """test process run
+    """
+    cnt=0
+    while 1:
+        cnt += 1
+
 def read_cpufreq_sysfs(cpuid):
     """read cpuid freq
     """
@@ -36,69 +45,13 @@ def read_cpufreq_sysfs(cpuid):
 
     return read_sysfs(cpuid_freq_sysfs)[:-1]
 
-def run_task_cpuid(cpuid):
-    """run a cycle task in cpuid
-    """
-    os.system("echo \"scale=5000; 4*a(1)\" | bc -l -q&"); 
-    bc_id=os.popen("pidof \"bc\"").read()
-    if not bc_id:
-        print "ERROR: run bc failed"
-        return 1
-
-    bc_id=os.popen("pidof \"bc\"").read()
-    if not bc_id:
-        print "ERROR: bc id not found"
-        return 1
-
-    bc_id=bc_id[:-1]
-    if os.system("taskset -cp "+str(cpuid)+" "+bc_id):
-        print "ERROR: taskset bind to CPU"+str(cpuid)+" failed"
-        os.system("kill -p "+bc_id)
-        return 0
-    return bc_id
-
-def get_cpuidle_sysfs(cpuid):
-    """get the cpuid idle sysfs path
-    """
-    cpuid_sysfs="/sys/devices/system/cpu/cpu?/cpuidle"
-    cpuid_sysfs=cpuid_sysfs.replace("?", str(cpuid))
-    if os.path.exists(cpuid_sysfs):
-        return cpuid_sysfs
-
-    return ""
-
-def get_cpuid_cstate_ctrl_sysf_diction(cpuid):
-    """return the cstate control sysfs diction
-    """
-    ctrl_dic={}
-
-    cpuid_sysfs=get_cpuidle_sysfs(cpuid)
-    if not cpuid_sysfs:
-        return ""
-
-    for name in os.listdir(cpuid_sysfs):
-
-        #state0 is poll state, we not need it
-        if name == "state0":
-            continue
-        cpuid_cstate_sysfs=os.path.join(cpuid_sysfs, name)
-        cpuid_cstate_name_sysfs=os.path.join(cpuid_cstate_sysfs, "name")
-        cpuid_cstate_name_str=open(cpuid_cstate_name_sysfs, "r").read()
-
-        res=re.search("C.*-", cpuid_cstate_name_str)
-        if res:
-            cstate_str=res.group(0)[:-1]
-            ctrl_dic[cstate_str]=cpuid_cstate_sysfs
-
-    return ctrl_dic
-
 def get_machine_cstate_list():
     """return the machine support cstate list
     """
     cpuid_cstate_list=[]
     cpu_cnt=cpu_count()
     for cpuid in range(cpu_cnt):
-        cpuid_sysfs=get_cpuidle_sysfs(cpuid)
+        cpuid_sysfs=csctrl._get_cpuidle_sysfs(cpuid)
         if not os.path.exists(cpuid_sysfs):
             print("ERROR: not find ",cpuid_str," interface")
             exit()
@@ -111,111 +64,11 @@ def get_machine_cstate_list():
             cpuid_cstate_name_sysfs=os.path.join(cpuid_cstate_sysfs, "name")
         break
 
-
-def get_cpuid_cstate_sysfs(cpuid, cstate):
-    """get the cpu cstate sysfs dir
-       for exmaple: CPU0-C1
-       it is /sys/devices/system/cpu/cpu0/cpuidle/state2"
-    """
-    diction=get_cpuid_cstate_ctrl_sysf_diction(cpuid)
-
-    if cstate.find("C6") >= 0:
-        for cstate_name in diction.keys():
-            if cstate_name.find("C6") >= 0:
-                return diction[cstate_name]
-    else:
-        if diction and diction.has_key(cstate):
-            return diction[cstate]
-    return ""
-
-def read_cstate_sysfs(cpuid, cstate, name):
-    """read the /sys/devices/system/cpu/cpu?/cpuidle/name
-    """
-
-    cpuid_cstate_sysfs=get_cpuid_cstate_sysfs(cpuid, cstate)
-    if cpuid_cstate_sysfs:
-        cpuid_cstate_name_sysfs=os.path.join(cpuid_cstate_sysfs, name)
-        if os.path.exists(cpuid_cstate_name_sysfs):
-            return read_sysfs(cpuid_cstate_name_sysfs)
-
-    return ""
-
-def enable_cpuid_cstate(cpuid_cstate_sysfs, enable):
-    """set the cpu cstate disable value
-       cpuid_cstate_dis_sysfs: such as /sys/devices/system/cpu/cpu0/cpuidle
-       val: 1 disbale cstate, 0 enable cstate
-    """
-    cpuid_cstate_dis_sysfs=os.path.join(cpuid_cstate_sysfs, "disable")
-
-    if enable:
-        write_sysfs(cpuid_cstate_dis_sysfs, "0")
-    else:
-        write_sysfs(cpuid_cstate_dis_sysfs, "1")
-
-    #check the operation is complete
-    val=read_sysfs(cpuid_cstate_dis_sysfs)
-
-    if enable and val[0] != "0":
-        print("WARNING:",cpuid_str,cstate," enable failed")
-        return 0
-    elif not enable and val[0] != "1":
-        print("WARNING:",cpuid_str,cstate," disable failed")
-        return 0
-
-    return 1
-
-def cstate_control(cpuid, cstate, enable, show=1):
-    """control the cpuid cstate en/dis.
-       cpuid: cpu id
-       cstate: cpu cstate "c1 c2 c3 c4 c5 c6
-       enable: en 1, dis 0
-       return: success is 1, fail is 0
-    """
-
-    cpuid_cstate_sysfs=get_cpuid_cstate_sysfs(cpuid, cstate)
-    if not cpuid_cstate_sysfs:
-        print("ERROR: not find cpu cstate: %s"%cstate)
-        return 1
-
-    if not enable_cpuid_cstate(cpuid_cstate_sysfs, enable):
-        return 1;
-
-    if show:
-        if enable:
-            print("CPU%-3d enable  %s"%(cpuid,cstate))
-        else:
-            print("CPU%-3d disable %s"%(cpuid,cstate))
-
-    return 0
-
-def cstate_control_mask(cpumask, cstate, enable):
-    """control the cpumask cstate en/dis.
-       cpumask: cpumaksvalue
-       cstate: cpu cstate "c1 c2 c3 c4 c5 c6
-       enable: en 1, dis 0
-       return: success is 1, fail is 0
-    """
-
-    for cpuid in range(128):
-        if cpumask & (1<<cpuid):
-            if cstate_control(cpuid, cstate, enable, 0):
-                print("ERROR: CPU"+str(cpuid)+" cstate control fail")
-                return 1
-            else:
-                print "CPU"+str(cpuid)+" ",
-
-    if enable:
-        print("enable "+cstate)
-    else:
-        print("disable "+cstate)
-
-    return 0
-
 def dump_cpustate_info(cpuid):
     """print the cpuid cstate infomations
        cpuid: cpu id
     """
-    cpuid_sysfs=get_cpuidle_sysfs(cpuid)
+    cpuid_sysfs=csctrl._get_cpuidle_sysfs(cpuid)
     cpuid_str="cpu"+str(cpuid)
     cpuid_cstate_list={'name':'', 'disable':'', 'time':'', 'usage':''}
 
@@ -223,13 +76,6 @@ def dump_cpustate_info(cpuid):
         print("ERROR: not find ",cpuid_str," interface")
         return 1
 
-    #print("%-20s %-20s %-20s %-20s"%(cpuid_str.upper(), "disable", "time", "usage"))
-    #for name in os.listdir(cpuid_sysfs):
-    #    cpuid_cstate_sysfs=os.path.join(cpuid_sysfs, name)
-    #    for item in cpuid_cstate_list:
-    #        fs=os.path.join(cpuid_cstate_sysfs, item)
-    #        print "%-20s"%(open(fs).read()[:-1]), 
-    #    print ""
     print "%-6d "%cpuid,
     for name in os.listdir(cpuid_sysfs):
         cstate_en_str=""
@@ -249,7 +95,7 @@ def dump_cpustate_info(cpuid):
     print ""
 
 def test_turbost(cpuid):
-    """test signal cpu turbost 
+    """test signal cpu turbost
     """
     cpu_freq_sysfs="/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"
     cpuid_freq_sysfs=cpu_freq_sysfs.replace("?", str(cpuid))
@@ -259,24 +105,14 @@ def test_turbost(cpuid):
         return 1
 
     cpu_cnt=cpu_count()
-    ret=cstate_control_mask((1<<cpu_cnt)-1, "C6", 1)
+    ret=csctrl.cstate_control_mask((1<<cpu_cnt)-1, "C6", 1)
     if ret:
         print("ERROR: cstate control failed")
         return 1
 
-    os.system("echo \"scale=5000; 4*a(1)\" | bc -l -q&"); 
-    bc_id=os.popen("pidof \"bc\"").read()
-    if not bc_id:
-        print "ERROR: run bc failed"
-        return 1
-
-    bc_id=os.popen("pidof \"bc\"").read()
-    if not bc_id:
-        print "ERROR: bc id not found"
-        return 1
-
-    bc_id=bc_id[:-1]
-    if os.system("taskset -cp "+str(cpuid)+" "+bc_id):
+    cpu_process=Process(target=process_run)
+    cpu_process.start()
+    if os.system("taskset -cp "+str(cpuid)+" "+str(cpu_process.pid)+" >& /dev/null"):
         print "ERROR: taskset bind to CPU"+str(cpuid)+" failed"
         os.system("kill -p "+bc_id)
 
@@ -287,7 +123,7 @@ def test_turbost(cpuid):
         time.sleep(1)
         poll_time -= 1
 
-    os.system("kill "+bc_id)
+    cpu_process.terminate()
 
 def test_c6_cstate(cpu_nums, enable):
     """test all cpu cstate c6 control
@@ -298,16 +134,21 @@ def test_c6_cstate(cpu_nums, enable):
     cputime_dic={}
     rang_max=(1<<cpu_nums)-1;
     rand_val=random.randint(0, rang_max)
-    print "TEST: ",
+    print "TEST:",
 
+    cpu0_dic=csctrl.get_cpuid_cstate_ctrl_sysf_diction(0)
+    if cpu0_dic.has_key("C7"):
+        if csctrl.cstate_control_mask(rand_val, "C7", 0):
+            print "ERROR: disable all cpu C7 failed"
+            return 1
 
-
+    #check C7, if it is exist, disable it
     if enable:
         #enable all mask cpu C6
-        ret=cstate_control_mask(rand_val, "C6", 1)
+        ret=csctrl.cstate_control_mask(rand_val, "C6", 1)
     else:
         #disable all mask cpu C6
-        ret=cstate_control_mask(rand_val, "C6", 0)
+        ret=csctrl.cstate_control_mask(rand_val, "C6", 0)
 
     if ret:
         print("ERROR: cstate control failed")
@@ -319,7 +160,7 @@ def test_c6_cstate(cpu_nums, enable):
     for cpuid in range(cpu_nums):
         if rand_val & (1<<cpuid):
             cpuid_str=str(cpuid)
-            cputime_old_dic[cpuid_str]=read_cstate_sysfs(cpuid, "C6", "time")
+            cputime_old_dic[cpuid_str]=csctrl._read_cstate_sysfs(cpuid, "C6", "time")
             if  not cputime_old_dic[cpuid_str]:
                 print("ERROR: read CPU"+str(cpuid)+" csate time failed")
                 return 0
@@ -329,7 +170,7 @@ def test_c6_cstate(cpu_nums, enable):
     for cpuid in range(cpu_nums):
         if rand_val & (1<<cpuid):
             cpuid_str=str(cpuid)
-            cputime_dic[cpuid_str]=read_cstate_sysfs(cpuid, "C6", "time")
+            cputime_dic[cpuid_str]=csctrl._read_cstate_sysfs(cpuid, "C6", "time")
             if  not cputime_dic[cpuid_str]:
                 print("ERROR: read CPU"+str(cpuid)+" csate time failed")
                 return 0
@@ -344,7 +185,7 @@ def test_c6_cstate(cpu_nums, enable):
                          while retry_cnt>0:
                              time.sleep(1)
                              print("WARNING CPU%s: C6 time is not update in 1s, test it again"%key)
-                             cputime_dic[key]=read_cstate_sysfs(int(key), "C6", "time")
+                             cputime_dic[key]=csctrl._read_cstate_sysfs(int(key), "C6", "time")
                              if cputime_old_dic[key] == cputime_dic[key]:
                                 print("WARNGING CPU%-6s cstate enable test failed dealy %ds: %s %s"%\
                                         (key, 3-retry_cnt, cputime_old_dic[key][:-1],cputime_dic[key][:-1]))
@@ -366,14 +207,25 @@ def test_c6_cstate(cpu_nums, enable):
                      else:
                          print("INFO CPU%-6s cstate disable test successfully"%key)
 
-    turbost_max=3
-    cpu_run_cnt=0
+
     if enable:
+        turbost_max=3
+        cpu_run_cnt=0
+        process_list=[]
+        for cnt in range(turbost_max):
+            cpu_process=Process(target=process_run)
+            process_list.append(cpu_process)
+
         # test turbost cpu freq
         for cpuid in range(cpu_nums):
             if rand_val & (1<<cpuid):
-                print "run cpuid:%d"%cpuid
-                run_task_cpuid(cpuid)
+                cpu_process=process_list[cpu_run_cnt]
+                cpu_process.start()
+                print "INFO CPU%-3d %6s turbost test"%(cpuid, "run")
+
+                if os.system("taskset -cp "+str(cpuid)+" "+str(cpu_process.pid)+ " >& /dev/null"):
+                    print "ERROR: taskset bind to CPU"+str(cpuid)+" failed"
+                    return 0
                 cpu_run_cnt += 1
                 if cpu_run_cnt == turbost_max:
                     break;
@@ -382,120 +234,122 @@ def test_c6_cstate(cpu_nums, enable):
         time.sleep(3)
         for cpuid in range(cpu_nums):
             if rand_val & (1<<cpuid):
-                print  "cpufreq:%s"%(read_cpufreq_sysfs(cpuid))
+                print  "INFO CPU%-3d %10s cpufreq:%s"%(cpuid, "turbost", read_cpufreq_sysfs(cpuid))
                 cpu_run_cnt += 1
                 if cpu_run_cnt == turbost_max:
                     break;
-        exit()
-        pass
+
+        # exit cpu run process
+        for process in process_list:
+            process.terminate()
     else:
-        cstate_control_mask(rand_val, "C6", 1)
+        csctrl.cstate_control_mask(rand_val, "C6", 1)
 
+if __name__ == "__main__":
+    parser = OptionParser()
+    parser.add_option("-d", "--disable", action="store",type="string", default="", dest="dis_cpuid",
+                      help="-d cpuid -c cstate, disbale cpu cstate", metavar="cpuid")
 
-parser = OptionParser()
-parser.add_option("-d", "--disable", action="store",type="string", default="", dest="dis_cpuid",
-                  help="-d cpuid -c cstate, disbale cpu cstate", metavar="cpuid")
+    parser.add_option("-e", "--enable",
+                      action="store", type="string", dest="en_cpuid", default="",
+                      help="-e cpuid -c cstate, enable cpu cstate", metavar="cpuid"
+                      )
 
-parser.add_option("-e", "--enable",
-                  action="store", type="string", dest="en_cpuid", default="",
-                  help="-e cpuid -c cstate, enable cpu cstate", metavar="cpuid"
-                  )
+    parser.add_option("-c", "--cstate",
+                      action="store", type="string", dest="cstate", default="",
+                      help="-c cstate, cpu cstate", metavar="cstate such as \"C6\""
+                      )
 
-parser.add_option("-c", "--cstate",
-                  action="store", type="string", dest="cstate", default="",
-                  help="-c cstate, cpu cstate", metavar="cstate such as \"C6\""
-                  )
+    parser.add_option("-i", "--info",
+                      action="store_true",  dest="info",
+                      help="-i show all cpu cstate information",
+                      )
 
-parser.add_option("-i", "--info",
-                  action="store_true",  dest="info",
-                  help="-i show all cpu cstate information",
-                  )
+    parser.add_option("-t", "--test",
+                      action="store_true",  dest="test",
+                      help="-t run the cycle cstate test",
+                      )
 
-parser.add_option("-t", "--test",
-                  action="store_true",  dest="test",
-                  help="-t run the cycle cstate test",
-                  )
+    parser.add_option("-b", "--turbost",
+                      action="store", type="string", dest="turbost", default="",
+                      help="-b cpuid , run turbost test for cpuid",
+                      )
 
-parser.add_option("-b", "--turbost",
-                  action="store", type="string", dest="turbost", default="",
-                  help="-b cpuid , run turbost test for cpuid",
-                  )
+    parser.add_option("-s", "--show",
+                      action="store_true",  dest="cstate_show",
+                      help="-s show machine support all cstate"
+                      )
+    (options, args) = parser.parse_args()
 
-parser.add_option("-s", "--show",
-                  action="store_true",  dest="cstate_show",
-                  help="-s show machine support all cstate"
-                  )
-(options, args) = parser.parse_args()
-
-if not os.getenv("SUDO_USER"):
-    print "ERROR: sudo access is need"
-    exit()
-
-if options.info:
-    print "CPU      Cstate(enable/time/usage)"
-    for cpuid in range(cpu_count()):
-        dump_cpustate_info(cpuid)
-    exit()
-
-
-if options.test:
-    cpu_cnt=cpu_count()
-    while 1:
-        if test_c6_cstate(cpu_cnt, 1):
-            break
-
-        if test_c6_cstate(cpu_cnt, 0):
-            break
-    exit()
-
-if options.turbost:
-    cpu_cnt=cpu_count()
-    cpuid=int(options.turbost)
-    if cpuid >= cpu_cnt:
-        print "ERROR: CPU%s is not found"%options.dis_cpuid
-        exit()
-    test_turbost(int(cpuid))
-    exit()
-
-if options.dis_cpuid:
-    cpu_cnt=cpu_count()
-    cpuid=int(options.dis_cpuid)
-    if cpuid >= cpu_cnt:
-        print "ERROR: CPU%s is not found"%options.dis_cpuid
+    if not os.getenv("SUDO_USER"):
+        print "ERROR: sudo access is need"
         exit()
 
-    if not options.cstate:
-        print "ERROR: CPU%s cstate is miss"%options.dis_cpuid
-
-    cstate_control(cpuid, options.cstate, 0)
-
-if options.en_cpuid:
-    cpu_cnt=cpu_count()
-    cpuid=int(options.en_cpuid)
-    if cpuid >= cpu_cnt:
-        print "ERROR: CPU%s is not found"%options.dis_cpuid
+    if options.info:
+        print "CPU      Cstate(enable/time/usage)"
+        for cpuid in range(cpu_count()):
+            dump_cpustate_info(cpuid)
         exit()
 
-    if not options.cstate:
-        print "ERROR: CPU%s cstate is miss"%options.dis_cpuid
 
-    cstate_control(cpuid, options.cstate, 1)
+    if options.test:
+        cpu_cnt=cpu_count()
+        while 1:
+            if test_c6_cstate(cpu_cnt, 1):
+                break
 
-if options.cstate_show:
-    cpu_cnt=cpu_count()
-    for cpuid in range(cpu_cnt):
-        cpuid_sysfs=get_cpuidle_sysfs(cpuid)
-        if not os.path.exists(cpuid_sysfs):
-            print("ERROR: not find ",cpuid_str," interface")
+            if test_c6_cstate(cpu_cnt, 0):
+                break
+        exit()
+
+    if options.turbost:
+        cpu_cnt=cpu_count()
+        cpuid=int(options.turbost)
+        if cpuid >= cpu_cnt:
+            print "ERROR: CPU%s is not found"%options.dis_cpuid
+            exit()
+        test_turbost(int(cpuid))
+        exit()
+
+    if options.dis_cpuid:
+        cpu_cnt=cpu_count()
+        cpuid=int(options.dis_cpuid)
+        if cpuid >= cpu_cnt:
+            print "ERROR: CPU%s is not found"%options.dis_cpuid
             exit()
 
-        print "CPU cstate:",
-        for name in os.listdir(cpuid_sysfs):
-            #state0 is poll state, we not need it
-            if name == "state0":
-                continue
-            cpuid_cstate_sysfs=os.path.join(cpuid_sysfs, name)
-            cpuid_cstate_name_sysfs=os.path.join(cpuid_cstate_sysfs, "name")
-            print "%s"%read_sysfs(cpuid_cstate_name_sysfs)[:-1],
-        break
+        if not options.cstate:
+            print "ERROR: CPU%s cstate is miss"%options.dis_cpuid
+
+        csctrl.cpu_cstate_control(cpuid, options.cstate, -1)
+
+    if options.en_cpuid:
+        cpu_cnt=cpu_count()
+        cpuid=int(options.en_cpuid)
+        if cpuid >= cpu_cnt:
+            print "ERROR: CPU%s is not found"%options.dis_cpuid
+            exit()
+
+        if not options.cstate:
+            print "ERROR: CPU%s cstate is miss"%options.dis_cpuid
+
+        csctrl.cpu_cstate_control(cpuid, options.cstate, 1)
+
+    if options.cstate_show:
+        cpu_cnt=cpu_count()
+        for cpuid in range(cpu_cnt):
+            cpuid_sysfs=csctrl._get_cpuidle_sysfs(cpuid)
+            if not os.path.exists(cpuid_sysfs):
+                print("ERROR: not find ",cpuid_str," interface")
+                exit()
+
+            print "CPU cstate:",
+            for name in os.listdir(cpuid_sysfs):
+                #state0 is poll state, we not need it
+                if name == "state0":
+                    continue
+                cpuid_cstate_sysfs=os.path.join(cpuid_sysfs, name)
+                cpuid_cstate_name_sysfs=os.path.join(cpuid_cstate_sysfs, "name")
+                print "%s"%read_sysfs(cpuid_cstate_name_sysfs)[:-1],
+            break
 
