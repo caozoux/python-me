@@ -92,6 +92,25 @@ def get_cpuid_cstate_ctrl_sysf_diction(cpuid):
 
     return ctrl_dic
 
+def get_machine_cstate_list():
+    """return the machine support cstate list
+    """
+    cpuid_cstate_list=[]
+    cpu_cnt=cpu_count()
+    for cpuid in range(cpu_cnt):
+        cpuid_sysfs=get_cpuidle_sysfs(cpuid)
+        if not os.path.exists(cpuid_sysfs):
+            print("ERROR: not find ",cpuid_str," interface")
+            exit()
+
+        for name in os.listdir(cpuid_sysfs):
+            #state0 is poll state, we not need it
+            if name == "state0":
+                continue
+            cpuid_cstate_sysfs=os.path.join(cpuid_sysfs, name)
+            cpuid_cstate_name_sysfs=os.path.join(cpuid_cstate_sysfs, "name")
+        break
+
 
 def get_cpuid_cstate_sysfs(cpuid, cstate):
     """get the cpu cstate sysfs dir
@@ -375,16 +394,16 @@ def test_c6_cstate(cpu_nums, enable):
 
 parser = OptionParser()
 parser.add_option("-d", "--disable", action="store",type="string", default="", dest="dis_cpuid",
-                  help="-d cpuid -c cstate, disbale cpu cstate", metavar="DERECTORY")
+                  help="-d cpuid -c cstate, disbale cpu cstate", metavar="cpuid")
 
 parser.add_option("-e", "--enable",
                   action="store", type="string", dest="en_cpuid", default="",
-                  help="-e cpuid -c cstate, enable cpu cstate", metavar="DERECTORY"
+                  help="-e cpuid -c cstate, enable cpu cstate", metavar="cpuid"
                   )
 
 parser.add_option("-c", "--cstate",
                   action="store", type="string", dest="cstate", default="",
-                  help="-c cstate, cpu cstate", metavar="DERECTORY"
+                  help="-c cstate, cpu cstate", metavar="cstate such as \"C6\""
                   )
 
 parser.add_option("-i", "--info",
@@ -408,8 +427,12 @@ parser.add_option("-s", "--show",
                   )
 (options, args) = parser.parse_args()
 
+if not os.getenv("SUDO_USER"):
+    print "ERROR: sudo access is need"
+    exit()
+
 if options.info:
-    print "CPU      cstate(enable/time/usage)"
+    print "CPU      Cstate(enable/time/usage)"
     for cpuid in range(cpu_count()):
         dump_cpustate_info(cpuid)
     exit()
