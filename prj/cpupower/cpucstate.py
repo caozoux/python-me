@@ -25,6 +25,38 @@ def write_sysfs(sysfs_file, str_v):
         fd.write(str_v)
         fd.close()
 
+def read_cpufreq_sysfs(cpuid):
+    """read cpuid freq
+    """
+    cpu_freq_sysfs="/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"
+    cpuid_freq_sysfs=cpu_freq_sysfs.replace("?", str(cpuid))
+    if not os.path.exists(cpuid_freq_sysfs):
+        print "ERROR: not find cpu freq sys interface"
+        return ""
+
+    return read_sysfs(cpuid_freq_sysfs)[:-1]
+
+def run_task_cpuid(cpuid):
+    """run a cycle task in cpuid
+    """
+    os.system("echo \"scale=5000; 4*a(1)\" | bc -l -q&"); 
+    bc_id=os.popen("pidof \"bc\"").read()
+    if not bc_id:
+        print "ERROR: run bc failed"
+        return 1
+
+    bc_id=os.popen("pidof \"bc\"").read()
+    if not bc_id:
+        print "ERROR: bc id not found"
+        return 1
+
+    bc_id=bc_id[:-1]
+    if os.system("taskset -cp "+str(cpuid)+" "+bc_id):
+        print "ERROR: taskset bind to CPU"+str(cpuid)+" failed"
+        os.system("kill -p "+bc_id)
+        return 0
+    return bc_id
+
 def get_cpuidle_sysfs(cpuid):
     """get the cpuid idle sysfs path
     """
@@ -262,7 +294,7 @@ def test_c6_cstate(cpu_nums, enable):
         print("ERROR: cstate control failed")
         return 1
 
-    time.sleep(1)
+    time.sleep(5)
 
     #update time to cputime_old_dic
     for cpuid in range(cpu_nums):
@@ -273,7 +305,7 @@ def test_c6_cstate(cpu_nums, enable):
                 print("ERROR: read CPU"+str(cpuid)+" csate time failed")
                 return 0
 
-    time.sleep(2)
+    time.sleep(5)
     #update time to cputime_dic
     for cpuid in range(cpu_nums):
         if rand_val & (1<<cpuid):
@@ -306,7 +338,8 @@ def test_c6_cstate(cpu_nums, enable):
                             print("ERROR CPU%-6s cstate enable test failed in 3s: %s %s"%\
                                     (key,cputime_old_dic[key][:-1],cputime_dic[key][:-1]))
                      else:
-                         print("INFO CPU%-6s cstate enable test successfully"%key)
+                         print("INFO CPU%-6s cstate enable test successfully:%d  freq:%s"%(key, \
+                                  int(cputime_dic[key][:-1])- int(cputime_old_dic[key][:-1]), read_cpufreq_sysfs(int(key))))
                  else:
                      if cputime_old_dic[key] != cputime_dic[key]:
                          print("ERROR CPU%-6s cstate disable test failed"%key)
@@ -314,7 +347,27 @@ def test_c6_cstate(cpu_nums, enable):
                      else:
                          print("INFO CPU%-6s cstate disable test successfully"%key)
 
+    turbost_max=3
+    cpu_run_cnt=0
     if enable:
+        # test turbost cpu freq
+        for cpuid in range(cpu_nums):
+            if rand_val & (1<<cpuid):
+                print "run cpuid:%d"%cpuid
+                run_task_cpuid(cpuid)
+                cpu_run_cnt += 1
+                if cpu_run_cnt == turbost_max:
+                    break;
+
+        cpu_run_cnt=0
+        time.sleep(3)
+        for cpuid in range(cpu_nums):
+            if rand_val & (1<<cpuid):
+                print  "cpufreq:%s"%(read_cpufreq_sysfs(cpuid))
+                cpu_run_cnt += 1
+                if cpu_run_cnt == turbost_max:
+                    break;
+        exit()
         pass
     else:
         cstate_control_mask(rand_val, "C6", 1)
