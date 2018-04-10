@@ -37,7 +37,7 @@ def process_run():
 def read_cpufreq_sysfs(cpuid):
     """read cpuid freq
     """
-    cpu_freq_sysfs="/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"
+    cpu_freq_sysfs="/sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq"
     cpuid_freq_sysfs=cpu_freq_sysfs.replace("?", str(cpuid))
     if not os.path.exists(cpuid_freq_sysfs):
         print "ERROR: not find cpu freq sys interface"
@@ -197,13 +197,15 @@ def test_c6_cstate(cpu_nums, enable):
                          if retry_cnt == 0:
                             print("ERROR CPU%-6s cstate enable test failed in 3s: %s %s"%\
                                     (key,cputime_old_dic[key][:-1],cputime_dic[key][:-1]))
+			    return 0
                      else:
                          print("INFO CPU%-6s cstate enable test successfully:%d  freq:%s"%(key, \
                                   int(cputime_dic[key][:-1])- int(cputime_old_dic[key][:-1]), read_cpufreq_sysfs(int(key))))
                  else:
                      if cputime_old_dic[key] != cputime_dic[key]:
                          print("ERROR CPU%-6s cstate disable test failed"%key)
-                         break;
+			 return 0
+                         #break;
                      else:
                          print("INFO CPU%-6s cstate disable test successfully"%key)
 
