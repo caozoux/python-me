@@ -1,5 +1,6 @@
 import os
 import re
+from multiprocessing import cpu_count
 
 def _read_sysfs(sysfs_file):
     """read sysfs value
@@ -151,5 +152,34 @@ def cpu_cstate_control(cpuid, cstate, enable, show=1):
         else:
             print("CPU%-3d disable %s"%(cpuid,cstate))
 
+    return 0
+
+def scoket_cstate_control(socketid, cstate, enable, show=1):
+    """control the socketid cstate en/dis.
+       socketid: cpu socketid
+       cstate: cpu cstate "c1 c2 c3 c4 c5 c6
+       enable: en 1, dis 0
+       return: success is 1, fail is 0
+    """
+    cpu_package_sysfs="/sys/devices/system/cpu/cpu?/topology/physical_package_id"
+    cpu_cnt=cpu_count()
+
+    for cpuid in range(cpu_cnt):
+        cpuid_package_sysfs=cpu_package_sysfs.replace("?",str(cpuid))
+        if not os.path.exists(cpuid_package_sysfs):
+            print "WARNING: CPU%-3d %s not find"%(cpuid, cpuid_package_sysfs)
+            continue
+
+        package_id=_read_sysfs(cpuid_package_sysfs)[:-1]
+        if not package_id:
+            print "WARNING: CPU%-3d %s read failed"%(cpuid, cpuid_package_sysfs)
+            continue
+
+        if int(package_id) == socketid:
+            if not cpu_cstate_control(cpuid, cstate, enable):
+                print "ERROR: socket control failed"
+                return 1
+
+    print "package%-2d CS:%s enable:%d"%(socketid, cstate, enable)
     return 0
 

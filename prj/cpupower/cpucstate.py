@@ -247,12 +247,17 @@ def test_c6_cstate(cpu_nums, enable):
 
 if __name__ == "__main__":
     parser = OptionParser()
-    parser.add_option("-d", "--disable", action="store",type="string", default="", dest="dis_cpuid",
+    parser.add_option("-d", "--disable", action="store_true", dest="disable",
                       help="-d cpuid -c cstate, disbale cpu cstate", metavar="cpuid")
 
+    parser.add_option("-C", "--cpuid",
+                      action="store", type="string", dest="cpuid", default="",
+                      help="-e|-d -c cpuid -c cstate, enable cpu cstate", metavar="cpuid"
+                      )
+
     parser.add_option("-e", "--enable",
-                      action="store", type="string", dest="en_cpuid", default="",
-                      help="-e cpuid -c cstate, enable cpu cstate", metavar="cpuid"
+                      action="store_true",  dest="enable",
+                      help="-e, enable cpu cstate", metavar="cpuid"
                       )
 
     parser.add_option("-c", "--cstate",
@@ -278,6 +283,10 @@ if __name__ == "__main__":
     parser.add_option("-s", "--show",
                       action="store_true",  dest="cstate_show",
                       help="-s show machine support all cstate"
+                      )
+    parser.add_option("-p", "--package",
+                      action="store", type="string",  dest="packageid", default="",
+                      help="-e|-d -p package_id cstate_name  or -d control packageid cstate"
                       )
     (options, args) = parser.parse_args()
 
@@ -306,34 +315,35 @@ if __name__ == "__main__":
         cpu_cnt=cpu_count()
         cpuid=int(options.turbost)
         if cpuid >= cpu_cnt:
-            print "ERROR: CPU%s is not found"%options.dis_cpuid
+            print "ERROR: CPU%s is not found"%options.cpuid
             exit()
         test_turbost(int(cpuid))
         exit()
 
-    if options.dis_cpuid:
-        cpu_cnt=cpu_count()
-        cpuid=int(options.dis_cpuid)
-        if cpuid >= cpu_cnt:
-            print "ERROR: CPU%s is not found"%options.dis_cpuid
+    if options.cpuid:
+        enable=0
+        if options.enable:
+            enable=1
+        elif options.disable:
+            enable=0
+        else:
+            print "ERROR not cstate option"
             exit()
 
         if not options.cstate:
-            print "ERROR: CPU%s cstate is miss"%options.dis_cpuid
+            print "ERROR: CPU%s cstate is miss"%options.cpuid
+            exit()
 
-        csctrl.cpu_cstate_control(cpuid, options.cstate, -1)
-
-    if options.en_cpuid:
         cpu_cnt=cpu_count()
-        cpuid=int(options.en_cpuid)
+        cpuid=int(options.cpuid)
         if cpuid >= cpu_cnt:
-            print "ERROR: CPU%s is not found"%options.dis_cpuid
+            print "ERROR: CPU%s is not found"%options.cpuid
             exit()
 
         if not options.cstate:
-            print "ERROR: CPU%s cstate is miss"%options.dis_cpuid
+            print "ERROR: CPU%s cstate is miss"%options.cpuid
 
-        csctrl.cpu_cstate_control(cpuid, options.cstate, 1)
+        csctrl.cpu_cstate_control(cpuid, options.cstate, enable)
 
     if options.cstate_show:
         cpu_cnt=cpu_count()
@@ -352,4 +362,21 @@ if __name__ == "__main__":
                 cpuid_cstate_name_sysfs=os.path.join(cpuid_cstate_sysfs, "name")
                 print "%s"%read_sysfs(cpuid_cstate_name_sysfs)[:-1],
             break
+
+    if options.packageid:
+        enable=0
+        if options.enable:
+            enable=1
+        elif options.disable:
+            enable=0
+        else:
+            print "ERROR not cstate option"
+            exit()
+
+        if not options.cstate:
+            print "ERROR: CPU%s cstate is miss"%options.cpuid
+            exit()
+
+        csctrl.scoket_cstate_control(int(options.packageid), options.cstate, enable)
+        exit()
 
