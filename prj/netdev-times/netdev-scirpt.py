@@ -47,7 +47,7 @@ trace_event_type = [
 "irq_handler_exit",
 "napi_poll",
 "netif_receive_skb",
-"net_netif_rx",
+"netif_rx",
 "skb_copy_datagram_iovec",
 "net_dev_queue",
 "net_dev_xmit",
@@ -62,7 +62,7 @@ FUTEX_PRIVATE_FLAG = 128
 FUTEX_CLOCK_REALTIME = 256
 FUTEX_CMD_MASK = ~(FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME)
 
-NSECS_PER_SEC    = 1000000
+NSECS_PER_SEC    = 1000000000
 # Format for displaying rx packet processing
 PF_IRQ_ENTRY= "  irq_entry(+%.3fmsec irq=%d:%s)"
 PF_SOFT_ENTRY="  softirq_entry(+%.3fmsec)"
@@ -98,6 +98,13 @@ def nsecs_str(nsecs):
 def transfer_trace_to_event(event_str):
     ""
     event_info=re.split(r" +", event_str)
+    event_info[0]=re.search(".*-", event_info[1]).group(0)[:-1] #comm
+    #event_info[1]=int(re.search("-.*", event_info[1]).group(0)[1:]) #pid
+    event_info[1]=int(event_info[1].replace(event_info[0]+"-", ""))
+    event_info[2]=int(event_info[2][1:-1])
+    event_info[4]=int(event_info[4][:-1].replace(".",""))*1000 #time
+    #exit()
+    #event_info[0]=re.search(".*-", event_info[1]).groups[0]
     for name in trace_event_type:
         evnet_cmp=name+":"
         #if event_name in event:
@@ -122,7 +129,7 @@ def transfer_trace_to_event(event_str):
             elif name == 'netif_receive_skb':
                     handle_netif_receive_skb(event_info)
                     pass
-            elif name == 'net_netif_rx':
+            elif name == 'netif_rx':
                     handle_netif_rx(event_info)
             elif name == 'skb_copy_datagram_iovec':
                     handle_skb_copy_datagram_iovec(event_info)
@@ -141,12 +148,9 @@ def transfer_trace_to_event(event_str):
                     pass
 
 def handle_consume_skb(event_info):
-    #(name, context, cpu, time, pid, comm, skbaddr) = event_info
     (var1, pid, cpu, var2,  time, comm, skbaddr) = event_info
-    cpu=cpu[1:-1]
-    time=time[:-1]
     comm=comm[:-1]
-    skbaddr=skbaddr[8:-1]
+    skbaddr=int(skbaddr[8:-1],16)
     print pid, cpu, time, comm, skbaddr
     for i in range(len(tx_xmit_list)):
             skb = tx_xmit_list[i]
@@ -159,12 +163,9 @@ def handle_consume_skb(event_info):
 def handle_kfree_skb(event_info):
     #(name, context, cpu, time, pid, comm,
     #        skbaddr, protocol, location) = event_info
-    print event_info
     (var1, pid, cpu, var2,  time, comm, skbaddr, protocol, location) = event_info
-    cpu=cpu[1:-1]
-    time=time[:-1]
     comm=comm[:-1]
-    skbaddr=skbaddr[8:]
+    skbaddr=int(skbaddr[8:],16)
     print pid, cpu, time, comm, skbaddr, protocol, location[:-1]
     for i in range(len(tx_queue_list)):
             skb = tx_queue_list[i]
@@ -188,11 +189,9 @@ def handle_kfree_skb(event_info):
 
 def handle_skb_copy_datagram_iovec(event_info):
     (var1, pid, cpu, var2,  time, comm, skbaddr, skblen) = event_info
-    cpu=cpu[1:-1]
-    time=time[:-1]
     comm=comm[:-1]
-    skbaddr=skbaddr[8:]
-    skblen=skblen[4:-1]
+    skbaddr=int(skbaddr[8:], 16)
+    skblen=int(skblen[4:-1])
     print pid, cpu, time, comm, skbaddr, skblen
     for i in range(len(rx_skb_list)):
             rec_data = rx_skb_list[i]
@@ -203,8 +202,14 @@ def handle_skb_copy_datagram_iovec(event_info):
                     return
 
 def handle_netif_rx(event_info):
-    (name, context, cpu, time, pid, comm,
-            skbaddr, skblen, dev_name) = event_info
+
+    (var1, pid, cpu, var2,  time, comm, dev_name, skbaddr, skblen) = event_info
+    comm=comm[:-1]
+    dev_name=dev_name[4:]
+    skbaddr=int(skbaddr[8:],16)
+    skblen=int(skblen[4:-1])
+    print pid, cpu, time, comm, dev_name, skbaddr, skblen
+
     if cpu not in irq_dic.keys() \
     or len(irq_dic[cpu]) == 0:
             return
@@ -222,12 +227,10 @@ def handle_netif_receive_skb(event_info):
     global of_count_rx_skb_list
 
     (var1, pid, cpu, var2,  time, comm, dev_name, skbaddr, skblen) = event_info
-    cpu=cpu[1:-1]
-    time=time[:-1]
     comm=comm[:-1]
     dev_name=dev_name[4:]
-    skbaddr=skbaddr[8:]
-    skblen=skblen[4:-1]
+    skbaddr=int(skbaddr[8:],16)
+    skblen=int(skblen[4:-1])
     print pid, cpu, time, comm, dev_name, skbaddr, skblen
 
     if cpu in net_rx_dic.keys():
@@ -240,9 +243,9 @@ def handle_netif_receive_skb(event_info):
                     rx_skb_list.pop()
                     of_count_rx_skb_list += 1
 def handle_napi_poll(event_info):
+    #['<idle>', 0, 6, '..s.', 1413890202, 'napi_poll:', 'napi', 'poll', 'on', 'napi', 'struct', 'ffff880fe83b89c0', 'for', 'device', 'eth0\n']
+    (var1, pid, cpu, var2,  time, comm, var3,var4,var5,var6,var7, skbaddr, var8, var9, dev_name) = event_info
     pid=event_info[1]
-    cpu=event_info[2][1:-1]
-    time=event_info[4][:-1]
     comm=event_info[5][:-1]
     dev_name=event_info[14][:-1]
     print pid, cpu, time, comm, dev_name
@@ -254,10 +257,8 @@ def handle_napi_poll(event_info):
 
 def handle_irq_softirq_raise(event_info):
     (var1, pid, cpu, var2, time, comm, irq, irq_name) = event_info
-    cpu=cpu[1:-1]
     comm=comm[:-1]
-    time=time[:-1]
-    irq=irq[4:]
+    irq=int(irq[4:])
     irq_name=irq_name[8:-2]
     print pid, cpu, time, comm, irq, irq_name
     if cpu not in irq_dic.keys() \
@@ -275,10 +276,8 @@ def handle_irq_softirq_raise(event_info):
 def handle_irq_softirq_entry(event_info):
     #(name, context, cpu, time, pid, comm, vec) = event_info
     (var1, pid, cpu, var2, time, comm, irq, irq_name) = event_info
-    cpu=cpu[1:-1]
     comm=comm[:-1]
-    time=time[:-1]
-    irq=irq[4:]
+    irq=int(irq[4:])
     irq_name=irq_name[8:-2]
     print pid, cpu, time, comm, irq, irq_name
     net_rx_dic[cpu] = {'sirq_ent_t':time, 'event_list':[]}
@@ -288,10 +287,8 @@ def handle_irq_softirq_exit(event_info):
     event_list = 0
 
     (var1, pid, cpu, var2, time, comm, irq, irq_name) = event_info
-    cpu=cpu[1:-1]
     comm=comm[:-1]
-    time=time[:-1]
-    irq=irq[4:]
+    irq=int(irq[4:])
     irq_name=irq_name[8:-2]
     print pid, cpu, time, comm, irq, irq_name
 
@@ -312,10 +309,8 @@ def handle_irq_softirq_exit(event_info):
 def handle_irq_handler_entry(event_info):
     #['', '<idle>-0', '[000]', 'd.h.', '512351.312182:', 'irq_handler_entry:', 'irq=76', 'name=eth0-tx-0\n']
     (var1, pid, cpu, var2, time, comm, irq, irq_name) = event_info
-    cpu=cpu[1:-1]
     comm=comm[:-1]
-    time=time[:-1]
-    irq=irq[4:]
+    irq=int(irq[4:])
     irq_name=irq_name[5:-1]
     print pid, cpu, time, comm, irq, irq_name
     if cpu not in irq_dic.keys():
@@ -325,10 +320,8 @@ def handle_irq_handler_entry(event_info):
 
 def handle_irq_handler_exit(event_info):
     (var1, pid, cpu, var2, time, comm, irq, irq_name) = event_info
-    cpu=cpu[1:-1]
     comm=comm[:-1]
-    time=time[:-1]
-    irq=irq[4:]
+    irq=int(irq[4:])
     irq_name=irq_name[4:-1]
     print pid, cpu, time, comm, irq, irq_name
     if cpu not in irq_dic.keys():
@@ -344,14 +337,11 @@ def handle_irq_handler_exit(event_info):
 def handle_net_dev_queue(event_info):
     global of_count_tx_queue_list
 
-    #['', '<...>-105788', '[001]', '..s.', '155386.949286:', 'net_dev_queue:', 'dev=eth0', 'skbaddr=ffff880fddb308f8', 'len=102\n']
     (var1, pid, cpu, var2,  time, comm, dev_name, skbaddr, skblen) = event_info
-    cpu=cpu[1:-1]
-    time=time[:-1]
     comm=comm[:-1]
     dev_name=dev_name[4:]
-    skbaddr=skbaddr[8:]
-    skblen=skblen[4:-1]
+    skbaddr=int(skbaddr[8:],16)
+    skblen=int(skblen[4:-1])
     #print cpu, pid, time, comm, dev_name, skbaddr, skblen
     skb = {'dev':dev_name, 'skbaddr':skbaddr, 'len':skblen, 'queue_t':time}
     tx_queue_list.insert(0, skb)
@@ -380,7 +370,7 @@ def print_receive(hunk):
     show_hunk = 0
     irq_list = hunk['irq_list']
     cpu = int(irq_list[0]['cpu'])
-    base_t = int(irq_list[0]['irq_ent_t'].replace(".",""))
+    base_t = irq_list[0]['irq_ent_t']
     # check if this hunk should be showed
     if dev != 0:
             for i in range(len(irq_list)):
@@ -441,17 +431,22 @@ def print_receive(hunk):
                                             diff_msec(base_t,
                                                     event['comm_t'])
                     print PF_JOINT
-    exit()
 
 if 1:
     trace_fd=open("/sys/kernel/debug/tracing/trace", "r")
     buf=trace_fd.readlines()
     if buf:
-        for line in buf:
+        for line in buf[11:]:
             transfer_trace_to_event(line)
 
 for i in range(len(receive_hunk_list)):
         print_receive(receive_hunk_list[i])
+
+print "   dev    len      Qdisc        " \
+        "       netdevice             free"
+for i in range(len(tx_free_list)):
+        print_transmit(tx_free_list[i])
+
 #while 1:
 #    trace_fd=open("/sys/kernel/debug/tracing/trace_pipe", "r")
 #    buf=trace_fd.readlines(2000)
