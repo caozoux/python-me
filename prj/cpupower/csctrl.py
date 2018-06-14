@@ -117,7 +117,7 @@ def cstate_control_mask(cpumask, cstate, enable):
 
     for cpuid in range(128):
         if cpumask & (1<<cpuid):
-            if cpu_cstate_control(cpuid, cstate, enable, 0):
+            if not cpu_cstate_control(cpuid, cstate, enable, 0):
                 print("ERROR: CPU"+str(cpuid)+" cstate control fail")
                 return 1
             else:
@@ -141,10 +141,10 @@ def cpu_cstate_control(cpuid, cstate, enable, show=1):
     cpuid_cstate_sysfs=_get_cpuid_cstate_sysfs(cpuid, cstate)
     if not cpuid_cstate_sysfs:
         print("ERROR: not find cpu cstate: %s"%cstate)
-        return 1
+        return 0
 
     if not enable_cpuid_cstate(cpuid_cstate_sysfs, enable):
-        return 1;
+        return 0
 
     if show:
         if enable:
@@ -152,7 +152,7 @@ def cpu_cstate_control(cpuid, cstate, enable, show=1):
         else:
             print("CPU%-3d disable %s"%(cpuid,cstate))
 
-    return 0
+    return 1
 
 def scoket_cstate_control(socketid, cstate, enable, show=1):
     """control the socketid cstate en/dis.
