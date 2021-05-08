@@ -17,11 +17,11 @@ class ObjCompleteHead(object):
         """TODO: Docstring for dump.
         :returns: TODO
         """
-        print self.head 
+        print(self.head) 
         ret =  self.m_manager.getExtern(self.head)
         if ret:
-            print "extern:"
-            print ret
+            print("extern:")
+            print(ret)
 
 
 class ObjCompleteManger(object):
