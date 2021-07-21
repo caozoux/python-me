@@ -1,0 +1,2773 @@
+[    0.000000] Linux version 4.19.91+ (zc@zc-ThinkPad-T14s-Gen-1) (gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)) #62 SMP Fri Jul 9 15:33:00 CST 2021
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.000000] Call Trace:
+[    0.000000]  ? dump_stack+0x66/0x90
+[    0.000000]  ? memblock_reserve+0x4e/0x85
+[    0.000000]  ? setup_arch+0x39/0x993
+[    0.000000]  ? start_kernel+0x65/0x4ec
+[    0.000000]  ? load_ucode_bsp+0x7a/0x133
+[    0.000000]  ? secondary_startup_64+0xa4/0xb0
+[    0.000000] zz memblock_add_range idx:0 2000000 1c00000 totla_cnt:1 total_size: 1c00000
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.000000] Call Trace:
+[    0.000000]  ? dump_stack+0x66/0x90
+[    0.000000]  ? memblock_reserve+0x4e/0x85
+[    0.000000]  ? setup_arch+0x45/0x993
+[    0.000000]  ? start_kernel+0x65/0x4ec
+[    0.000000]  ? load_ucode_bsp+0x7a/0x133
+[    0.000000]  ? secondary_startup_64+0xa4/0xb0
+[    0.000000] zz memblock_insert_region idx:0 0 1000 totla_cnt:2 total_size: 1c01000
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.000000] Call Trace:
+[    0.000000]  ? dump_stack+0x66/0x90
+[    0.000000]  ? memblock_reserve+0x4e/0x85
+[    0.000000]  ? setup_arch+0x95/0x993
+[    0.000000]  ? start_kernel+0x65/0x4ec
+[    0.000000]  ? load_ucode_bsp+0x7a/0x133
+[    0.000000]  ? secondary_startup_64+0xa4/0xb0
+[    0.000000] zz memblock_insert_region idx:2 3d133000 11e4000 totla_cnt:3 total_size: 2de5000
+[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-4.19.91+ root=UUID=fa7126ce-d94f-4477-a18e-ed2a1b592c48 ro crashkernel=215M console=ttyS0,115200n8 nokaslr memblock=debug memmap=500M!4G earlyprintk=serial,0x3f8,115200
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.000000] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'compacted' format.
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000007fffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000000800000-0x0000000000807fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x0000000000808000-0x000000000080ffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000000810000-0x00000000008fffff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x0000000000900000-0x00000000bf8eefff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000bf8ef000-0x00000000bfb6efff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000bfb6f000-0x00000000bfb7efff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x00000000bfb7f000-0x00000000bfbfefff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000bfbff000-0x00000000bfebbfff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000bfebc000-0x00000000bff3ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000bff40000-0x00000000bfffffff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000023fffffff] usable
+[    0.000000] bootconsole [earlyser0] enabled
+[    0.000000] memblock_reserve: [0x00000000be2d4018-0x00000000be2d52d7] efi_memblock_x86_reserve_range+0x173/0x194
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.000000] Call Trace:
+[    0.000000]  ? dump_stack+0x66/0x90
+[    0.000000]  ? memblock_reserve+0x4e/0x85
+[    0.000000]  ? efi_memblock_x86_reserve_range+0x173/0x194
+[    0.000000]  ? setup_arch+0x31a/0x993
+[    0.000000]  ? start_kernel+0x65/0x4ec
+[    0.000000]  ? secondary_startup_64+0xa4/0xb0
+[    0.000000] zz memblock_insert_region idx:3 be2d4018 12c0 totla_cnt:4 total_size: 2de62c0
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] memblock_reserve: [0x00000000be2d8018-0x00000000be2e1a57] setup_arch+0x35a/0x993
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.000000] Call Trace:
+[    0.000000]  ? dump_stack+0x66/0x90
+[    0.000000]  ? memblock_reserve+0x4e/0x85
+[    0.000000]  ? setup_arch+0x35a/0x993
+[    0.000000]  ? start_kernel+0x65/0x4ec
+[    0.000000]  ? secondary_startup_64+0xa4/0xb0
+[    0.000000] zz memblock_insert_region idx:4 be2d8018 9a40 totla_cnt:5 total_size: 2defd00
+[    0.000000] memblock_reserve: [0x00000000be056018-0x00000000be0a1057] setup_arch+0x35a/0x993
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.000000] Call Trace:
+[    0.000000]  ? dump_stack+0x66/0x90
+[    0.000000]  ? memblock_reserve+0x4e/0x85
+[    0.000000]  ? setup_arch+0x35a/0x993
+[    0.000000]  ? start_kernel+0x65/0x4ec
+[    0.000000]  ? secondary_startup_64+0xa4/0xb0
+[    0.000000] zz memblock_insert_region idx:3 be056018 4b040 totla_cnt:6 total_size: 2e3ad40
+[    0.000000] e820: update [mem 0xbe2d8018-0xbe2e1a57] usable ==> usable
+[    0.000000] e820: update [mem 0xbe2d8018-0xbe2e1a57] usable ==> usable
+[    0.000000] e820: update [mem 0xbe056018-0xbe0a1057] usable ==> usable
+[    0.000000] e820: update [mem 0xbe056018-0xbe0a1057] usable ==> usable
+[    0.000000] extended physical RAM map:
+[    0.000000] reserve setup_data: [mem 0x0000000000000000-0x000000000009ffff] usable
+[    0.000000] reserve setup_data: [mem 0x0000000000100000-0x00000000007fffff] usable
+[    0.000000] reserve setup_data: [mem 0x0000000000800000-0x0000000000807fff] ACPI NVS
+[    0.000000] reserve setup_data: [mem 0x0000000000808000-0x000000000080ffff] usable
+[    0.000000] reserve setup_data: [mem 0x0000000000810000-0x00000000008fffff] ACPI NVS
+[    0.000000] reserve setup_data: [mem 0x0000000000900000-0x00000000be056017] usable
+[    0.000000] reserve setup_data: [mem 0x00000000be056018-0x00000000be0a1057] usable
+[    0.000000] reserve setup_data: [mem 0x00000000be0a1058-0x00000000be2d8017] usable
+[    0.000000] reserve setup_data: [mem 0x00000000be2d8018-0x00000000be2e1a57] usable
+[    0.000000] reserve setup_data: [mem 0x00000000be2e1a58-0x00000000bf8eefff] usable
+[    0.000000] reserve setup_data: [mem 0x00000000bf8ef000-0x00000000bfb6efff] reserved
+[    0.000000] reserve setup_data: [mem 0x00000000bfb6f000-0x00000000bfb7efff] ACPI data
+[    0.000000] reserve setup_data: [mem 0x00000000bfb7f000-0x00000000bfbfefff] ACPI NVS
+[    0.000000] reserve setup_data: [mem 0x00000000bfbff000-0x00000000bfebbfff] usable
+[    0.000000] reserve setup_data: [mem 0x00000000bfebc000-0x00000000bff3ffff] reserved
+[    0.000000] reserve setup_data: [mem 0x00000000bff40000-0x00000000bfffffff] ACPI NVS
+[    0.000000] reserve setup_data: [mem 0x0000000100000000-0x000000011f3fffff] persistent (type 12)
+[    0.000000] reserve setup_data: [mem 0x000000011f400000-0x000000023fffffff] usable
+[    0.000000] user-defined physical RAM map:
+[    0.000000] user: [mem 0x0000000000000000-0x000000000009ffff] usable
+[    0.000000] user: [mem 0x0000000000100000-0x00000000007fffff] usable
+[    0.000000] user: [mem 0x0000000000800000-0x0000000000807fff] ACPI NVS
+[    0.000000] user: [mem 0x0000000000808000-0x000000000080ffff] usable
+[    0.000000] user: [mem 0x0000000000810000-0x00000000008fffff] ACPI NVS
+[    0.000000] user: [mem 0x0000000000900000-0x00000000be056017] usable
+[    0.000000] user: [mem 0x00000000be056018-0x00000000be0a1057] usable
+[    0.000000] user: [mem 0x00000000be0a1058-0x00000000be2d8017] usable
+[    0.000000] user: [mem 0x00000000be2d8018-0x00000000be2e1a57] usable
+[    0.000000] user: [mem 0x00000000be2e1a58-0x00000000bf8eefff] usable
+[    0.000000] user: [mem 0x00000000bf8ef000-0x00000000bfb6efff] reserved
+[    0.000000] user: [mem 0x00000000bfb6f000-0x00000000bfb7efff] ACPI data
+[    0.000000] user: [mem 0x00000000bfb7f000-0x00000000bfbfefff] ACPI NVS
+[    0.000000] user: [mem 0x00000000bfbff000-0x00000000bfebbfff] usable
+[    0.000000] user: [mem 0x00000000bfebc000-0x00000000bff3ffff] reserved
+[    0.000000] user: [mem 0x00000000bff40000-0x00000000bfffffff] ACPI NVS
+[    0.000000] user: [mem 0x0000000100000000-0x000000011f3fffff] persistent (type 12)
+[    0.000000] user: [mem 0x000000011f400000-0x000000023fffffff] usable
+[    0.000000] efi: EFI v2.70 by EDK II
+[    0.000000] efi:  SMBIOS=0xbf942000  ACPI=0xbfb7e000  ACPI 2.0=0xbfb7e014  MEMATTR=0xbe3f7018 
+[    0.000000] memblock_reserve: [0x00000000be3f7018-0x00000000be3f7417] efi_memattr_init+0x75/0x8f
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.000000] Call Trace:
+[    0.000000]  ? dump_stack+0x66/0x90
+[    0.000000]  ? memblock_reserve+0x4e/0x85
+[    0.000000]  ? efi_memattr_init+0x75/0x8f
+[    0.000000]  ? efi_config_parse_tables+0x147/0x25b
+[    0.000000]  ? __early_set_fixmap+0xaf/0xbe
+[    0.000000]  ? efi_config_init+0x79/0x9d
+[    0.000000]  ? efi_init+0x37a/0x46e
+[    0.000000]  ? setup_arch+0x3a4/0x993
+[    0.000000]  ? start_kernel+0x65/0x4ec
+[    0.000000]  ? secondary_startup_64+0xa4/0xb0
+[    0.000000] zz memblock_insert_region idx:6 be3f7018 400 totla_cnt:7 total_size: 2e3b140
+[    0.000000] SMBIOS 2.8 present.
+[    0.000000] DMI: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] kvm-clock: cpu 0, msr 380c001, primary cpu clock
+[    0.000000] kvm-clock: using sched offset of 32522757497 cycles
+[    0.000628] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.002453] tsc: Detected 1696.693 MHz processor
+[    0.003036] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+[    0.003037] e820: remove [mem 0x000a0000-0x000fffff] usable
+[    0.003041] last_pfn = 0x240000 max_arch_pfn = 0x400000000
+[    0.003638] MTRR default type: write-back
+[    0.003638] MTRR fixed ranges enabled:
+[    0.003640]   00000-9FFFF write-back
+[    0.003640]   A0000-FFFFF uncachable
+[    0.003641] MTRR variable ranges enabled:
+[    0.003642]   0 base 00C0000000 mask FFC0000000 uncachable
+[    0.003642]   1 base 0800000000 mask F800000000 uncachable
+[    0.003643]   2 disabled
+[    0.003643]   3 disabled
+[    0.003643]   4 disabled
+[    0.003643]   5 disabled
+[    0.003644]   6 disabled
+[    0.003644]   7 disabled
+[    0.003656] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.004436] last_pfn = 0xbfebc max_arch_pfn = 0x400000000
+[    0.008392] memblock_reserve: [0x0000000003c00000-0x0000000003c0cfff] setup_arch+0x556/0x993
+[    0.009370] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.010030] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.010927] Call Trace:
+[    0.011199]  ? dump_stack+0x66/0x90
+[    0.011586]  ? memblock_reserve+0x4e/0x85
+[    0.012042]  ? setup_arch+0x556/0x993
+[    0.012449]  ? start_kernel+0x65/0x4ec
+[    0.012868]  ? secondary_startup_64+0xa4/0xb0
+[    0.013347] zz memblock_insert_region idx:2 3c00000 d000 totla_cnt:8 total_size: 2e48140
+[    0.014244] memblock_add: [0x0000000000001000-0x000000000009ffff] e820__memblock_setup+0x44/0x63
+[    0.015211] memblock_add: [0x0000000000100000-0x00000000007fffff] e820__memblock_setup+0x44/0x63
+[    0.016192] memblock_add: [0x0000000000808000-0x000000000080ffff] e820__memblock_setup+0x44/0x63
+[    0.017168] memblock_add: [0x0000000000900000-0x00000000be056017] e820__memblock_setup+0x44/0x63
+[    0.018141] memblock_add: [0x00000000be056018-0x00000000be0a1057] e820__memblock_setup+0x44/0x63
+[    0.019112] memblock_add: [0x00000000be0a1058-0x00000000be2d8017] e820__memblock_setup+0x44/0x63
+[    0.020099] memblock_add: [0x00000000be2d8018-0x00000000be2e1a57] e820__memblock_setup+0x44/0x63
+[    0.021059] memblock_add: [0x00000000be2e1a58-0x00000000bf8eefff] e820__memblock_setup+0x44/0x63
+[    0.022011] memblock_add: [0x00000000bfbff000-0x00000000bfebbfff] e820__memblock_setup+0x44/0x63
+[    0.022959] memblock_add: [0x000000011f400000-0x000000023fffffff] e820__memblock_setup+0x44/0x63
+[    0.023924] MEMBLOCK configuration:
+[    0.024300]  memory size = 0x00000001e0653000 reserved size = 0x0000000002e48140
+[    0.025095]  memory.cnt  = 0x6
+[    0.025427]  memory[0x0]	[0x0000000000001000-0x000000000009ffff], 0x000000000009f000 bytes flags: 0x0
+[    0.026419]  memory[0x1]	[0x0000000000100000-0x00000000007fffff], 0x0000000000700000 bytes flags: 0x0
+[    0.027419]  memory[0x2]	[0x0000000000808000-0x000000000080ffff], 0x0000000000008000 bytes flags: 0x0
+[    0.028428]  memory[0x3]	[0x0000000000900000-0x00000000bf8eefff], 0x00000000befef000 bytes flags: 0x0
+[    0.029443]  memory[0x4]	[0x00000000bfbff000-0x00000000bfebbfff], 0x00000000002bd000 bytes flags: 0x0
+[    0.030463]  memory[0x5]	[0x000000011f400000-0x000000023fffffff], 0x0000000120c00000 bytes flags: 0x0
+[    0.031480]  reserved.cnt  = 0x7
+[    0.031847]  reserved[0x0]	[0x0000000000000000-0x0000000000000fff], 0x0000000000001000 bytes flags: 0x0
+[    0.032879]  reserved[0x1]	[0x0000000002000000-0x0000000003c0cfff], 0x0000000001c0d000 bytes flags: 0x0
+[    0.033919]  reserved[0x2]	[0x000000003d133000-0x000000003e316fff], 0x00000000011e4000 bytes flags: 0x0
+[    0.034956]  reserved[0x3]	[0x00000000be056018-0x00000000be0a1057], 0x000000000004b040 bytes flags: 0x0
+[    0.035999]  reserved[0x4]	[0x00000000be2d4018-0x00000000be2d52d7], 0x00000000000012c0 bytes flags: 0x0
+[    0.037018]  reserved[0x5]	[0x00000000be2d8018-0x00000000be2e1a57], 0x0000000000009a40 bytes flags: 0x0
+[    0.038029]  reserved[0x6]	[0x00000000be3f7018-0x00000000be3f7417], 0x0000000000000400 bytes flags: 0x0
+[    0.039038] memblock_reserve: [0x000000000009f000-0x00000000000fffff] setup_arch+0x57a/0x993
+[    0.039966] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.040611] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.041480] Call Trace:
+[    0.041743]  ? dump_stack+0x66/0x90
+[    0.042117]  ? memblock_reserve+0x4e/0x85
+[    0.042548]  ? setup_arch+0x57a/0x993
+[    0.042947]  ? start_kernel+0x65/0x4ec
+[    0.043349]  ? secondary_startup_64+0xa4/0xb0
+[    0.043827] zz memblock_insert_region idx:1 9f000 61000 totla_cnt:8 total_size: 2ea9140
+[    0.044695] memblock_reserve: [0x0000000000087000-0x0000000000087fff] efi_reserve_boot_services+0x76/0xc1
+[    0.045738] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.046395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.047276] Call Trace:
+[    0.047545]  ? dump_stack+0x66/0x90
+[    0.047938]  ? memblock_reserve+0x4e/0x85
+[    0.048376]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.048907]  ? setup_arch+0x594/0x993
+[    0.049307]  ? start_kernel+0x65/0x4ec
+[    0.049716]  ? secondary_startup_64+0xa4/0xb0
+[    0.050188] zz memblock_insert_region idx:1 87000 1000 totla_cnt:9 total_size: 2eaa140
+[    0.051052] memblock_reserve: [0x0000000000900000-0x00000000014fffff] efi_reserve_boot_services+0x76/0xc1
+[    0.052111] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.052771] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.053650] Call Trace:
+[    0.053917]  ? dump_stack+0x66/0x90
+[    0.054293]  ? memblock_reserve+0x4e/0x85
+[    0.054718]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.055236]  ? setup_arch+0x594/0x993
+[    0.055629]  ? start_kernel+0x65/0x4ec
+[    0.056040]  ? secondary_startup_64+0xa4/0xb0
+[    0.056510] zz memblock_insert_region idx:3 900000 c00000 totla_cnt:10 total_size: 3aaa140
+[    0.057396] memblock_reserve: [0x00000000bbefe000-0x00000000bbf1dfff] efi_reserve_boot_services+0x76/0xc1
+[    0.058427] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.059076] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.059964] Call Trace:
+[    0.060227]  ? dump_stack+0x66/0x90
+[    0.060596]  ? memblock_reserve+0x4e/0x85
+[    0.061027]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.061544]  ? setup_arch+0x594/0x993
+[    0.061942]  ? start_kernel+0x65/0x4ec
+[    0.062352]  ? secondary_startup_64+0xa4/0xb0
+[    0.062830] zz memblock_insert_region idx:6 bbefe000 20000 totla_cnt:11 total_size: 3aca140
+[    0.063753] memblock_reserve: [0x00000000be2cd000-0x00000000be2cdfff] efi_reserve_boot_services+0x76/0xc1
+[    0.064797] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.065445] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.066322] Call Trace:
+[    0.066586]  ? dump_stack+0x66/0x90
+[    0.066965]  ? memblock_reserve+0x4e/0x85
+[    0.067403]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.067944]  ? setup_arch+0x594/0x993
+[    0.068347]  ? start_kernel+0x65/0x4ec
+[    0.068758]  ? secondary_startup_64+0xa4/0xb0
+[    0.069242] zz memblock_insert_region idx:8 be2cd000 1000 totla_cnt:12 total_size: 3acb140
+[    0.070141] memblock_reserve: [0x00000000be3fe000-0x00000000beb08fff] efi_reserve_boot_services+0x76/0xc1
+[    0.071192] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.071845] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.072712] Call Trace:
+[    0.072978]  ? dump_stack+0x66/0x90
+[    0.073350]  ? memblock_reserve+0x4e/0x85
+[    0.073782]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.074300]  ? setup_arch+0x594/0x993
+[    0.074696]  ? start_kernel+0x65/0x4ec
+[    0.075097]  ? secondary_startup_64+0xa4/0xb0
+[    0.075565] zz memblock_insert_region idx:12 be3fe000 70b000 totla_cnt:13 total_size: 41d6140
+[    0.076497] memblock_reserve: [0x00000000beb09000-0x00000000bebbffff] efi_reserve_boot_services+0x76/0xc1
+[    0.077532] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.078178] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.079053] Call Trace:
+[    0.079314]  ? dump_stack+0x66/0x90
+[    0.079697]  ? memblock_reserve+0x4e/0x85
+[    0.080139]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.080658]  ? setup_arch+0x594/0x993
+[    0.081060]  ? start_kernel+0x65/0x4ec
+[    0.081468]  ? secondary_startup_64+0xa4/0xb0
+[    0.081946] zz memblock_insert_region idx:13 beb09000 b7000 totla_cnt:14 total_size: 428d140
+[    0.082874] memblock_reserve: [0x00000000bebc0000-0x00000000bec4afff] efi_reserve_boot_services+0x76/0xc1
+[    0.083938] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.084596] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.085481] Call Trace:
+[    0.085750]  ? dump_stack+0x66/0x90
+[    0.086132]  ? memblock_reserve+0x4e/0x85
+[    0.086569]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.087089]  ? setup_arch+0x594/0x993
+[    0.087494]  ? start_kernel+0x65/0x4ec
+[    0.087914]  ? secondary_startup_64+0xa4/0xb0
+[    0.088389] zz memblock_insert_region idx:13 bebc0000 8b000 totla_cnt:14 total_size: 4318140
+[    0.089307] memblock_reserve: [0x00000000bec4b000-0x00000000bec87fff] efi_reserve_boot_services+0x76/0xc1
+[    0.090336] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.090976] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.091856] Call Trace:
+[    0.092117]  ? dump_stack+0x66/0x90
+[    0.092496]  ? memblock_reserve+0x4e/0x85
+[    0.092934]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.093449]  ? setup_arch+0x594/0x993
+[    0.093848]  ? start_kernel+0x65/0x4ec
+[    0.094253]  ? secondary_startup_64+0xa4/0xb0
+[    0.094720] zz memblock_insert_region idx:13 bec4b000 3d000 totla_cnt:14 total_size: 4355140
+[    0.095619] memblock_reserve: [0x00000000bec88000-0x00000000bec8bfff] efi_reserve_boot_services+0x76/0xc1
+[    0.096664] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.097320] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.098204] Call Trace:
+[    0.098470]  ? dump_stack+0x66/0x90
+[    0.098857]  ? memblock_reserve+0x4e/0x85
+[    0.099298]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.099831]  ? setup_arch+0x594/0x993
+[    0.100231]  ? start_kernel+0x65/0x4ec
+[    0.100642]  ? secondary_startup_64+0xa4/0xb0
+[    0.101142] zz memblock_insert_region idx:13 bec88000 4000 totla_cnt:14 total_size: 4359140
+[    0.102065] memblock_reserve: [0x00000000bec8c000-0x00000000becc9fff] efi_reserve_boot_services+0x76/0xc1
+[    0.103121] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.103804] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.104695] Call Trace:
+[    0.104964]  ? dump_stack+0x66/0x90
+[    0.105344]  ? memblock_reserve+0x4e/0x85
+[    0.105774]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.106302]  ? setup_arch+0x594/0x993
+[    0.106694]  ? start_kernel+0x65/0x4ec
+[    0.107094]  ? secondary_startup_64+0xa4/0xb0
+[    0.107560] zz memblock_insert_region idx:13 bec8c000 3e000 totla_cnt:14 total_size: 4397140
+[    0.108479] memblock_reserve: [0x00000000becca000-0x00000000beccefff] efi_reserve_boot_services+0x76/0xc1
+[    0.109522] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.110162] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.111031] Call Trace:
+[    0.111294]  ? dump_stack+0x66/0x90
+[    0.111697]  ? memblock_reserve+0x4e/0x85
+[    0.112190]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.112708]  ? setup_arch+0x594/0x993
+[    0.113112]  ? start_kernel+0x65/0x4ec
+[    0.113527]  ? secondary_startup_64+0xa4/0xb0
+[    0.114008] zz memblock_insert_region idx:13 becca000 5000 totla_cnt:14 total_size: 439c140
+[    0.114921] memblock_reserve: [0x00000000beccf000-0x00000000beceffff] efi_reserve_boot_services+0x76/0xc1
+[    0.115999] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.116660] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.117555] Call Trace:
+[    0.117827]  ? dump_stack+0x66/0x90
+[    0.118207]  ? memblock_reserve+0x4e/0x85
+[    0.118648]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.119187]  ? setup_arch+0x594/0x993
+[    0.119591]  ? start_kernel+0x65/0x4ec
+[    0.120016]  ? secondary_startup_64+0xa4/0xb0
+[    0.120500] zz memblock_insert_region idx:13 beccf000 21000 totla_cnt:14 total_size: 43bd140
+[    0.121421] memblock_reserve: [0x00000000becf0000-0x00000000becfafff] efi_reserve_boot_services+0x76/0xc1
+[    0.122457] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.123104] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.123980] Call Trace:
+[    0.124248]  ? dump_stack+0x66/0x90
+[    0.124627]  ? memblock_reserve+0x4e/0x85
+[    0.125060]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.125581]  ? setup_arch+0x594/0x993
+[    0.125978]  ? start_kernel+0x65/0x4ec
+[    0.126380]  ? secondary_startup_64+0xa4/0xb0
+[    0.126847] zz memblock_insert_region idx:13 becf0000 b000 totla_cnt:14 total_size: 43c8140
+[    0.127762] memblock_reserve: [0x00000000becfb000-0x00000000bed0efff] efi_reserve_boot_services+0x76/0xc1
+[    0.128866] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.129513] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.130387] Call Trace:
+[    0.130657]  ? dump_stack+0x66/0x90
+[    0.131038]  ? memblock_reserve+0x4e/0x85
+[    0.131479]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.132020]  ? setup_arch+0x594/0x993
+[    0.132425]  ? start_kernel+0x65/0x4ec
+[    0.132842]  ? secondary_startup_64+0xa4/0xb0
+[    0.133324] zz memblock_insert_region idx:13 becfb000 14000 totla_cnt:14 total_size: 43dc140
+[    0.134253] memblock_reserve: [0x00000000bed0f000-0x00000000bed10fff] efi_reserve_boot_services+0x76/0xc1
+[    0.135303] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.135973] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.136860] Call Trace:
+[    0.137129]  ? dump_stack+0x66/0x90
+[    0.137514]  ? memblock_reserve+0x4e/0x85
+[    0.137957]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.138476]  ? setup_arch+0x594/0x993
+[    0.138877]  ? start_kernel+0x65/0x4ec
+[    0.139285]  ? secondary_startup_64+0xa4/0xb0
+[    0.139779] zz memblock_insert_region idx:13 bed0f000 2000 totla_cnt:14 total_size: 43de140
+[    0.140677] memblock_reserve: [0x00000000bed11000-0x00000000bed24fff] efi_reserve_boot_services+0x76/0xc1
+[    0.141707] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.142360] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.143235] Call Trace:
+[    0.143496]  ? dump_stack+0x66/0x90
+[    0.143927]  ? memblock_reserve+0x4e/0x85
+[    0.144366]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.144887]  ? setup_arch+0x594/0x993
+[    0.145280]  ? start_kernel+0x65/0x4ec
+[    0.145686]  ? secondary_startup_64+0xa4/0xb0
+[    0.146156] zz memblock_insert_region idx:13 bed11000 14000 totla_cnt:14 total_size: 43f2140
+[    0.147043] memblock_reserve: [0x00000000bed25000-0x00000000bed29fff] efi_reserve_boot_services+0x76/0xc1
+[    0.148051] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.148669] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.149532] Call Trace:
+[    0.149793]  ? dump_stack+0x66/0x90
+[    0.150161]  ? memblock_reserve+0x4e/0x85
+[    0.150578]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.151093]  ? setup_arch+0x594/0x993
+[    0.151496]  ? start_kernel+0x65/0x4ec
+[    0.151928]  ? secondary_startup_64+0xa4/0xb0
+[    0.152408] zz memblock_insert_region idx:13 bed25000 5000 totla_cnt:14 total_size: 43f7140
+[    0.153325] memblock_reserve: [0x00000000bed2a000-0x00000000bed4efff] efi_reserve_boot_services+0x76/0xc1
+[    0.154376] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.155033] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.155929] Call Trace:
+[    0.156197]  ? dump_stack+0x66/0x90
+[    0.156577]  ? memblock_reserve+0x4e/0x85
+[    0.157017]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.157545]  ? setup_arch+0x594/0x993
+[    0.157951]  ? start_kernel+0x65/0x4ec
+[    0.158363]  ? secondary_startup_64+0xa4/0xb0
+[    0.158846] zz memblock_insert_region idx:13 bed2a000 25000 totla_cnt:14 total_size: 441c140
+[    0.159788] memblock_reserve: [0x00000000bed4f000-0x00000000bed58fff] efi_reserve_boot_services+0x76/0xc1
+[    0.160839] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.161498] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.162386] Call Trace:
+[    0.162658]  ? dump_stack+0x66/0x90
+[    0.163044]  ? memblock_reserve+0x4e/0x85
+[    0.163481]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.164018]  ? setup_arch+0x594/0x993
+[    0.164396]  ? start_kernel+0x65/0x4ec
+[    0.164799]  ? secondary_startup_64+0xa4/0xb0
+[    0.165262] zz memblock_insert_region idx:13 bed4f000 a000 totla_cnt:14 total_size: 4426140
+[    0.166141] memblock_reserve: [0x00000000bed59000-0x00000000bed7afff] efi_reserve_boot_services+0x76/0xc1
+[    0.167182] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.167842] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.168721] Call Trace:
+[    0.168995]  ? dump_stack+0x66/0x90
+[    0.169375]  ? memblock_reserve+0x4e/0x85
+[    0.169802]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.170321]  ? setup_arch+0x594/0x993
+[    0.170713]  ? start_kernel+0x65/0x4ec
+[    0.171119]  ? secondary_startup_64+0xa4/0xb0
+[    0.171592] zz memblock_insert_region idx:13 bed59000 22000 totla_cnt:14 total_size: 4448140
+[    0.172530] memblock_reserve: [0x00000000bed7b000-0x00000000bed7bfff] efi_reserve_boot_services+0x76/0xc1
+[    0.173581] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.174243] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.175132] Call Trace:
+[    0.175402]  ? dump_stack+0x66/0x90
+[    0.175795]  ? memblock_reserve+0x4e/0x85
+[    0.176240]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.176767]  ? setup_arch+0x594/0x993
+[    0.177172]  ? start_kernel+0x65/0x4ec
+[    0.177585]  ? secondary_startup_64+0xa4/0xb0
+[    0.178064] zz memblock_insert_region idx:13 bed7b000 1000 totla_cnt:14 total_size: 4449140
+[    0.178991] memblock_reserve: [0x00000000bed7c000-0x00000000bed92fff] efi_reserve_boot_services+0x76/0xc1
+[    0.180058] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.180714] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.181600] Call Trace:
+[    0.181868]  ? dump_stack+0x66/0x90
+[    0.182255]  ? memblock_reserve+0x4e/0x85
+[    0.182696]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.183220]  ? setup_arch+0x594/0x993
+[    0.183618]  ? start_kernel+0x65/0x4ec
+[    0.184035]  ? secondary_startup_64+0xa4/0xb0
+[    0.184507] zz memblock_insert_region idx:13 bed7c000 17000 totla_cnt:14 total_size: 4460140
+[    0.185419] memblock_reserve: [0x00000000bed93000-0x00000000bed95fff] efi_reserve_boot_services+0x76/0xc1
+[    0.186450] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.187097] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.187971] Call Trace:
+[    0.188234]  ? dump_stack+0x66/0x90
+[    0.188615]  ? memblock_reserve+0x4e/0x85
+[    0.189049]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.189563]  ? setup_arch+0x594/0x993
+[    0.189958]  ? start_kernel+0x65/0x4ec
+[    0.190367]  ? secondary_startup_64+0xa4/0xb0
+[    0.190839] zz memblock_insert_region idx:13 bed93000 3000 totla_cnt:14 total_size: 4463140
+[    0.191763] memblock_reserve: [0x00000000bed96000-0x00000000bedadfff] efi_reserve_boot_services+0x76/0xc1
+[    0.192828] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.193492] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.194382] Call Trace:
+[    0.194651]  ? dump_stack+0x66/0x90
+[    0.195037]  ? memblock_reserve+0x4e/0x85
+[    0.195474]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.196015]  ? setup_arch+0x594/0x993
+[    0.196418]  ? start_kernel+0x65/0x4ec
+[    0.196833]  ? secondary_startup_64+0xa4/0xb0
+[    0.197315] zz memblock_insert_region idx:13 bed96000 18000 totla_cnt:14 total_size: 447b140
+[    0.198244] memblock_reserve: [0x00000000bedae000-0x00000000bedaefff] efi_reserve_boot_services+0x76/0xc1
+[    0.199303] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.199984] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.200868] Call Trace:
+[    0.201142]  ? dump_stack+0x66/0x90
+[    0.201521]  ? memblock_reserve+0x4e/0x85
+[    0.201955]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.202470]  ? setup_arch+0x594/0x993
+[    0.202861]  ? start_kernel+0x65/0x4ec
+[    0.203267]  ? secondary_startup_64+0xa4/0xb0
+[    0.203744] zz memblock_insert_region idx:13 bedae000 1000 totla_cnt:14 total_size: 447c140
+[    0.204642] memblock_reserve: [0x00000000bedaf000-0x00000000bedc3fff] efi_reserve_boot_services+0x76/0xc1
+[    0.205667] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.206317] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.207193] Call Trace:
+[    0.207454]  ? dump_stack+0x66/0x90
+[    0.207841]  ? memblock_reserve+0x4e/0x85
+[    0.208280]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.208811]  ? setup_arch+0x594/0x993
+[    0.209220]  ? start_kernel+0x65/0x4ec
+[    0.209639]  ? secondary_startup_64+0xa4/0xb0
+[    0.210116] zz memblock_insert_region idx:13 bedaf000 15000 totla_cnt:14 total_size: 4491140
+[    0.211047] memblock_reserve: [0x00000000bedc4000-0x00000000bedcbfff] efi_reserve_boot_services+0x76/0xc1
+[    0.212112] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.212765] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.213648] Call Trace:
+[    0.213916]  ? dump_stack+0x66/0x90
+[    0.214296]  ? memblock_reserve+0x4e/0x85
+[    0.214731]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.215257]  ? setup_arch+0x594/0x993
+[    0.215658]  ? start_kernel+0x65/0x4ec
+[    0.216159]  ? secondary_startup_64+0xa4/0xb0
+[    0.216642] zz memblock_insert_region idx:13 bedc4000 8000 totla_cnt:14 total_size: 4499140
+[    0.217543] memblock_reserve: [0x00000000bedcc000-0x00000000beddcfff] efi_reserve_boot_services+0x76/0xc1
+[    0.218581] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.219237] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.220139] Call Trace:
+[    0.220402]  ? dump_stack+0x66/0x90
+[    0.220777]  ? memblock_reserve+0x4e/0x85
+[    0.221209]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.221727]  ? setup_arch+0x594/0x993
+[    0.222121]  ? start_kernel+0x65/0x4ec
+[    0.222525]  ? secondary_startup_64+0xa4/0xb0
+[    0.222991] zz memblock_insert_region idx:13 bedcc000 11000 totla_cnt:14 total_size: 44aa140
+[    0.223910] memblock_reserve: [0x00000000beddd000-0x00000000bede1fff] efi_reserve_boot_services+0x76/0xc1
+[    0.224934] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.225589] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.226474] Call Trace:
+[    0.226739]  ? dump_stack+0x66/0x90
+[    0.227116]  ? memblock_reserve+0x4e/0x85
+[    0.227553]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.228091]  ? setup_arch+0x594/0x993
+[    0.228491]  ? start_kernel+0x65/0x4ec
+[    0.228904]  ? secondary_startup_64+0xa4/0xb0
+[    0.229381] zz memblock_insert_region idx:13 beddd000 5000 totla_cnt:14 total_size: 44af140
+[    0.230288] memblock_reserve: [0x00000000bede2000-0x00000000bedfffff] efi_reserve_boot_services+0x76/0xc1
+[    0.231339] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.232025] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.232906] Call Trace:
+[    0.233181]  ? dump_stack+0x66/0x90
+[    0.233557]  ? memblock_reserve+0x4e/0x85
+[    0.233989]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.234507]  ? setup_arch+0x594/0x993
+[    0.234906]  ? start_kernel+0x65/0x4ec
+[    0.235311]  ? secondary_startup_64+0xa4/0xb0
+[    0.235792] zz memblock_insert_region idx:13 bede2000 1e000 totla_cnt:14 total_size: 44cd140
+[    0.236713] memblock_reserve: [0x00000000bee00000-0x00000000beffffff] efi_reserve_boot_services+0x76/0xc1
+[    0.237749] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.238397] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.239274] Call Trace:
+[    0.239537]  ? dump_stack+0x66/0x90
+[    0.239930]  ? memblock_reserve+0x4e/0x85
+[    0.240363]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.240877]  ? setup_arch+0x594/0x993
+[    0.241267]  ? start_kernel+0x65/0x4ec
+[    0.241675]  ? secondary_startup_64+0xa4/0xb0
+[    0.242151] zz memblock_insert_region idx:13 bee00000 200000 totla_cnt:14 total_size: 46cd140
+[    0.243084] memblock_reserve: [0x00000000bf000000-0x00000000bf049fff] efi_reserve_boot_services+0x76/0xc1
+[    0.244147] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.244807] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.245693] Call Trace:
+[    0.245961]  ? dump_stack+0x66/0x90
+[    0.246345]  ? memblock_reserve+0x4e/0x85
+[    0.246786]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.247314]  ? setup_arch+0x594/0x993
+[    0.247731]  ? start_kernel+0x65/0x4ec
+[    0.248141]  ? secondary_startup_64+0xa4/0xb0
+[    0.248616] zz memblock_insert_region idx:13 bf000000 4a000 totla_cnt:14 total_size: 4717140
+[    0.249546] memblock_reserve: [0x00000000bf04a000-0x00000000bf04efff] efi_reserve_boot_services+0x76/0xc1
+[    0.250586] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.251236] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.252117] Call Trace:
+[    0.252382]  ? dump_stack+0x66/0x90
+[    0.252757]  ? memblock_reserve+0x4e/0x85
+[    0.253187]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.253701]  ? setup_arch+0x594/0x993
+[    0.254094]  ? start_kernel+0x65/0x4ec
+[    0.254498]  ? secondary_startup_64+0xa4/0xb0
+[    0.254971] zz memblock_insert_region idx:13 bf04a000 5000 totla_cnt:14 total_size: 471c140
+[    0.255880] memblock_reserve: [0x00000000bf04f000-0x00000000bf059fff] efi_reserve_boot_services+0x76/0xc1
+[    0.256907] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.257567] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.258442] Call Trace:
+[    0.258705]  ? dump_stack+0x66/0x90
+[    0.259080]  ? memblock_reserve+0x4e/0x85
+[    0.259522]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.260060]  ? setup_arch+0x594/0x993
+[    0.260462]  ? start_kernel+0x65/0x4ec
+[    0.260872]  ? secondary_startup_64+0xa4/0xb0
+[    0.261353] zz memblock_insert_region idx:13 bf04f000 b000 totla_cnt:14 total_size: 4727140
+[    0.262262] memblock_reserve: [0x00000000bf05a000-0x00000000bf05bfff] efi_reserve_boot_services+0x76/0xc1
+[    0.263305] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.263972] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.264861] Call Trace:
+[    0.265132]  ? dump_stack+0x66/0x90
+[    0.265513]  ? memblock_reserve+0x4e/0x85
+[    0.265950]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.266486]  ? setup_arch+0x594/0x993
+[    0.266889]  ? start_kernel+0x65/0x4ec
+[    0.267303]  ? secondary_startup_64+0xa4/0xb0
+[    0.267793] zz memblock_insert_region idx:13 bf05a000 2000 totla_cnt:14 total_size: 4729140
+[    0.268707] memblock_reserve: [0x00000000bf05c000-0x00000000bf05ffff] efi_reserve_boot_services+0x76/0xc1
+[    0.269758] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.270416] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.271307] Call Trace:
+[    0.271573]  ? dump_stack+0x66/0x90
+[    0.271974]  ? memblock_reserve+0x4e/0x85
+[    0.272409]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.272943]  ? setup_arch+0x594/0x993
+[    0.273346]  ? start_kernel+0x65/0x4ec
+[    0.273759]  ? secondary_startup_64+0xa4/0xb0
+[    0.274236] zz memblock_insert_region idx:13 bf05c000 4000 totla_cnt:14 total_size: 472d140
+[    0.275163] memblock_reserve: [0x00000000bf060000-0x00000000bf064fff] efi_reserve_boot_services+0x76/0xc1
+[    0.276209] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.276815] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.277610] Call Trace:
+[    0.277852]  ? dump_stack+0x66/0x90
+[    0.278193]  ? memblock_reserve+0x4e/0x85
+[    0.278586]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.279063]  ? setup_arch+0x594/0x993
+[    0.279419]  ? start_kernel+0x65/0x4ec
+[    0.279804]  ? secondary_startup_64+0xa4/0xb0
+[    0.280240] zz memblock_insert_region idx:13 bf060000 5000 totla_cnt:14 total_size: 4732140
+[    0.281074] memblock_reserve: [0x00000000bf065000-0x00000000bf07dfff] efi_reserve_boot_services+0x76/0xc1
+[    0.282020] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.282613] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.283426] Call Trace:
+[    0.283693]  ? dump_stack+0x66/0x90
+[    0.284051]  ? memblock_reserve+0x4e/0x85
+[    0.284456]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.284948]  ? setup_arch+0x594/0x993
+[    0.285333]  ? start_kernel+0x65/0x4ec
+[    0.285716]  ? secondary_startup_64+0xa4/0xb0
+[    0.286165] zz memblock_insert_region idx:13 bf065000 19000 totla_cnt:14 total_size: 474b140
+[    0.287014] memblock_reserve: [0x00000000bf07e000-0x00000000bf085fff] efi_reserve_boot_services+0x76/0xc1
+[    0.288003] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.288623] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.289447] Call Trace:
+[    0.289697]  ? dump_stack+0x66/0x90
+[    0.290046]  ? memblock_reserve+0x4e/0x85
+[    0.290461]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.290949]  ? setup_arch+0x594/0x993
+[    0.291324]  ? start_kernel+0x65/0x4ec
+[    0.291722]  ? secondary_startup_64+0xa4/0xb0
+[    0.292172] zz memblock_insert_region idx:13 bf07e000 8000 totla_cnt:14 total_size: 4753140
+[    0.293029] memblock_reserve: [0x00000000bf086000-0x00000000bf095fff] efi_reserve_boot_services+0x76/0xc1
+[    0.293986] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.294604] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.295454] Call Trace:
+[    0.295720]  ? dump_stack+0x66/0x90
+[    0.296119]  ? memblock_reserve+0x4e/0x85
+[    0.296555]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.297063]  ? setup_arch+0x594/0x993
+[    0.297456]  ? start_kernel+0x65/0x4ec
+[    0.297856]  ? secondary_startup_64+0xa4/0xb0
+[    0.298326] zz memblock_insert_region idx:13 bf086000 10000 totla_cnt:14 total_size: 4763140
+[    0.299248] memblock_reserve: [0x00000000bf096000-0x00000000bf098fff] efi_reserve_boot_services+0x76/0xc1
+[    0.300292] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.300880] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.301665] Call Trace:
+[    0.301905]  ? dump_stack+0x66/0x90
+[    0.302259]  ? memblock_reserve+0x4e/0x85
+[    0.302653]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.303128]  ? setup_arch+0x594/0x993
+[    0.303549]  ? start_kernel+0x65/0x4ec
+[    0.303976]  ? secondary_startup_64+0xa4/0xb0
+[    0.304479] zz memblock_insert_region idx:13 bf096000 3000 totla_cnt:14 total_size: 4766140
+[    0.305419] memblock_reserve: [0x00000000bf099000-0x00000000bf0cafff] efi_reserve_boot_services+0x76/0xc1
+[    0.306360] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.306950] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.307785] Call Trace:
+[    0.308036]  ? dump_stack+0x66/0x90
+[    0.308385]  ? memblock_reserve+0x4e/0x85
+[    0.308824]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.309351]  ? setup_arch+0x594/0x993
+[    0.309754]  ? start_kernel+0x65/0x4ec
+[    0.310167]  ? secondary_startup_64+0xa4/0xb0
+[    0.310646] zz memblock_insert_region idx:13 bf099000 32000 totla_cnt:14 total_size: 4798140
+[    0.311573] memblock_reserve: [0x00000000bf0cb000-0x00000000bf0d2fff] efi_reserve_boot_services+0x76/0xc1
+[    0.312628] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.313287] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.314174] Call Trace:
+[    0.314442]  ? dump_stack+0x66/0x90
+[    0.314825]  ? memblock_reserve+0x4e/0x85
+[    0.315268]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.315796]  ? setup_arch+0x594/0x993
+[    0.316197]  ? start_kernel+0x65/0x4ec
+[    0.316570]  ? secondary_startup_64+0xa4/0xb0
+[    0.317007] zz memblock_insert_region idx:13 bf0cb000 8000 totla_cnt:14 total_size: 47a0140
+[    0.317812] memblock_reserve: [0x00000000bf0d3000-0x00000000bf0dcfff] efi_reserve_boot_services+0x76/0xc1
+[    0.318746] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.319341] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.320240] Call Trace:
+[    0.320493]  ? dump_stack+0x66/0x90
+[    0.320839]  ? memblock_reserve+0x4e/0x85
+[    0.321230]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.321702]  ? setup_arch+0x594/0x993
+[    0.322067]  ? start_kernel+0x65/0x4ec
+[    0.322461]  ? secondary_startup_64+0xa4/0xb0
+[    0.322882] zz memblock_insert_region idx:13 bf0d3000 a000 totla_cnt:14 total_size: 47aa140
+[    0.323701] memblock_reserve: [0x00000000bf0dd000-0x00000000bf0e0fff] efi_reserve_boot_services+0x76/0xc1
+[    0.324709] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.325394] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.326316] Call Trace:
+[    0.326597]  ? dump_stack+0x66/0x90
+[    0.327000]  ? memblock_reserve+0x4e/0x85
+[    0.327452]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.328017]  ? setup_arch+0x594/0x993
+[    0.328434]  ? start_kernel+0x65/0x4ec
+[    0.328860]  ? secondary_startup_64+0xa4/0xb0
+[    0.329368] zz memblock_insert_region idx:13 bf0dd000 4000 totla_cnt:14 total_size: 47ae140
+[    0.330322] memblock_reserve: [0x00000000bf0e1000-0x00000000bf103fff] efi_reserve_boot_services+0x76/0xc1
+[    0.331411] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.332098] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.333007] Call Trace:
+[    0.333279]  ? dump_stack+0x66/0x90
+[    0.333675]  ? memblock_reserve+0x4e/0x85
+[    0.334127]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.334671]  ? setup_arch+0x594/0x993
+[    0.335090]  ? start_kernel+0x65/0x4ec
+[    0.335521]  ? secondary_startup_64+0xa4/0xb0
+[    0.336035] zz memblock_insert_region idx:13 bf0e1000 23000 totla_cnt:14 total_size: 47d1140
+[    0.336985] memblock_reserve: [0x00000000bf104000-0x00000000bf10bfff] efi_reserve_boot_services+0x76/0xc1
+[    0.338070] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.338745] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.339659] Call Trace:
+[    0.339951]  ? dump_stack+0x66/0x90
+[    0.340346]  ? memblock_reserve+0x4e/0x85
+[    0.340799]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.341345]  ? setup_arch+0x594/0x993
+[    0.341768]  ? start_kernel+0x65/0x4ec
+[    0.342195]  ? secondary_startup_64+0xa4/0xb0
+[    0.342694] zz memblock_insert_region idx:13 bf104000 8000 totla_cnt:14 total_size: 47d9140
+[    0.343662] memblock_reserve: [0x00000000bf10c000-0x00000000bf118fff] efi_reserve_boot_services+0x76/0xc1
+[    0.344763] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.345448] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.346367] Call Trace:
+[    0.346648]  ? dump_stack+0x66/0x90
+[    0.347044]  ? memblock_reserve+0x4e/0x85
+[    0.347504]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.348062]  ? setup_arch+0x594/0x993
+[    0.348482]  ? start_kernel+0x65/0x4ec
+[    0.348920]  ? secondary_startup_64+0xa4/0xb0
+[    0.349425] zz memblock_insert_region idx:13 bf10c000 d000 totla_cnt:14 total_size: 47e6140
+[    0.350391] memblock_reserve: [0x00000000bf119000-0x00000000bf11bfff] efi_reserve_boot_services+0x76/0xc1
+[    0.351553] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.352313] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.353246] Call Trace:
+[    0.353535]  ? dump_stack+0x66/0x90
+[    0.353937]  ? memblock_reserve+0x4e/0x85
+[    0.354398]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.354933]  ? setup_arch+0x594/0x993
+[    0.355357]  ? start_kernel+0x65/0x4ec
+[    0.355806]  ? secondary_startup_64+0xa4/0xb0
+[    0.356318] zz memblock_insert_region idx:13 bf119000 3000 totla_cnt:14 total_size: 47e9140
+[    0.357281] memblock_reserve: [0x00000000bf11c000-0x00000000bf123fff] efi_reserve_boot_services+0x76/0xc1
+[    0.358399] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.359107] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.360047] Call Trace:
+[    0.360331]  ? dump_stack+0x66/0x90
+[    0.360739]  ? memblock_reserve+0x4e/0x85
+[    0.361205]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.361759]  ? setup_arch+0x594/0x993
+[    0.362186]  ? start_kernel+0x65/0x4ec
+[    0.362610]  ? secondary_startup_64+0xa4/0xb0
+[    0.363108] zz memblock_insert_region idx:13 bf11c000 8000 totla_cnt:14 total_size: 47f1140
+[    0.364071] memblock_reserve: [0x00000000bf124000-0x00000000bf126fff] efi_reserve_boot_services+0x76/0xc1
+[    0.365163] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.365844] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.366771] Call Trace:
+[    0.367050]  ? dump_stack+0x66/0x90
+[    0.367447]  ? memblock_reserve+0x4e/0x85
+[    0.367919]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.368465]  ? setup_arch+0x594/0x993
+[    0.368888]  ? start_kernel+0x65/0x4ec
+[    0.369317]  ? secondary_startup_64+0xa4/0xb0
+[    0.369812] zz memblock_insert_region idx:13 bf124000 3000 totla_cnt:14 total_size: 47f4140
+[    0.370764] memblock_reserve: [0x00000000bf127000-0x00000000bf12bfff] efi_reserve_boot_services+0x76/0xc1
+[    0.371880] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.372570] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.373490] Call Trace:
+[    0.373769]  ? dump_stack+0x66/0x90
+[    0.374167]  ? memblock_reserve+0x4e/0x85
+[    0.374623]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.375174]  ? setup_arch+0x594/0x993
+[    0.375592]  ? start_kernel+0x65/0x4ec
+[    0.376032]  ? secondary_startup_64+0xa4/0xb0
+[    0.376561] zz memblock_insert_region idx:13 bf127000 5000 totla_cnt:14 total_size: 47f9140
+[    0.377593] memblock_reserve: [0x00000000bf12c000-0x00000000bf16dfff] efi_reserve_boot_services+0x76/0xc1
+[    0.378782] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.379527] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.380469] Call Trace:
+[    0.380711]  ? dump_stack+0x66/0x90
+[    0.381055]  ? memblock_reserve+0x4e/0x85
+[    0.381457]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.381932]  ? setup_arch+0x594/0x993
+[    0.382297]  ? start_kernel+0x65/0x4ec
+[    0.382667]  ? secondary_startup_64+0xa4/0xb0
+[    0.383107] zz memblock_insert_region idx:13 bf12c000 42000 totla_cnt:14 total_size: 483b140
+[    0.383991] memblock_reserve: [0x00000000bf16e000-0x00000000bf17dfff] efi_reserve_boot_services+0x76/0xc1
+[    0.385095] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.385779] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.386701] Call Trace:
+[    0.386979]  ? dump_stack+0x66/0x90
+[    0.387374]  ? memblock_reserve+0x4e/0x85
+[    0.387841]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.388387]  ? setup_arch+0x594/0x993
+[    0.388805]  ? start_kernel+0x65/0x4ec
+[    0.389250]  ? secondary_startup_64+0xa4/0xb0
+[    0.389755] zz memblock_insert_region idx:13 bf16e000 10000 totla_cnt:14 total_size: 484b140
+[    0.390716] memblock_reserve: [0x00000000bf17e000-0x00000000bf17efff] efi_reserve_boot_services+0x76/0xc1
+[    0.391829] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.392516] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.393443] Call Trace:
+[    0.393721]  ? dump_stack+0x66/0x90
+[    0.394120]  ? memblock_reserve+0x4e/0x85
+[    0.394585]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.395129]  ? setup_arch+0x594/0x993
+[    0.395552]  ? start_kernel+0x65/0x4ec
+[    0.395986]  ? secondary_startup_64+0xa4/0xb0
+[    0.396488] zz memblock_insert_region idx:13 bf17e000 1000 totla_cnt:14 total_size: 484c140
+[    0.397449] memblock_reserve: [0x00000000bf17f000-0x00000000bf180fff] efi_reserve_boot_services+0x76/0xc1
+[    0.398542] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.399234] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.400176] Call Trace:
+[    0.400463]  ? dump_stack+0x66/0x90
+[    0.400859]  ? memblock_reserve+0x4e/0x85
+[    0.401319]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.401871]  ? setup_arch+0x594/0x993
+[    0.402303]  ? start_kernel+0x65/0x4ec
+[    0.402735]  ? secondary_startup_64+0xa4/0xb0
+[    0.403234] zz memblock_insert_region idx:13 bf17f000 2000 totla_cnt:14 total_size: 484e140
+[    0.404198] memblock_reserve: [0x00000000bf181000-0x00000000bf182fff] efi_reserve_boot_services+0x76/0xc1
+[    0.405299] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.405988] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.406907] Call Trace:
+[    0.407185]  ? dump_stack+0x66/0x90
+[    0.407585]  ? memblock_reserve+0x4e/0x85
+[    0.408048]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.408599]  ? setup_arch+0x594/0x993
+[    0.409023]  ? start_kernel+0x65/0x4ec
+[    0.409455]  ? secondary_startup_64+0xa4/0xb0
+[    0.409950] zz memblock_insert_region idx:13 bf181000 2000 totla_cnt:14 total_size: 4850140
+[    0.410898] memblock_reserve: [0x00000000bf183000-0x00000000bf184fff] efi_reserve_boot_services+0x76/0xc1
+[    0.412010] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.412692] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.413611] Call Trace:
+[    0.413890]  ? dump_stack+0x66/0x90
+[    0.414293]  ? memblock_reserve+0x4e/0x85
+[    0.414758]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.415305]  ? setup_arch+0x594/0x993
+[    0.415738]  ? start_kernel+0x65/0x4ec
+[    0.416185]  ? secondary_startup_64+0xa4/0xb0
+[    0.416690] zz memblock_insert_region idx:13 bf183000 2000 totla_cnt:14 total_size: 4852140
+[    0.417655] memblock_reserve: [0x00000000bf185000-0x00000000bf186fff] efi_reserve_boot_services+0x76/0xc1
+[    0.418756] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.419451] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.420387] Call Trace:
+[    0.420668]  ? dump_stack+0x66/0x90
+[    0.421070]  ? memblock_reserve+0x4e/0x85
+[    0.421536]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.422087]  ? setup_arch+0x594/0x993
+[    0.422510]  ? start_kernel+0x65/0x4ec
+[    0.422940]  ? secondary_startup_64+0xa4/0xb0
+[    0.423446] zz memblock_insert_region idx:13 bf185000 2000 totla_cnt:14 total_size: 4854140
+[    0.424488] memblock_reserve: [0x00000000bf187000-0x00000000bf18dfff] efi_reserve_boot_services+0x76/0xc1
+[    0.425600] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.426291] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.427230] Call Trace:
+[    0.427512]  ? dump_stack+0x66/0x90
+[    0.427932]  ? memblock_reserve+0x4e/0x85
+[    0.428393]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.428945]  ? setup_arch+0x594/0x993
+[    0.429361]  ? start_kernel+0x65/0x4ec
+[    0.429799]  ? secondary_startup_64+0xa4/0xb0
+[    0.430300] zz memblock_insert_region idx:13 bf187000 7000 totla_cnt:14 total_size: 485b140
+[    0.431345] memblock_reserve: [0x00000000bf18e000-0x00000000bf58dfff] efi_reserve_boot_services+0x76/0xc1
+[    0.432538] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.433278] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.434282] Call Trace:
+[    0.434580]  ? dump_stack+0x66/0x90
+[    0.435013]  ? memblock_reserve+0x4e/0x85
+[    0.435512]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.436128]  ? setup_arch+0x594/0x993
+[    0.436588]  ? start_kernel+0x65/0x4ec
+[    0.437060]  ? secondary_startup_64+0xa4/0xb0
+[    0.437608] zz memblock_insert_region idx:13 bf18e000 400000 totla_cnt:14 total_size: 4c5b140
+[    0.438660] memblock_reserve: [0x00000000bf58e000-0x00000000bf596fff] efi_reserve_boot_services+0x76/0xc1
+[    0.439818] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.440503] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.441427] Call Trace:
+[    0.441712]  ? dump_stack+0x66/0x90
+[    0.442129]  ? memblock_reserve+0x4e/0x85
+[    0.442604]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.443167]  ? setup_arch+0x594/0x993
+[    0.443616]  ? start_kernel+0x65/0x4ec
+[    0.444081]  ? secondary_startup_64+0xa4/0xb0
+[    0.444615] zz memblock_insert_region idx:13 bf58e000 9000 totla_cnt:14 total_size: 4c64140
+[    0.445653] memblock_reserve: [0x00000000bf597000-0x00000000bf599fff] efi_reserve_boot_services+0x76/0xc1
+[    0.446830] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.447594] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.448668] Call Trace:
+[    0.448981]  ? dump_stack+0x66/0x90
+[    0.449411]  ? memblock_reserve+0x4e/0x85
+[    0.449902]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.450496]  ? setup_arch+0x594/0x993
+[    0.450951]  ? start_kernel+0x65/0x4ec
+[    0.451419]  ? secondary_startup_64+0xa4/0xb0
+[    0.451980] zz memblock_insert_region idx:13 bf597000 3000 totla_cnt:14 total_size: 4c67140
+[    0.452982] memblock_reserve: [0x00000000bf59a000-0x00000000bf5b1fff] efi_reserve_boot_services+0x76/0xc1
+[    0.454070] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.454754] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.455686] Call Trace:
+[    0.455968]  ? dump_stack+0x66/0x90
+[    0.456371]  ? memblock_reserve+0x4e/0x85
+[    0.456831]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.457379]  ? setup_arch+0x594/0x993
+[    0.457804]  ? start_kernel+0x65/0x4ec
+[    0.458236]  ? secondary_startup_64+0xa4/0xb0
+[    0.458736] zz memblock_insert_region idx:13 bf59a000 18000 totla_cnt:14 total_size: 4c7f140
+[    0.459725] memblock_reserve: [0x00000000bf5b2000-0x00000000bf8eefff] efi_reserve_boot_services+0x76/0xc1
+[    0.460811] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.461490] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.462400] Call Trace:
+[    0.462681]  ? dump_stack+0x66/0x90
+[    0.463076]  ? memblock_reserve+0x4e/0x85
+[    0.463532]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.464090]  ? setup_arch+0x594/0x993
+[    0.464507]  ? start_kernel+0x65/0x4ec
+[    0.464934]  ? secondary_startup_64+0xa4/0xb0
+[    0.465435] zz memblock_insert_region idx:13 bf5b2000 33d000 totla_cnt:14 total_size: 4fbc140
+[    0.466408] memblock_reserve: [0x00000000bfbff000-0x00000000bfdfffff] efi_reserve_boot_services+0x76/0xc1
+[    0.467497] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.468197] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.469122] Call Trace:
+[    0.469398]  ? dump_stack+0x66/0x90
+[    0.469797]  ? memblock_reserve+0x4e/0x85
+[    0.470249]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.470798]  ? setup_arch+0x594/0x993
+[    0.471216]  ? start_kernel+0x65/0x4ec
+[    0.471647]  ? secondary_startup_64+0xa4/0xb0
+[    0.472159] zz memblock_insert_region idx:13 bfbff000 201000 totla_cnt:14 total_size: 51bd140
+[    0.473131] memblock_reserve: [0x00000000bfe0d000-0x00000000bfe2cfff] efi_reserve_boot_services+0x76/0xc1
+[    0.474216] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.474898] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.475834] Call Trace:
+[    0.476112]  ? dump_stack+0x66/0x90
+[    0.476513]  ? memblock_reserve+0x4e/0x85
+[    0.476971]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.477517]  ? setup_arch+0x594/0x993
+[    0.477944]  ? start_kernel+0x65/0x4ec
+[    0.478372]  ? secondary_startup_64+0xa4/0xb0
+[    0.478879] zz memblock_insert_region idx:14 bfe0d000 20000 totla_cnt:15 total_size: 51dd140
+[    0.479853] memblock_reserve: [0x00000000bfe2d000-0x00000000bfe59fff] efi_reserve_boot_services+0x76/0xc1
+[    0.480957] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.481643] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.482559] Call Trace:
+[    0.482845]  ? dump_stack+0x66/0x90
+[    0.483260]  ? memblock_reserve+0x4e/0x85
+[    0.483736]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.484277]  ? setup_arch+0x594/0x993
+[    0.484706]  ? start_kernel+0x65/0x4ec
+[    0.485148]  ? secondary_startup_64+0xa4/0xb0
+[    0.485665] zz memblock_insert_region idx:15 bfe2d000 2d000 totla_cnt:16 total_size: 520a140
+[    0.486664] memblock_reserve: [0x00000000bfe5a000-0x00000000bfe9bfff] efi_reserve_boot_services+0x76/0xc1
+[    0.487802] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.488506] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.489514] Call Trace:
+[    0.489818]  ? dump_stack+0x66/0x90
+[    0.490250]  ? memblock_reserve+0x4e/0x85
+[    0.490751]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.491341]  ? setup_arch+0x594/0x993
+[    0.491818]  ? start_kernel+0x65/0x4ec
+[    0.492285]  ? secondary_startup_64+0xa4/0xb0
+[    0.492827] zz memblock_insert_region idx:15 bfe5a000 42000 totla_cnt:16 total_size: 524c140
+[    0.493882] memblock_reserve: [0x00000000bfe9c000-0x00000000bfebbfff] efi_reserve_boot_services+0x76/0xc1
+[    0.495043] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.495744] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.496665] Call Trace:
+[    0.496942]  ? dump_stack+0x66/0x90
+[    0.497342]  ? memblock_reserve+0x4e/0x85
+[    0.497803]  ? efi_reserve_boot_services+0x76/0xc1
+[    0.498348]  ? setup_arch+0x594/0x993
+[    0.498765]  ? start_kernel+0x65/0x4ec
+[    0.499201]  ? secondary_startup_64+0xa4/0xb0
+[    0.499714] zz memblock_insert_region idx:15 bfe9c000 20000 totla_cnt:16 total_size: 526c140
+[    0.500679] zz __memblock_find_range_top_down size:6000 
+[    0.501282] memblock_reserve: [0x0000000000099000-0x000000000009efff] reserve_real_mode+0x7b/0x8d
+[    0.502302] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.502988] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.503922] Call Trace:
+[    0.504209]  ? dump_stack+0x66/0x90
+[    0.504608]  ? memblock_reserve+0x4e/0x85
+[    0.505064]  ? reserve_real_mode+0x7b/0x8d
+[    0.505525]  ? setup_arch+0x5a3/0x993
+[    0.505944]  ? start_kernel+0x65/0x4ec
+[    0.506370]  ? secondary_startup_64+0xa4/0xb0
+[    0.506869] zz memblock_insert_region idx:2 99000 6000 totla_cnt:16 total_size: 5272140
+[    0.507811] memblock_reserve: [0x0000000000000000-0x000000000000ffff] setup_arch+0x5c5/0x993
+[    0.508771] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.509460] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.510380] Call Trace:
+[    0.510662]  ? dump_stack+0x66/0x90
+[    0.511060]  ? memblock_reserve+0x4e/0x85
+[    0.511520]  ? setup_arch+0x5c5/0x993
+[    0.512061]  ? start_kernel+0x65/0x4ec
+[    0.512498]  ? secondary_startup_64+0xa4/0xb0
+[    0.513005] zz memblock_insert_region idx:1 1000 f000 totla_cnt:16 total_size: 5281140
+[    0.513923] Using GB pages for direct mapping
+[    0.514420] BRK [0x03c01000, 0x03c01fff] PGTABLE
+[    0.514422] BRK [0x03c02000, 0x03c02fff] PGTABLE
+[    0.514423] BRK [0x03c03000, 0x03c03fff] PGTABLE
+[    0.514457] zz __memblock_find_range_top_down size:200000 
+[    0.515186] BRK [0x03c04000, 0x03c04fff] PGTABLE
+[    0.515297] zz __memblock_find_range_top_down size:1000 
+[    0.515959] memblock_reserve: [0x000000023ffff000-0x000000023fffffff] alloc_low_pages+0x12b/0x190
+[    0.516978] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.517669] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.518598] Call Trace:
+[    0.518889]  ? dump_stack+0x66/0x90
+[    0.519300]  ? memblock_reserve+0x4e/0x85
+[    0.519811]  ? alloc_low_pages+0x12b/0x190
+[    0.520324]  ? phys_pud_init+0x1bf/0x237
+[    0.520814]  ? kernel_physical_mapping_init+0xca/0x19e
+[    0.521451]  ? init_memory_mapping+0x22d/0x330
+[    0.522001]  ? init_range_memory_mapping+0xcb/0x11b
+[    0.522610]  ? init_mem_mapping+0x222/0x2c5
+[    0.523125]  ? setup_arch+0x5ca/0x993
+[    0.523567]  ? start_kernel+0x65/0x4ec
+[    0.524029]  ? secondary_startup_64+0xa4/0xb0
+[    0.524565] zz memblock_insert_region idx:15 23ffff000 1000 totla_cnt:16 total_size: 5282140
+[    0.525647] zz __memblock_find_range_top_down size:1000 
+[    0.526312] memblock_reserve: [0x000000023fffe000-0x000000023fffefff] alloc_low_pages+0x12b/0x190
+[    0.527398] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.528229] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.529238] Call Trace:
+[    0.529546]  ? dump_stack+0x66/0x90
+[    0.529979]  ? memblock_reserve+0x4e/0x85
+[    0.530485]  ? alloc_low_pages+0x12b/0x190
+[    0.530999]  ? phys_pmd_init+0x1c9/0x23d
+[    0.531491]  ? phys_pud_init+0x11c/0x237
+[    0.531999]  ? kernel_physical_mapping_init+0xca/0x19e
+[    0.532625]  ? init_memory_mapping+0x22d/0x330
+[    0.533136]  ? init_range_memory_mapping+0xcb/0x11b
+[    0.533698]  ? init_mem_mapping+0x222/0x2c5
+[    0.534179]  ? setup_arch+0x5ca/0x993
+[    0.534603]  ? start_kernel+0x65/0x4ec
+[    0.535033]  ? secondary_startup_64+0xa4/0xb0
+[    0.535537] zz memblock_insert_region idx:15 23fffe000 1000 totla_cnt:17 total_size: 5283140
+[    0.536562] BRK [0x03c05000, 0x03c05fff] PGTABLE
+[    0.536603] BRK [0x03c06000, 0x03c06fff] PGTABLE
+[    0.536638] BRK [0x03c07000, 0x03c07fff] PGTABLE
+[    0.536692] Secure boot disabled
+[    0.537065] RAMDISK: [mem 0x3d133000-0x3e316fff]
+[    0.537613] ACPI: Early table checksum verification disabled
+[    0.538265] ACPI: RSDP 0x00000000BFB7E014 000024 (v02 BOCHS )
+[    0.538935] ACPI: XSDT 0x00000000BFB7D0E8 000044 (v01 BOCHS  BXPCFACP 00000001      01000013)
+[    0.539943] ACPI: FACP 0x00000000BFB7A000 000074 (v01 BOCHS  BXPCFACP 00000001 BXPC 00000001)
+[    0.540930] ACPI: DSDT 0x00000000BFB7B000 001662 (v01 BOCHS  BXPCDSDT 00000001 BXPC 00000001)
+[    0.541919] ACPI: FACS 0x00000000BFBDD000 000040
+[    0.542447] ACPI: APIC 0x00000000BFB79000 0000B0 (v01 BOCHS  BXPCAPIC 00000001 BXPC 00000001)
+[    0.543425] ACPI: HPET 0x00000000BFB78000 000038 (v01 BOCHS  BXPCHPET 00000001 BXPC 00000001)
+[    0.544417] ACPI: BGRT 0x00000000BFB77000 000038 (v01 INTEL  EDK2     00000002      01000013)
+[    0.545403] ACPI: Local APIC address 0xfee00000
+[    0.545720] No NUMA configuration found
+[    0.546163] Faking a node at [mem 0x0000000000000000-0x000000023fffffff]
+[    0.546944] zz __memblock_find_range_top_down size:22000 
+[    0.547566] memblock_reserve: [0x000000023ffdc000-0x000000023fffdfff] memblock_alloc_base_nid+0x43/0x4e
+[    0.548669] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.549361] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.550343] Call Trace:
+[    0.550645]  ? dump_stack+0x66/0x90
+[    0.551073]  ? memblock_reserve+0x4e/0x85
+[    0.551569]  ? memblock_alloc_base_nid+0x43/0x4e
+[    0.552141]  ? memblock_alloc_nid+0x2c/0x42
+[    0.552652]  ? alloc_node_data+0x1e/0xc9
+[    0.553130]  ? numa_init+0x2be/0x3b6
+[    0.553568]  ? setup_arch+0x86b/0x993
+[    0.554017]  ? start_kernel+0x65/0x4ec
+[    0.554468]  ? secondary_startup_64+0xa4/0xb0
+[    0.555012] zz memblock_insert_region idx:15 23ffdc000 22000 totla_cnt:17 total_size: 52a5140
+[    0.556088] NODE_DATA(0) allocated [mem 0x23ffdc000-0x23fffdfff]
+[    0.556838] MEMBLOCK configuration:
+[    0.557276]  memory size = 0x00000001e0653000 reserved size = 0x00000000052a5140
+[    0.558164]  memory.cnt  = 0x6
+[    0.558515]  memory[0x0]	[0x0000000000001000-0x000000000009ffff], 0x000000000009f000 bytes on node 0 flags: 0x0
+[    0.559694]  memory[0x1]	[0x0000000000100000-0x00000000007fffff], 0x0000000000700000 bytes on node 0 flags: 0x0
+[    0.560863]  memory[0x2]	[0x0000000000808000-0x000000000080ffff], 0x0000000000008000 bytes on node 0 flags: 0x0
+[    0.562017]  memory[0x3]	[0x0000000000900000-0x00000000bf8eefff], 0x00000000befef000 bytes on node 0 flags: 0x0
+[    0.563165]  memory[0x4]	[0x00000000bfbff000-0x00000000bfebbfff], 0x00000000002bd000 bytes on node 0 flags: 0x0
+[    0.564330]  memory[0x5]	[0x000000011f400000-0x000000023fffffff], 0x0000000120c00000 bytes on node 0 flags: 0x0
+[    0.565504]  reserved.cnt  = 0x11
+[    0.565898]  reserved[0x0]	[0x0000000000000000-0x000000000000ffff], 0x0000000000010000 bytes on node 0 flags: 0x0
+[    0.567110]  reserved[0x1]	[0x0000000000087000-0x0000000000087fff], 0x0000000000001000 bytes on node 0 flags: 0x0
+[    0.568323]  reserved[0x2]	[0x0000000000099000-0x00000000000fffff], 0x0000000000067000 bytes on node 0 flags: 0x0
+[    0.569535]  reserved[0x3]	[0x0000000000900000-0x00000000014fffff], 0x0000000000c00000 bytes on node 0 flags: 0x0
+[    0.570807]  reserved[0x4]	[0x0000000002000000-0x0000000003c0cfff], 0x0000000001c0d000 bytes on node 0 flags: 0x0
+[    0.572039]  reserved[0x5]	[0x000000003d133000-0x000000003e316fff], 0x00000000011e4000 bytes on node 0 flags: 0x0
+[    0.573251]  reserved[0x6]	[0x00000000bbefe000-0x00000000bbf1dfff], 0x0000000000020000 bytes on node 0 flags: 0x0
+[    0.574454]  reserved[0x7]	[0x00000000be056018-0x00000000be0a1057], 0x000000000004b040 bytes on node 0 flags: 0x0
+[    0.575717]  reserved[0x8]	[0x00000000be2cd000-0x00000000be2cdfff], 0x0000000000001000 bytes on node 0 flags: 0x0
+[    0.576974]  reserved[0x9]	[0x00000000be2d4018-0x00000000be2d52d7], 0x00000000000012c0 bytes on node 0 flags: 0x0
+[    0.578245]  reserved[0xa]	[0x00000000be2d8018-0x00000000be2e1a57], 0x0000000000009a40 bytes on node 0 flags: 0x0
+[    0.579525]  reserved[0xb]	[0x00000000be3f7018-0x00000000be3f7417], 0x0000000000000400 bytes on node 0 flags: 0x0
+[    0.580747]  reserved[0xc]	[0x00000000be3fe000-0x00000000bf8eefff], 0x00000000014f1000 bytes on node 0 flags: 0x0
+[    0.581921]  reserved[0xd]	[0x00000000bfbff000-0x00000000bfdfffff], 0x0000000000201000 bytes on node 0 flags: 0x0
+[    0.583104]  reserved[0xe]	[0x00000000bfe0d000-0x00000000bfebbfff], 0x00000000000af000 bytes on node 0 flags: 0x0
+[    0.584296]  reserved[0xf]	[0x000000023ffdc000-0x000000023fffdfff], 0x0000000000022000 bytes flags: 0x0
+[    0.585377]  reserved[0x10]	[0x000000023fffe000-0x000000023fffffff], 0x0000000000002000 bytes on node 0 flags: 0x0
+[    0.586685] zz __memblock_find_range_top_down size:d700000 
+[    0.587333] memblock_reserve: [0x000000002a000000-0x00000000376fffff] reserve_crashkernel+0x111/0x2c6
+[    0.588466] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.589233] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.590253] Call Trace:
+[    0.590562]  ? dump_stack+0x66/0x90
+[    0.591006]  ? memblock_reserve+0x4e/0x85
+[    0.591511]  ? reserve_crashkernel+0x111/0x2c6
+[    0.592086]  ? __next_node_in+0x33/0x50
+[    0.592564]  ? setup_arch+0x870/0x993
+[    0.593023]  ? start_kernel+0x65/0x4ec
+[    0.593491]  ? secondary_startup_64+0xa4/0xb0
+[    0.594042] zz memblock_insert_region idx:5 2a000000 d700000 totla_cnt:18 total_size: 129a5140
+[    0.595139] Reserving 215MB of memory at 672MB for crashkernel (System RAM: 7686MB)
+[    0.596102] memblock_virt_alloc_try_nid: 16384 bytes align=0x40 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 memory_present+0x3e/0xe3
+[    0.597667] zz __memblock_find_range_top_down size:4000 
+[    0.598276] memblock_reserve: [0x000000023ffd8000-0x000000023ffdbfff] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.599419] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.600117] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.601052] Call Trace:
+[    0.601334]  ? dump_stack+0x66/0x90
+[    0.601733]  ? memblock_reserve+0x4e/0x85
+[    0.602191]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.602781]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.603347]  ? memory_present+0x3e/0xe3
+[    0.603807]  ? sparse_memory_present_with_active_regions+0x55/0x8b
+[    0.604527]  ? paging_init+0xf/0x31
+[    0.604925]  ? setup_arch+0x87e/0x993
+[    0.605343]  ? start_kernel+0x65/0x4ec
+[    0.605772]  ? secondary_startup_64+0xa4/0xb0
+[    0.606273] zz memblock_insert_region idx:16 23ffd8000 4000 totla_cnt:19 total_size: 129a9140
+[    0.607253] memblock_virt_alloc_try_nid: 4096 bytes align=0x0 nid=0 from=0x0000000000000000 max_addr=0x0000000000000000 sparse_index_init+0x23/0x41
+[    0.608794] zz __memblock_find_range_top_down size:1000 
+[    0.609406] memblock_reserve: [0x000000023ffd7000-0x000000023ffd7fff] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.610540] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.611225] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.612164] Call Trace:
+[    0.612450]  ? dump_stack+0x66/0x90
+[    0.612864]  ? memblock_reserve+0x4e/0x85
+[    0.613358]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.613985]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.614599]  ? sparse_index_init+0x23/0x41
+[    0.615114]  ? memory_present+0x83/0xe3
+[    0.615591]  ? sparse_memory_present_with_active_regions+0x55/0x8b
+[    0.616383]  ? paging_init+0xf/0x31
+[    0.616817]  ? setup_arch+0x87e/0x993
+[    0.617270]  ? start_kernel+0x65/0x4ec
+[    0.617732]  ? secondary_startup_64+0xa4/0xb0
+[    0.618266] zz memblock_insert_region idx:16 23ffd7000 1000 totla_cnt:19 total_size: 129aa140
+[    0.619332] memblock_virt_alloc_try_nid_nopanic: 1952 bytes align=0x40 nid=0 from=0x0000000238000000 max_addr=0x0000000240000000 sparse_init_nid+0x92/0x3eb
+[    0.621054] zz __memblock_find_range_top_down size:7a0 
+[    0.621650] memblock_reserve: [0x000000023ffd6840-0x000000023ffd6fdf] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.622785] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.623488] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.624430] Call Trace:
+[    0.624710]  ? dump_stack+0x66/0x90
+[    0.625109]  ? memblock_reserve+0x4e/0x85
+[    0.625567]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.626155]  ? memblock_virt_alloc_try_nid_nopanic+0x69/0x87
+[    0.626802]  ? sparse_init_nid+0x92/0x3eb
+[    0.627266]  ? sparse_init+0x126/0x133
+[    0.627709]  ? paging_init+0x14/0x31
+[    0.628117]  ? setup_arch+0x87e/0x993
+[    0.628541]  ? start_kernel+0x65/0x4ec
+[    0.628979]  ? secondary_startup_64+0xa4/0xb0
+[    0.629484] zz memblock_insert_region idx:16 23ffd6840 7a0 totla_cnt:19 total_size: 129aa8e0
+[    0.630480] memblock_virt_alloc_try_nid_raw: 127926272 bytes align=0x1000 nid=0 from=0x0000000001000000 max_addr=0x0000000000000000 sparse_init_nid+0x133/0x3eb
+[    0.632198] zz __memblock_find_range_top_down size:7a00000 
+[    0.632836] memblock_reserve: [0x00000002385d6000-0x000000023ffd5fff] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.633984] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.634664] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.635590] Call Trace:
+[    0.635900]  ? dump_stack+0x66/0x90
+[    0.636295]  ? memblock_reserve+0x4e/0x85
+[    0.636755]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.637341]  ? memblock_virt_alloc_try_nid_raw+0x69/0x72
+[    0.637985]  ? sparse_init_nid+0x133/0x3eb
+[    0.638497]  ? sparse_init+0x126/0x133
+[    0.638973]  ? paging_init+0x14/0x31
+[    0.639416]  ? setup_arch+0x87e/0x993
+[    0.639881]  ? start_kernel+0x65/0x4ec
+[    0.640344]  ? secondary_startup_64+0xa4/0xb0
+[    0.640891] zz memblock_insert_region idx:16 2385d6000 7a00000 totla_cnt:20 total_size: 1a3aa8e0
+[    0.642059] memblock_virt_alloc_try_nid_raw: 4096 bytes align=0x1000 nid=0 from=0x0000000001000000 max_addr=0x0000000000000000 vmemmap_alloc_block_zero.constprop.0+0xc/0x24
+[    0.643997] zz __memblock_find_range_top_down size:1000 
+[    0.644650] memblock_reserve: [0x00000002385d5000-0x00000002385d5fff] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.645886] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.646633] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.647630] Call Trace:
+[    0.647940]  ? dump_stack+0x66/0x90
+[    0.648342]  ? memblock_reserve+0x4e/0x85
+[    0.648796]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.649389]  ? memblock_virt_alloc_try_nid_raw+0x69/0x72
+[    0.650005]  ? vmemmap_alloc_block_zero.constprop.0+0xc/0x24
+[    0.650645]  ? vmemmap_p4d_populate+0x1b/0xa0
+[    0.651143]  ? vmemmap_populate+0x7f/0x29a
+[    0.651615]  ? sparse_mem_map_populate+0x27/0x34
+[    0.652148]  ? sparse_init_nid+0x19b/0x3eb
+[    0.652622]  ? sparse_init+0x126/0x133
+[    0.653054]  ? paging_init+0x14/0x31
+[    0.653464]  ? setup_arch+0x87e/0x993
+[    0.653890]  ? start_kernel+0x65/0x4ec
+[    0.654323]  ? secondary_startup_64+0xa4/0xb0
+[    0.654820] zz memblock_insert_region idx:16 2385d5000 1000 totla_cnt:21 total_size: 1a3ab8e0
+[    0.655819] memblock_virt_alloc_try_nid_raw: 4096 bytes align=0x1000 nid=0 from=0x0000000001000000 max_addr=0x0000000000000000 vmemmap_alloc_block_zero.constprop.0+0xc/0x24
+[    0.657743] zz __memblock_find_range_top_down size:1000 
+[    0.658396] memblock_reserve: [0x00000002385d4000-0x00000002385d4fff] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.659637] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.660398] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.661411] Call Trace:
+[    0.661715]  ? dump_stack+0x66/0x90
+[    0.662156]  ? memblock_reserve+0x4e/0x85
+[    0.662671]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.663320]  ? memblock_virt_alloc_try_nid_raw+0x69/0x72
+[    0.663997]  ? vmemmap_alloc_block_zero.constprop.0+0xc/0x24
+[    0.664705]  ? vmemmap_pud_populate+0x4e/0xd6
+[    0.665212]  ? vmemmap_populate+0x96/0x29a
+[    0.665677]  ? sparse_mem_map_populate+0x27/0x34
+[    0.666210]  ? sparse_init_nid+0x19b/0x3eb
+[    0.666677]  ? sparse_init+0x126/0x133
+[    0.667107]  ? paging_init+0x14/0x31
+[    0.667516]  ? setup_arch+0x87e/0x993
+[    0.667946]  ? start_kernel+0x65/0x4ec
+[    0.668372]  ? secondary_startup_64+0xa4/0xb0
+[    0.668872] zz memblock_insert_region idx:16 2385d4000 1000 totla_cnt:21 total_size: 1a3ac8e0
+[    0.669838] memblock_virt_alloc_try_nid_raw: 2097152 bytes align=0x200000 nid=0 from=0x0000000001000000 max_addr=0x0000000000000000 vmemmap_populate+0xf8/0x29a
+[    0.671473] zz __memblock_find_range_top_down size:200000 
+[    0.672116] memblock_reserve: [0x0000000238200000-0x00000002383fffff] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.673246] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.673929] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.674866] Call Trace:
+[    0.675144]  ? dump_stack+0x66/0x90
+[    0.675540]  ? memblock_reserve+0x4e/0x85
+[    0.676009]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.676590]  ? memblock_virt_alloc_try_nid_raw+0x69/0x72
+[    0.677199]  ? vmemmap_populate+0xf8/0x29a
+[    0.677664]  ? sparse_mem_map_populate+0x27/0x34
+[    0.678192]  ? sparse_init_nid+0x19b/0x3eb
+[    0.678658]  ? sparse_init+0x126/0x133
+[    0.679096]  ? paging_init+0x14/0x31
+[    0.679503]  ? setup_arch+0x87e/0x993
+[    0.679939]  ? start_kernel+0x65/0x4ec
+[    0.680367]  ? secondary_startup_64+0xa4/0xb0
+[    0.680865] zz memblock_insert_region idx:16 238200000 200000 totla_cnt:21 total_size: 1a5ac8e0
+[    0.681858]    memblock_free: [0x000000023fe00000-0x000000023ffd5fff] sparse_init_nid+0x349/0x3eb
+[    0.682872] zz memblock_isolate_range idx:17 23fe00000 782c000 totla_cnt:21 total_size: 12d808e0
+[    0.683891] zz memblock_insert_region idx:17 2385d4000 782c000 totla_cnt:22 total_size: 1a5ac8e0
+[    0.684886] zz memblock_remove_region idx:18 23fe00000 1d6000 totla_cnt:21 total_size: 1a3d68e0
+[    0.685876] Zone ranges:
+[    0.686166]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.686867]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.687578]   Normal   [mem 0x0000000100000000-0x000000023fffffff]
+[    0.688293] Movable zone start for each node
+[    0.688780] Early memory node ranges
+[    0.689192]   node   0: [mem 0x0000000000001000-0x000000000009ffff]
+[    0.689909]   node   0: [mem 0x0000000000100000-0x00000000007fffff]
+[    0.690639]   node   0: [mem 0x0000000000808000-0x000000000080ffff]
+[    0.691364]   node   0: [mem 0x0000000000900000-0x00000000bf8eefff]
+[    0.692090]   node   0: [mem 0x00000000bfbff000-0x00000000bfebbfff]
+[    0.692812]   node   0: [mem 0x000000011f400000-0x000000023fffffff]
+[    0.693531] Reserved but unavailable: 97 pages
+[    0.693533] Initmem setup node 0 [mem 0x0000000000001000-0x000000023fffffff]
+[    0.694857] On node 0 totalpages: 1967699
+[    0.694857]   DMA zone: 59 pages used for memmap
+[    0.694858]   DMA zone: 1815 pages reserved
+[    0.694858]   DMA zone: 3751 pages, LIFO batch:0
+[    0.694891]   DMA32 zone: 12207 pages used for memmap
+[    0.694891]   DMA32 zone: 781228 pages, LIFO batch:63
+[    0.702593]   Normal zone: 18480 pages used for memmap
+[    0.702595]   Normal zone: 1182720 pages, LIFO batch:63
+[    0.714442] ACPI: PM-Timer IO Port: 0xb008
+[    0.714969] ACPI: Local APIC address 0xfee00000
+[    0.714978] ACPI: LAPIC_NMI (acpi_id[0xff] dfl dfl lint[0x1])
+[    0.715726] IOAPIC[0]: apic_id 0, version 17, address 0xfec00000, GSI 0-23
+[    0.716579] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.717352] ACPI: INT_SRC_OVR (bus 0 bus_irq 5 global_irq 5 high level)
+[    0.718108] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.718862] ACPI: INT_SRC_OVR (bus 0 bus_irq 10 global_irq 10 high level)
+[    0.719634] ACPI: INT_SRC_OVR (bus 0 bus_irq 11 global_irq 11 high level)
+[    0.720418] ACPI: IRQ0 used by override.
+[    0.720418] ACPI: IRQ5 used by override.
+[    0.720419] ACPI: IRQ9 used by override.
+[    0.720419] ACPI: IRQ10 used by override.
+[    0.720420] ACPI: IRQ11 used by override.
+[    0.720421] Using ACPI (MADT) for SMP configuration information
+[    0.721097] ACPI: HPET id: 0x8086a201 base: 0xfed00000
+[    0.721679] zz __memblock_find_range_top_down size:49 
+[    0.722273] memblock_reserve: [0x000000023ffd67c0-0x000000023ffd6808] __alloc_memory_core_early+0x84/0xac
+[    0.723364] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.724084] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.725099] Call Trace:
+[    0.725408]  ? dump_stack+0x66/0x90
+[    0.725841]  ? memblock_reserve+0x4e/0x85
+[    0.726344]  ? __alloc_memory_core_early+0x84/0xac
+[    0.726938]  ? ___alloc_bootmem_nopanic+0x50/0x5c
+[    0.727534]  ? __alloc_bootmem+0x12/0x34
+[    0.728043]  ? acpi_parse_hpet+0xc4/0x10f
+[    0.728552]  ? acpi_parse_ioapic+0x99/0x99
+[    0.729079]  ? acpi_table_parse+0x86/0xb8
+[    0.729573]  ? acpi_boot_init+0x47f/0x4ce
+[    0.730079]  ? acpi_parse_x2apic+0x87/0x87
+[    0.730594]  ? setup_acpi_sci+0xa2/0xa2
+[    0.731078]  ? setup_arch+0x892/0x993
+[    0.731541]  ? start_kernel+0x65/0x4ec
+[    0.732031]  ? secondary_startup_64+0xa4/0xb0
+[    0.732577] zz memblock_insert_region idx:18 23ffd67c0 49 totla_cnt:22 total_size: 1a3d6929
+[    0.733622] smpboot: Allowing 8 CPUs, 0 hotplug CPUs
+[    0.734245] zz __memblock_find_range_top_down size:4b 
+[    0.734881] memblock_reserve: [0x000000023ffd6740-0x000000023ffd678a] __alloc_memory_core_early+0x84/0xac
+[    0.736301] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.737061] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.738078] Call Trace:
+[    0.738387]  ? dump_stack+0x66/0x90
+[    0.738839]  ? memblock_reserve+0x4e/0x85
+[    0.739351]  ? __alloc_memory_core_early+0x84/0xac
+[    0.739973]  ? ___alloc_bootmem_nopanic+0x50/0x5c
+[    0.740565]  ? __alloc_bootmem+0x12/0x34
+[    0.741072]  ? io_apic_init_mappings+0x31/0x176
+[    0.741649]  ? setup_arch+0x8b6/0x993
+[    0.742109]  ? start_kernel+0x65/0x4ec
+[    0.742638]  ? secondary_startup_64+0xa4/0xb0
+[    0.743184] zz memblock_insert_region idx:18 23ffd6740 4b totla_cnt:23 total_size: 1a3d6974
+[    0.744252] zz __memblock_find_range_top_down size:4c0 
+[    0.744907] memblock_reserve: [0x000000023ffd6280-0x000000023ffd673f] __alloc_memory_core_early+0x84/0xac
+[    0.746095] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.746837] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.747850] Call Trace:
+[    0.748160]  ? dump_stack+0x66/0x90
+[    0.748587]  ? memblock_reserve+0x4e/0x85
+[    0.749084]  ? __alloc_memory_core_early+0x84/0xac
+[    0.749636]  ? ___alloc_bootmem_nopanic+0x50/0x5c
+[    0.750176]  ? __alloc_bootmem+0x12/0x34
+[    0.750627]  ? e820__reserve_resources+0x2f/0x138
+[    0.751172]  ? setup_arch+0x8c4/0x993
+[    0.751589]  ? start_kernel+0x65/0x4ec
+[    0.752024]  ? secondary_startup_64+0xa4/0xb0
+[    0.752520] zz memblock_insert_region idx:18 23ffd6280 4c0 totla_cnt:24 total_size: 1a3d6e34
+[    0.753484] zz __request_resource start:900000 end:be056017 name:System RAM 
+[    0.754295] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.755880] zz __memblock_find_range_top_down size:68 
+[    0.756468] memblock_reserve: [0x000000023ffd6200-0x000000023ffd6267] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.757611] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.758296] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.759229] Call Trace:
+[    0.759509]  ? dump_stack+0x66/0x90
+[    0.759914]  ? memblock_reserve+0x4e/0x85
+[    0.760371]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.760964]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.761536]  ? firmware_map_add_early+0x27/0x5b
+[    0.762059]  ? e820__reserve_resources+0x12d/0x138
+[    0.762607]  ? setup_arch+0x8c4/0x993
+[    0.763022]  ? start_kernel+0x65/0x4ec
+[    0.763456]  ? secondary_startup_64+0xa4/0xb0
+[    0.763963] zz memblock_insert_region idx:18 23ffd6200 68 totla_cnt:24 total_size: 1a3d6e9c
+[    0.764930] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.766533] zz __memblock_find_range_top_down size:68 
+[    0.767171] memblock_reserve: [0x000000023ffd6180-0x000000023ffd61e7] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.768418] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.769169] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.770175] Call Trace:
+[    0.770480]  ? dump_stack+0x66/0x90
+[    0.770918]  ? memblock_reserve+0x4e/0x85
+[    0.771427]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.772070]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.772689]  ? firmware_map_add_early+0x27/0x5b
+[    0.773244]  ? e820__reserve_resources+0x12d/0x138
+[    0.773844]  ? setup_arch+0x8c4/0x993
+[    0.774300]  ? start_kernel+0x65/0x4ec
+[    0.774766]  ? secondary_startup_64+0xa4/0xb0
+[    0.775293] zz memblock_insert_region idx:18 23ffd6180 68 totla_cnt:25 total_size: 1a3d6f04
+[    0.776249] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.777803] zz __memblock_find_range_top_down size:68 
+[    0.778383] memblock_reserve: [0x000000023ffd6100-0x000000023ffd6167] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.779506] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.780202] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.781111] Call Trace:
+[    0.781391]  ? dump_stack+0x66/0x90
+[    0.781788]  ? memblock_reserve+0x4e/0x85
+[    0.782241]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.782841]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.783414]  ? firmware_map_add_early+0x27/0x5b
+[    0.783938]  ? e820__reserve_resources+0x12d/0x138
+[    0.784478]  ? setup_arch+0x8c4/0x993
+[    0.784902]  ? start_kernel+0x65/0x4ec
+[    0.785334]  ? secondary_startup_64+0xa4/0xb0
+[    0.785827] zz memblock_insert_region idx:18 23ffd6100 68 totla_cnt:26 total_size: 1a3d6f6c
+[    0.786778] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.788340] zz __memblock_find_range_top_down size:68 
+[    0.788942] memblock_reserve: [0x000000023ffd6080-0x000000023ffd60e7] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.790069] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.790748] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.791732] Call Trace:
+[    0.792036]  ? dump_stack+0x66/0x90
+[    0.792464]  ? memblock_reserve+0x4e/0x85
+[    0.792966]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.793595]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.794215]  ? firmware_map_add_early+0x27/0x5b
+[    0.794770]  ? e820__reserve_resources+0x12d/0x138
+[    0.795370]  ? setup_arch+0x8c4/0x993
+[    0.795841]  ? start_kernel+0x65/0x4ec
+[    0.796323]  ? secondary_startup_64+0xa4/0xb0
+[    0.796869] zz memblock_insert_region idx:18 23ffd6080 68 totla_cnt:27 total_size: 1a3d6fd4
+[    0.797910] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.799637] zz __memblock_find_range_top_down size:68 
+[    0.800283] memblock_reserve: [0x000000023ffd6000-0x000000023ffd6067] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.801410] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.802092] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.803015] Call Trace:
+[    0.803295]  ? dump_stack+0x66/0x90
+[    0.803705]  ? memblock_reserve+0x4e/0x85
+[    0.804162]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.804739]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.805304]  ? firmware_map_add_early+0x27/0x5b
+[    0.805817]  ? e820__reserve_resources+0x12d/0x138
+[    0.806359]  ? setup_arch+0x8c4/0x993
+[    0.806775]  ? start_kernel+0x65/0x4ec
+[    0.807202]  ? secondary_startup_64+0xa4/0xb0
+[    0.807707] zz memblock_insert_region idx:18 23ffd6000 68 totla_cnt:28 total_size: 1a3d703c
+[    0.808673] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.810225] zz __memblock_find_range_top_down size:68 
+[    0.810810] memblock_reserve: [0x000000023ffd5f80-0x000000023ffd5fe7] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.811967] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.812654] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.813573] Call Trace:
+[    0.813854]  ? dump_stack+0x66/0x90
+[    0.814251]  ? memblock_reserve+0x4e/0x85
+[    0.814703]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.815299]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.815879]  ? firmware_map_add_early+0x27/0x5b
+[    0.816412]  ? e820__reserve_resources+0x12d/0x138
+[    0.817010]  ? setup_arch+0x8c4/0x993
+[    0.817467]  ? start_kernel+0x65/0x4ec
+[    0.817929]  ? secondary_startup_64+0xa4/0xb0
+[    0.818467] zz memblock_insert_region idx:18 23ffd5f80 68 totla_cnt:29 total_size: 1a3d70a4
+[    0.819509] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.821220] zz __memblock_find_range_top_down size:68 
+[    0.821858] memblock_reserve: [0x000000023ffd5f00-0x000000023ffd5f67] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.823095] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.823856] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.824858] Call Trace:
+[    0.825163]  ? dump_stack+0x66/0x90
+[    0.825568]  ? memblock_reserve+0x4e/0x85
+[    0.826022]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.826606]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.827170]  ? firmware_map_add_early+0x27/0x5b
+[    0.827700]  ? e820__reserve_resources+0x12d/0x138
+[    0.828266]  ? setup_arch+0x8c4/0x993
+[    0.828687]  ? start_kernel+0x65/0x4ec
+[    0.829117]  ? secondary_startup_64+0xa4/0xb0
+[    0.829620] zz memblock_insert_region idx:18 23ffd5f00 68 totla_cnt:30 total_size: 1a3d710c
+[    0.830574] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.832157] zz __memblock_find_range_top_down size:68 
+[    0.832744] memblock_reserve: [0x000000023ffd5e80-0x000000023ffd5ee7] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.833880] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.834571] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.835497] Call Trace:
+[    0.835785]  ? dump_stack+0x66/0x90
+[    0.836189]  ? memblock_reserve+0x4e/0x85
+[    0.836645]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.837238]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.837804]  ? firmware_map_add_early+0x27/0x5b
+[    0.838327]  ? e820__reserve_resources+0x12d/0x138
+[    0.838882]  ? setup_arch+0x8c4/0x993
+[    0.839300]  ? start_kernel+0x65/0x4ec
+[    0.839831]  ? secondary_startup_64+0xa4/0xb0
+[    0.840332] zz memblock_insert_region idx:18 23ffd5e80 68 totla_cnt:31 total_size: 1a3d7174
+[    0.841294] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.842857] zz __memblock_find_range_top_down size:68 
+[    0.843447] memblock_reserve: [0x000000023ffd5e00-0x000000023ffd5e67] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.844601] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.845298] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.846214] Call Trace:
+[    0.846491]  ? dump_stack+0x66/0x90
+[    0.846892]  ? memblock_reserve+0x4e/0x85
+[    0.847347]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.847942]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.848511]  ? firmware_map_add_early+0x27/0x5b
+[    0.849037]  ? e820__reserve_resources+0x12d/0x138
+[    0.849601]  ? setup_arch+0x8c4/0x993
+[    0.850022]  ? start_kernel+0x65/0x4ec
+[    0.850479]  ? secondary_startup_64+0xa4/0xb0
+[    0.851018] zz memblock_insert_region idx:18 23ffd5e00 68 totla_cnt:32 total_size: 1a3d71dc
+[    0.852079] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.853778] zz __memblock_find_range_top_down size:68 
+[    0.854419] memblock_reserve: [0x000000023ffd5d80-0x000000023ffd5de7] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.855656] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.856409] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.857420] Call Trace:
+[    0.857726]  ? dump_stack+0x66/0x90
+[    0.858160]  ? memblock_reserve+0x4e/0x85
+[    0.858626]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.859208]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.859782]  ? firmware_map_add_early+0x27/0x5b
+[    0.860303]  ? e820__reserve_resources+0x12d/0x138
+[    0.860850]  ? setup_arch+0x8c4/0x993
+[    0.861269]  ? start_kernel+0x65/0x4ec
+[    0.861692]  ? secondary_startup_64+0xa4/0xb0
+[    0.862186] zz memblock_insert_region idx:18 23ffd5d80 68 totla_cnt:33 total_size: 1a3d7244
+[    0.863134] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.864711] zz __memblock_find_range_top_down size:68 
+[    0.865301] memblock_reserve: [0x000000023ffd5d00-0x000000023ffd5d67] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.866427] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.867116] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.868047] Call Trace:
+[    0.868330]  ? dump_stack+0x66/0x90
+[    0.868726]  ? memblock_reserve+0x4e/0x85
+[    0.869189]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.869778]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.870343]  ? firmware_map_add_early+0x27/0x5b
+[    0.870862]  ? e820__reserve_resources+0x12d/0x138
+[    0.871410]  ? setup_arch+0x8c4/0x993
+[    0.871840]  ? start_kernel+0x65/0x4ec
+[    0.872268]  ? secondary_startup_64+0xa4/0xb0
+[    0.872767] zz memblock_insert_region idx:18 23ffd5d00 68 totla_cnt:34 total_size: 1a3d72ac
+[    0.873721] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.875269] zz __memblock_find_range_top_down size:68 
+[    0.875860] memblock_reserve: [0x000000023ffd5c80-0x000000023ffd5ce7] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.876984] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.877665] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.878591] Call Trace:
+[    0.878874]  ? dump_stack+0x66/0x90
+[    0.879280]  ? memblock_reserve+0x4e/0x85
+[    0.879756]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.880343]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.880904]  ? firmware_map_add_early+0x27/0x5b
+[    0.881424]  ? e820__reserve_resources+0x12d/0x138
+[    0.881967]  ? setup_arch+0x8c4/0x993
+[    0.882382]  ? start_kernel+0x65/0x4ec
+[    0.882808]  ? secondary_startup_64+0xa4/0xb0
+[    0.883322] zz memblock_insert_region idx:18 23ffd5c80 68 totla_cnt:35 total_size: 1a3d7314
+[    0.884316] memblock_virt_alloc_try_nid: 104 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 firmware_map_add_early+0x27/0x5b
+[    0.885867] zz __memblock_find_range_top_down size:68 
+[    0.886471] memblock_reserve: [0x000000023ffd5c00-0x000000023ffd5c67] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.887713] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.888458] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.889459] Call Trace:
+[    0.889765]  ? dump_stack+0x66/0x90
+[    0.890172]  ? memblock_reserve+0x4e/0x85
+[    0.890622]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.891202]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.891782]  ? firmware_map_add_early+0x27/0x5b
+[    0.892291]  ? e820__reserve_resources+0x12d/0x138
+[    0.892833]  ? setup_arch+0x8c4/0x993
+[    0.893253]  ? start_kernel+0x65/0x4ec
+[    0.893693]  ? secondary_startup_64+0xa4/0xb0
+[    0.894189] zz memblock_insert_region idx:18 23ffd5c00 68 totla_cnt:36 total_size: 1a3d737c
+[    0.895147] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.896740] zz __memblock_find_range_top_down size:20 
+[    0.897328] memblock_reserve: [0x000000023ffd5bc0-0x000000023ffd5bdf] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.898462] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.899153] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.900096] Call Trace:
+[    0.900378]  ? dump_stack+0x66/0x90
+[    0.900775]  ? memblock_reserve+0x4e/0x85
+[    0.901245]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.901853]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.902403]  ? __register_nosave_region+0x74/0xd4
+[    0.902914]  ? e820__register_nosave_regions+0x87/0x9c
+[    0.903472]  ? setup_arch+0x8d0/0x993
+[    0.903888]  ? start_kernel+0x65/0x4ec
+[    0.904299]  ? secondary_startup_64+0xa4/0xb0
+[    0.904778] zz memblock_insert_region idx:18 23ffd5bc0 20 totla_cnt:37 total_size: 1a3d739c
+[    0.905695] PM: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.906400] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.907921] zz __memblock_find_range_top_down size:20 
+[    0.908487] memblock_reserve: [0x000000023ffd5b80-0x000000023ffd5b9f] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.909579] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.910238] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.911121] Call Trace:
+[    0.911389]  ? dump_stack+0x66/0x90
+[    0.911808]  ? memblock_reserve+0x4e/0x85
+[    0.912261]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.912827]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.913386]  ? __register_nosave_region+0x74/0xd4
+[    0.913906]  ? e820__register_nosave_regions+0x4c/0x9c
+[    0.914486]  ? setup_arch+0x8d0/0x993
+[    0.914926]  ? start_kernel+0x65/0x4ec
+[    0.915380]  ? secondary_startup_64+0xa4/0xb0
+[    0.915929] zz memblock_insert_region idx:18 23ffd5b80 20 totla_cnt:38 total_size: 1a3d73bc
+[    0.916920] PM: Registered nosave memory: [mem 0x000a0000-0x000fffff]
+[    0.917687] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.919212] zz __memblock_find_range_top_down size:20 
+[    0.919791] memblock_reserve: [0x000000023ffd5b40-0x000000023ffd5b5f] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.920871] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.921529] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.922408] Call Trace:
+[    0.922674]  ? dump_stack+0x66/0x90
+[    0.923055]  ? memblock_reserve+0x4e/0x85
+[    0.923490]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.924074]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.924614]  ? __register_nosave_region+0x74/0xd4
+[    0.925130]  ? e820__register_nosave_regions+0x87/0x9c
+[    0.925694]  ? setup_arch+0x8d0/0x993
+[    0.926096]  ? start_kernel+0x65/0x4ec
+[    0.926509]  ? secondary_startup_64+0xa4/0xb0
+[    0.926984] zz memblock_insert_region idx:18 23ffd5b40 20 totla_cnt:39 total_size: 1a3d73dc
+[    0.927929] PM: Registered nosave memory: [mem 0x00800000-0x00807fff]
+[    0.928706] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.930366] zz __memblock_find_range_top_down size:20 
+[    0.930991] memblock_reserve: [0x000000023ffd5b00-0x000000023ffd5b1f] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.932191] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.932908] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.933882] Call Trace:
+[    0.934180]  ? dump_stack+0x66/0x90
+[    0.934602]  ? memblock_reserve+0x4e/0x85
+[    0.935082]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.935689]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.936245]  ? __register_nosave_region+0x74/0xd4
+[    0.936762]  ? e820__register_nosave_regions+0x87/0x9c
+[    0.937320]  ? setup_arch+0x8d0/0x993
+[    0.937722]  ? start_kernel+0x65/0x4ec
+[    0.938129]  ? secondary_startup_64+0xa4/0xb0
+[    0.938609] zz memblock_insert_region idx:18 23ffd5b00 20 totla_cnt:40 total_size: 1a3d73fc
+[    0.939523] PM: Registered nosave memory: [mem 0x00810000-0x008fffff]
+[    0.940242] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.941753] zz __memblock_find_range_top_down size:20 
+[    0.942316] memblock_reserve: [0x000000023ffd5ac0-0x000000023ffd5adf] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.943400] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.944154] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.945067] Call Trace:
+[    0.945355]  ? dump_stack+0x66/0x90
+[    0.945742]  ? memblock_reserve+0x4e/0x85
+[    0.946182]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.946736]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.947276]  ? __register_nosave_region+0x74/0xd4
+[    0.947814]  ? e820__register_nosave_regions+0x4c/0x9c
+[    0.948377]  ? setup_arch+0x8d0/0x993
+[    0.948779]  ? start_kernel+0x65/0x4ec
+[    0.949205]  ? secondary_startup_64+0xa4/0xb0
+[    0.949697] zz memblock_insert_region idx:18 23ffd5ac0 20 totla_cnt:41 total_size: 1a3d741c
+[    0.950627] PM: Registered nosave memory: [mem 0xbe056000-0xbe056fff]
+[    0.951341] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.952890] zz __memblock_find_range_top_down size:20 
+[    0.953467] memblock_reserve: [0x000000023ffd5a80-0x000000023ffd5a9f] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.954544] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.955199] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.956104] Call Trace:
+[    0.956373]  ? dump_stack+0x66/0x90
+[    0.956758]  ? memblock_reserve+0x4e/0x85
+[    0.957192]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.957757]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.958299]  ? __register_nosave_region+0x74/0xd4
+[    0.958820]  ? e820__register_nosave_regions+0x4c/0x9c
+[    0.959390]  ? setup_arch+0x8d0/0x993
+[    0.959809]  ? start_kernel+0x65/0x4ec
+[    0.960221]  ? secondary_startup_64+0xa4/0xb0
+[    0.960702] zz memblock_insert_region idx:18 23ffd5a80 20 totla_cnt:42 total_size: 1a3d743c
+[    0.961626] PM: Registered nosave memory: [mem 0xbe0a1000-0xbe0a1fff]
+[    0.962377] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.963906] zz __memblock_find_range_top_down size:20 
+[    0.964477] memblock_reserve: [0x000000023ffd5a40-0x000000023ffd5a5f] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.965576] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.966241] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.967139] Call Trace:
+[    0.967415]  ? dump_stack+0x66/0x90
+[    0.967853]  ? memblock_reserve+0x4e/0x85
+[    0.968329]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.968960]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.969503]  ? __register_nosave_region+0x74/0xd4
+[    0.970001]  ? e820__register_nosave_regions+0x4c/0x9c
+[    0.970553]  ? setup_arch+0x8d0/0x993
+[    0.970950]  ? start_kernel+0x65/0x4ec
+[    0.971356]  ? secondary_startup_64+0xa4/0xb0
+[    0.971852] zz memblock_insert_region idx:18 23ffd5a40 20 totla_cnt:43 total_size: 1a3d745c
+[    0.972777] PM: Registered nosave memory: [mem 0xbe2d8000-0xbe2d8fff]
+[    0.973486] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.974998] zz __memblock_find_range_top_down size:20 
+[    0.975563] memblock_reserve: [0x000000023ffd5a00-0x000000023ffd5a1f] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.976679] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.977338] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.978231] Call Trace:
+[    0.978501]  ? dump_stack+0x66/0x90
+[    0.978891]  ? memblock_reserve+0x4e/0x85
+[    0.979337]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.979917]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.980463]  ? __register_nosave_region+0x74/0xd4
+[    0.980986]  ? e820__register_nosave_regions+0x4c/0x9c
+[    0.981549]  ? setup_arch+0x8d0/0x993
+[    0.981974]  ? start_kernel+0x65/0x4ec
+[    0.982394]  ? secondary_startup_64+0xa4/0xb0
+[    0.982876] zz memblock_insert_region idx:18 23ffd5a00 20 totla_cnt:44 total_size: 1a3d747c
+[    0.983905] PM: Registered nosave memory: [mem 0xbe2e1000-0xbe2e1fff]
+[    0.984672] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.986273] zz __memblock_find_range_top_down size:20 
+[    0.986884] memblock_reserve: [0x000000023ffd59c0-0x000000023ffd59df] memblock_virt_alloc_internal+0xc3/0x13e
+[    0.988086] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    0.988819] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    0.989807] Call Trace:
+[    0.990100]  ? dump_stack+0x66/0x90
+[    0.990527]  ? memblock_reserve+0x4e/0x85
+[    0.991019]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    0.991650]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    0.992260]  ? __register_nosave_region+0x74/0xd4
+[    0.992840]  ? e820__register_nosave_regions+0x87/0x9c
+[    0.993461]  ? setup_arch+0x8d0/0x993
+[    0.993900]  ? start_kernel+0x65/0x4ec
+[    0.994359]  ? secondary_startup_64+0xa4/0xb0
+[    0.994883] zz memblock_insert_region idx:18 23ffd59c0 20 totla_cnt:45 total_size: 1a3d749c
+[    0.995910] PM: Registered nosave memory: [mem 0xbf8ef000-0xbfb6efff]
+[    0.996693] PM: Registered nosave memory: [mem 0xbfb6f000-0xbfb7efff]
+[    0.997468] PM: Registered nosave memory: [mem 0xbfb7f000-0xbfbfefff]
+[    0.998238] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 __register_nosave_region+0x74/0xd4
+[    0.999882] zz __memblock_find_range_top_down size:20 
+[    1.000494] memblock_reserve: [0x000000023ffd5980-0x000000023ffd599f] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.001667] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.002378] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.003331] Call Trace:
+[    1.003626]  ? dump_stack+0x66/0x90
+[    1.004060]  ? memblock_reserve+0x4e/0x85
+[    1.004541]  ? memblock_virt_alloc_internal+0xc3/0x13e
+[    1.005156]  ? memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.005748]  ? __register_nosave_region+0x74/0xd4
+[    1.006303]  ? e820__register_nosave_regions+0x87/0x9c
+[    1.006880]  ? setup_arch+0x8d0/0x993
+[    1.007289]  ? start_kernel+0x65/0x4ec
+[    1.007710]  ? secondary_startup_64+0xa4/0xb0
+[    1.008185] zz memblock_insert_region idx:18 23ffd5980 20 totla_cnt:46 total_size: 1a3d74bc
+[    1.009108] PM: Registered nosave memory: [mem 0xbfebc000-0xbff3ffff]
+[    1.009813] PM: Registered nosave memory: [mem 0xbff40000-0xbfffffff]
+[    1.010522] PM: Registered nosave memory: [mem 0xc0000000-0xffffffff]
+[    1.011223] PM: Registered nosave memory: [mem 0x100000000-0x11f3fffff]
+[    1.011968] [mem 0xc0000000-0xffffffff] available for PCI devices
+[    1.012637] Booting paravirtualized kernel on KVM
+[    1.013153] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    1.016737] random: get_random_bytes called from start_kernel+0x91/0x4ec with crng_init=0
+[    1.017667] memblock_virt_alloc_try_nid: 189 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 start_kernel+0x10d/0x4ec
+[    1.019133] zz __memblock_find_range_top_down size:bd 
+[    1.019763] memblock_reserve: [0x000000023ffd58c0-0x000000023ffd597c] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.020947] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.021680] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.022658] Call Trace:
+[    1.022924]  dump_stack+0x66/0x90
+[    1.023287]  memblock_reserve+0x4e/0x85
+[    1.023730]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.024267]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.024783]  start_kernel+0x10d/0x4ec
+[    1.025171]  secondary_startup_64+0xa4/0xb0
+[    1.025621] zz memblock_insert_region idx:18 23ffd58c0 bd totla_cnt:47 total_size: 1a3d7579
+[    1.026498] memblock_virt_alloc_try_nid: 189 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 start_kernel+0x137/0x4ec
+[    1.027942] zz __memblock_find_range_top_down size:bd 
+[    1.028494] memblock_reserve: [0x000000023ffd5800-0x000000023ffd58bc] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.029566] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.030203] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.031063] Call Trace:
+[    1.031322]  dump_stack+0x66/0x90
+[    1.031690]  memblock_reserve+0x4e/0x85
+[    1.032108]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.032633]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.033151]  start_kernel+0x137/0x4ec
+[    1.033539]  secondary_startup_64+0xa4/0xb0
+[    1.033975] zz memblock_insert_region idx:18 23ffd5800 bd totla_cnt:48 total_size: 1a3d7636
+[    1.034866] memblock_virt_alloc_try_nid: 189 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 start_kernel+0x15d/0x4ec
+[    1.036322] zz __memblock_find_range_top_down size:bd 
+[    1.036895] memblock_reserve: [0x000000023ffd5740-0x000000023ffd57fc] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.038062] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.038726] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.039623] Call Trace:
+[    1.039905]  dump_stack+0x66/0x90
+[    1.040300]  memblock_reserve+0x4e/0x85
+[    1.040728]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.041330]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.041917]  start_kernel+0x15d/0x4ec
+[    1.042368]  secondary_startup_64+0xa4/0xb0
+[    1.042873] zz memblock_insert_region idx:18 23ffd5740 bd totla_cnt:49 total_size: 1a3d76f3
+[    1.043889] setup_percpu: NR_CPUS:8192 nr_cpumask_bits:8 nr_cpu_ids:8 nr_node_ids:1
+[    1.044835] memblock_virt_alloc_try_nid_nopanic: 4096 bytes align=0x1000 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_alloc_alloc_info+0x43/0x74
+[    1.046614] zz __memblock_find_range_top_down size:1000 
+[    1.047279] memblock_reserve: [0x000000023ffd4000-0x000000023ffd4fff] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.048592] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.049338] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.050313] Call Trace:
+[    1.050618]  dump_stack+0x66/0x90
+[    1.051019]  memblock_reserve+0x4e/0x85
+[    1.051484]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.052088]  memblock_virt_alloc_try_nid_nopanic+0x69/0x87
+[    1.052768]  pcpu_alloc_alloc_info+0x43/0x74
+[    1.053288]  pcpu_build_alloc_info+0x27e/0x39d
+[    1.053833]  pcpu_embed_first_chunk+0x25/0x2df
+[    1.054359]  ? pcpup_populate_pte+0xa/0xa
+[    1.054848]  ? pcpu_fc_free+0x2c/0x2c
+[    1.055286]  setup_per_cpu_areas+0x5f/0x21b
+[    1.055811]  start_kernel+0x18f/0x4ec
+[    1.056253]  secondary_startup_64+0xa4/0xb0
+[    1.056766] zz memblock_insert_region idx:18 23ffd4000 1000 totla_cnt:50 total_size: 1a3d86f3
+[    1.057804] memblock_virt_alloc_try_nid_nopanic: 4096 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_embed_first_chunk+0x6c/0x2df
+[    1.059537] zz __memblock_find_range_top_down size:1000 
+[    1.060179] memblock_reserve: [0x000000023ffd3000-0x000000023ffd3fff] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.061353] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.062064] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.063024] Call Trace:
+[    1.063318]  dump_stack+0x66/0x90
+[    1.063721]  memblock_reserve+0x4e/0x85
+[    1.064178]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.064772]  memblock_virt_alloc_try_nid_nopanic+0x69/0x87
+[    1.065421]  pcpu_embed_first_chunk+0x6c/0x2df
+[    1.065943]  ? pcpup_populate_pte+0xa/0xa
+[    1.066414]  ? pcpu_fc_free+0x2c/0x2c
+[    1.066839]  setup_per_cpu_areas+0x5f/0x21b
+[    1.067345]  start_kernel+0x18f/0x4ec
+[    1.067810]  secondary_startup_64+0xa4/0xb0
+[    1.068332] zz memblock_insert_region idx:18 23ffd3000 1000 totla_cnt:51 total_size: 1a3d96f3
+[    1.069371] zz __memblock_find_range_top_down size:200000 
+[    1.070036] memblock_reserve: [0x0000000238000000-0x00000002381fffff] __alloc_memory_core_early+0x84/0xac
+[    1.071190] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.071926] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.072904] Call Trace:
+[    1.073206]  dump_stack+0x66/0x90
+[    1.073615]  memblock_reserve+0x4e/0x85
+[    1.074078]  __alloc_memory_core_early+0x84/0xac
+[    1.074636]  ___alloc_bootmem_node_nopanic+0x33/0x63
+[    1.075221]  pcpu_fc_alloc+0xf7/0x14c
+[    1.075663]  pcpu_embed_first_chunk+0xe9/0x2df
+[    1.076208]  ? pcpup_populate_pte+0xa/0xa
+[    1.076698]  ? pcpu_fc_free+0x2c/0x2c
+[    1.077131]  setup_per_cpu_areas+0x5f/0x21b
+[    1.077635]  start_kernel+0x18f/0x4ec
+[    1.078082]  secondary_startup_64+0xa4/0xb0
+[    1.078594] zz memblock_insert_region idx:16 238000000 200000 totla_cnt:51 total_size: 1a5d96f3
+[    1.079835]    memblock_free: [0x000000023802d000-0x000000023803ffff] pcpu_embed_first_chunk+0x1e9/0x2df
+[    1.080991] zz memblock_isolate_range idx:16 23802d000 2d000 totla_cnt:50 total_size: 1a5ac6f3
+[    1.082042] zz memblock_insert_region idx:16 238000000 2d000 totla_cnt:51 total_size: 1a5d96f3
+[    1.083093] zz memblock_isolate_range idx:17 23802d000 13000 totla_cnt:51 total_size: 1a5c66f3
+[    1.084102] zz memblock_insert_region idx:17 23802d000 13000 totla_cnt:52 total_size: 1a5d96f3
+[    1.085012] zz memblock_remove_region idx:17 23802d000 13000 totla_cnt:51 total_size: 1a5c66f3
+[    1.085895]    memblock_free: [0x000000023806d000-0x000000023807ffff] pcpu_embed_first_chunk+0x1e9/0x2df
+[    1.086847] zz memblock_isolate_range idx:17 23806d000 2d000 totla_cnt:51 total_size: 1a5996f3
+[    1.087729] zz memblock_insert_region idx:17 238040000 2d000 totla_cnt:52 total_size: 1a5c66f3
+[    1.088602] zz memblock_isolate_range idx:18 23806d000 13000 totla_cnt:52 total_size: 1a5b36f3
+[    1.089476] zz memblock_insert_region idx:18 23806d000 13000 totla_cnt:53 total_size: 1a5c66f3
+[    1.090352] zz memblock_remove_region idx:18 23806d000 13000 totla_cnt:52 total_size: 1a5b36f3
+[    1.091240]    memblock_free: [0x00000002380ad000-0x00000002380bffff] pcpu_embed_first_chunk+0x1e9/0x2df
+[    1.092204] zz memblock_isolate_range idx:18 2380ad000 2d000 totla_cnt:52 total_size: 1a5866f3
+[    1.093051] zz memblock_insert_region idx:18 238080000 2d000 totla_cnt:53 total_size: 1a5b36f3
+[    1.093922] zz memblock_isolate_range idx:19 2380ad000 13000 totla_cnt:53 total_size: 1a5a06f3
+[    1.094784] zz memblock_insert_region idx:19 2380ad000 13000 totla_cnt:54 total_size: 1a5b36f3
+[    1.095702] zz memblock_remove_region idx:19 2380ad000 13000 totla_cnt:53 total_size: 1a5a06f3
+[    1.096604]    memblock_free: [0x00000002380ed000-0x00000002380fffff] pcpu_embed_first_chunk+0x1e9/0x2df
+[    1.097614] zz memblock_isolate_range idx:19 2380ed000 2d000 totla_cnt:53 total_size: 1a5736f3
+[    1.098631] zz memblock_insert_region idx:19 2380c0000 2d000 totla_cnt:54 total_size: 1a5a06f3
+[    1.099661] zz memblock_isolate_range idx:20 2380ed000 13000 totla_cnt:54 total_size: 1a58d6f3
+[    1.100595] zz memblock_insert_region idx:20 2380ed000 13000 totla_cnt:55 total_size: 1a5a06f3
+[    1.101570] zz memblock_remove_region idx:20 2380ed000 13000 totla_cnt:54 total_size: 1a58d6f3
+[    1.102618]    memblock_free: [0x000000023812d000-0x000000023813ffff] pcpu_embed_first_chunk+0x1e9/0x2df
+[    1.103790] zz memblock_isolate_range idx:20 23812d000 2d000 totla_cnt:54 total_size: 1a5606f3
+[    1.104844] zz memblock_insert_region idx:20 238100000 2d000 totla_cnt:55 total_size: 1a58d6f3
+[    1.105889] zz memblock_isolate_range idx:21 23812d000 13000 totla_cnt:55 total_size: 1a57a6f3
+[    1.106940] zz memblock_insert_region idx:21 23812d000 13000 totla_cnt:56 total_size: 1a58d6f3
+[    1.107959] zz memblock_remove_region idx:21 23812d000 13000 totla_cnt:55 total_size: 1a57a6f3
+[    1.108928]    memblock_free: [0x000000023816d000-0x000000023817ffff] pcpu_embed_first_chunk+0x1e9/0x2df
+[    1.110023] zz memblock_isolate_range idx:21 23816d000 2d000 totla_cnt:55 total_size: 1a54d6f3
+[    1.111064] zz memblock_insert_region idx:21 238140000 2d000 totla_cnt:56 total_size: 1a57a6f3
+[    1.112128] zz memblock_isolate_range idx:22 23816d000 13000 totla_cnt:56 total_size: 1a5676f3
+[    1.113175] zz memblock_insert_region idx:22 23816d000 13000 totla_cnt:57 total_size: 1a57a6f3
+[    1.114235] zz memblock_remove_region idx:22 23816d000 13000 totla_cnt:56 total_size: 1a5676f3
+[    1.115302]    memblock_free: [0x00000002381ad000-0x00000002381bffff] pcpu_embed_first_chunk+0x1e9/0x2df
+[    1.116461] zz memblock_isolate_range idx:22 2381ad000 2d000 totla_cnt:56 total_size: 1a53a6f3
+[    1.117512] zz memblock_insert_region idx:22 238180000 2d000 totla_cnt:57 total_size: 1a5676f3
+[    1.118558] zz memblock_isolate_range idx:23 2381ad000 13000 totla_cnt:57 total_size: 1a5546f3
+[    1.119592] zz memblock_insert_region idx:23 2381ad000 13000 totla_cnt:58 total_size: 1a5676f3
+[    1.120612] zz memblock_remove_region idx:23 2381ad000 13000 totla_cnt:57 total_size: 1a5546f3
+[    1.121642]    memblock_free: [0x00000002381ed000-0x00000002381fffff] pcpu_embed_first_chunk+0x1e9/0x2df
+[    1.122769] zz memblock_isolate_range idx:23 2381ed000 2d000 totla_cnt:57 total_size: 1a5276f3
+[    1.123797] zz memblock_insert_region idx:23 2381c0000 2d000 totla_cnt:58 total_size: 1a5546f3
+[    1.124819] zz memblock_isolate_range idx:24 2381ed000 13000 totla_cnt:58 total_size: 1a5416f3
+[    1.125834] zz memblock_insert_region idx:24 2381ed000 13000 totla_cnt:59 total_size: 1a5546f3
+[    1.126848] zz memblock_remove_region idx:24 2381ed000 13000 totla_cnt:58 total_size: 1a5416f3
+[    1.127892] percpu: Embedded 45 pages/cpu s145112 r8192 d31016 u262144
+[    1.128685] memblock_virt_alloc_try_nid: 8 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_setup_first_chunk+0x2e6/0x683
+[    1.130219] zz __memblock_find_range_top_down size:8 
+[    1.130775] memblock_reserve: [0x000000023ffd5700-0x000000023ffd5707] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.131883] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.132546] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.133430] Call Trace:
+[    1.133717]  dump_stack+0x66/0x90
+[    1.134133]  memblock_reserve+0x4e/0x85
+[    1.134589]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.135190]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.135782]  pcpu_setup_first_chunk+0x2e6/0x683
+[    1.136336]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.136891]  ? pcpup_populate_pte+0xa/0xa
+[    1.137379]  setup_per_cpu_areas+0x5f/0x21b
+[    1.137885]  start_kernel+0x18f/0x4ec
+[    1.138333]  secondary_startup_64+0xa4/0xb0
+[    1.138848] zz memblock_insert_region idx:27 23ffd5700 8 totla_cnt:59 total_size: 1a5416fb
+[    1.139860] memblock_virt_alloc_try_nid: 8 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_setup_first_chunk+0x2f6/0x683
+[    1.141514] zz __memblock_find_range_top_down size:8 
+[    1.142131] memblock_reserve: [0x000000023ffd56c0-0x000000023ffd56c7] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.143330] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.144063] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.145018] Call Trace:
+[    1.145311]  dump_stack+0x66/0x90
+[    1.145702]  memblock_reserve+0x4e/0x85
+[    1.146148]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.146734]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.147299]  pcpu_setup_first_chunk+0x2f6/0x683
+[    1.147846]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.148384]  ? pcpup_populate_pte+0xa/0xa
+[    1.148858]  setup_per_cpu_areas+0x5f/0x21b
+[    1.149353]  start_kernel+0x18f/0x4ec
+[    1.149783]  secondary_startup_64+0xa4/0xb0
+[    1.150285] zz memblock_insert_region idx:27 23ffd56c0 8 totla_cnt:60 total_size: 1a541703
+[    1.151266] memblock_virt_alloc_try_nid: 32 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_setup_first_chunk+0x308/0x683
+[    1.153957] zz __memblock_find_range_top_down size:20 
+[    1.155117] memblock_reserve: [0x000000023ffd5680-0x000000023ffd569f] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.157594] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.159087] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.161005] Call Trace:
+[    1.161275]  dump_stack+0x66/0x90
+[    1.161638]  memblock_reserve+0x4e/0x85
+[    1.162059]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.162601]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.163125]  pcpu_setup_first_chunk+0x308/0x683
+[    1.163619]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.164134]  ? pcpup_populate_pte+0xa/0xa
+[    1.164579]  setup_per_cpu_areas+0x5f/0x21b
+[    1.165034]  start_kernel+0x18f/0x4ec
+[    1.165436]  secondary_startup_64+0xa4/0xb0
+[    1.165896] zz memblock_insert_region idx:27 23ffd5680 20 totla_cnt:61 total_size: 1a541723
+[    1.166810] memblock_virt_alloc_try_nid: 64 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_setup_first_chunk+0x31a/0x683
+[    1.168330] zz __memblock_find_range_top_down size:40 
+[    1.168900] memblock_reserve: [0x000000023ffd5640-0x000000023ffd567f] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.169979] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.170634] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.171569] Call Trace:
+[    1.171873]  dump_stack+0x66/0x90
+[    1.172264]  memblock_reserve+0x4e/0x85
+[    1.172727]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.173315]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.173880]  pcpu_setup_first_chunk+0x31a/0x683
+[    1.174422]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.174974]  ? pcpup_populate_pte+0xa/0xa
+[    1.175456]  setup_per_cpu_areas+0x5f/0x21b
+[    1.175968]  start_kernel+0x18f/0x4ec
+[    1.176407]  secondary_startup_64+0xa4/0xb0
+[    1.176913] zz memblock_insert_region idx:27 23ffd5640 40 totla_cnt:62 total_size: 1a541763
+[    1.177913] pcpu-alloc: s145112 r8192 d31016 u262144 alloc=1*2097152
+[    1.177914] pcpu-alloc: [0] 0 1 2 3 4 5 6 7 
+[    1.177917] memblock_virt_alloc_try_nid: 288 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_setup_first_chunk+0x5c9/0x683
+[    1.179444] zz __memblock_find_range_top_down size:120 
+[    1.180035] memblock_reserve: [0x000000023ffd5500-0x000000023ffd561f] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.181118] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.181773] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.182652] Call Trace:
+[    1.182923]  dump_stack+0x66/0x90
+[    1.183286]  memblock_reserve+0x4e/0x85
+[    1.183715]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.184261]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.184787]  pcpu_setup_first_chunk+0x5c9/0x683
+[    1.185329]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.185877]  ? pcpup_populate_pte+0xa/0xa
+[    1.186361]  setup_per_cpu_areas+0x5f/0x21b
+[    1.186869]  start_kernel+0x18f/0x4ec
+[    1.187318]  secondary_startup_64+0xa4/0xb0
+[    1.187838] zz memblock_insert_region idx:27 23ffd5500 120 totla_cnt:62 total_size: 1a541883
+[    1.188883] memblock_virt_alloc_try_nid: 105 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_alloc_first_chunk+0x6c/0x21d
+[    1.190540] zz __memblock_find_range_top_down size:69 
+[    1.191167] memblock_reserve: [0x000000023ffd5480-0x000000023ffd54e8] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.192386] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.193121] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.194102] Call Trace:
+[    1.194407]  dump_stack+0x66/0x90
+[    1.194816]  memblock_reserve+0x4e/0x85
+[    1.195293]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.195915]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.196493]  pcpu_alloc_first_chunk+0x6c/0x21d
+[    1.197025]  pcpu_setup_first_chunk+0x61d/0x683
+[    1.197578]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.198127]  ? pcpup_populate_pte+0xa/0xa
+[    1.198616]  setup_per_cpu_areas+0x5f/0x21b
+[    1.199120]  start_kernel+0x18f/0x4ec
+[    1.199564]  secondary_startup_64+0xa4/0xb0
+[    1.200092] zz memblock_insert_region idx:27 23ffd5480 69 totla_cnt:63 total_size: 1a5418ec
+[    1.201106] memblock_virt_alloc_try_nid: 384 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_alloc_first_chunk+0xa9/0x21d
+[    1.202718] zz __memblock_find_range_top_down size:180 
+[    1.203289] memblock_reserve: [0x000000023ffd5300-0x000000023ffd547f] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.204384] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.205037] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.205918] Call Trace:
+[    1.206184]  dump_stack+0x66/0x90
+[    1.206542]  memblock_reserve+0x4e/0x85
+[    1.206962]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.207510]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.208045]  pcpu_alloc_first_chunk+0xa9/0x21d
+[    1.208531]  pcpu_setup_first_chunk+0x61d/0x683
+[    1.209034]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.209529]  ? pcpup_populate_pte+0xa/0xa
+[    1.209970]  setup_per_cpu_areas+0x5f/0x21b
+[    1.210431]  start_kernel+0x18f/0x4ec
+[    1.210836]  secondary_startup_64+0xa4/0xb0
+[    1.211293] zz memblock_insert_region idx:27 23ffd5300 180 totla_cnt:64 total_size: 1a541a6c
+[    1.212238] memblock_virt_alloc_try_nid: 392 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_alloc_first_chunk+0xc5/0x21d
+[    1.213750] zz __memblock_find_range_top_down size:188 
+[    1.214322] memblock_reserve: [0x000000023ffd5140-0x000000023ffd52c7] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.215414] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.216117] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.217004] Call Trace:
+[    1.217286]  dump_stack+0x66/0x90
+[    1.217680]  memblock_reserve+0x4e/0x85
+[    1.218140]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.218739]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.219320]  pcpu_alloc_first_chunk+0xc5/0x21d
+[    1.219871]  pcpu_setup_first_chunk+0x61d/0x683
+[    1.220410]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.220962]  ? pcpup_populate_pte+0xa/0xa
+[    1.221457]  setup_per_cpu_areas+0x5f/0x21b
+[    1.221971]  start_kernel+0x18f/0x4ec
+[    1.222419]  secondary_startup_64+0xa4/0xb0
+[    1.222925] zz memblock_insert_region idx:27 23ffd5140 188 totla_cnt:64 total_size: 1a541bf4
+[    1.223948] memblock_virt_alloc_try_nid: 60 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_alloc_first_chunk+0xd8/0x21d
+[    1.225341] zz __memblock_find_range_top_down size:3c 
+[    1.225862] memblock_reserve: [0x000000023ffd5100-0x000000023ffd513b] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.226904] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.227528] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.228396] Call Trace:
+[    1.228656]  dump_stack+0x66/0x90
+[    1.229017]  memblock_reserve+0x4e/0x85
+[    1.229443]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.229988]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.230513]  pcpu_alloc_first_chunk+0xd8/0x21d
+[    1.231003]  pcpu_setup_first_chunk+0x61d/0x683
+[    1.231498]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.232014]  ? pcpup_populate_pte+0xa/0xa
+[    1.232456]  setup_per_cpu_areas+0x5f/0x21b
+[    1.232914]  start_kernel+0x18f/0x4ec
+[    1.233317]  secondary_startup_64+0xa4/0xb0
+[    1.233776] zz memblock_insert_region idx:27 23ffd5100 3c totla_cnt:65 total_size: 1a541c30
+[    1.234700] memblock_virt_alloc_try_nid: 105 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_alloc_first_chunk+0x6c/0x21d
+[    1.236227] zz __memblock_find_range_top_down size:69 
+[    1.236792] memblock_reserve: [0x000000023ffd5080-0x000000023ffd50e8] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.237886] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.238547] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.239446] Call Trace:
+[    1.239724]  dump_stack+0x66/0x90
+[    1.240090]  memblock_reserve+0x4e/0x85
+[    1.240520]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.241067]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.241611]  pcpu_alloc_first_chunk+0x6c/0x21d
+[    1.242104]  pcpu_setup_first_chunk+0x63c/0x683
+[    1.242602]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.243101]  ? pcpup_populate_pte+0xa/0xa
+[    1.243541]  setup_per_cpu_areas+0x5f/0x21b
+[    1.244021]  start_kernel+0x18f/0x4ec
+[    1.244426]  secondary_startup_64+0xa4/0xb0
+[    1.244890] zz memblock_insert_region idx:27 23ffd5080 69 totla_cnt:66 total_size: 1a541c99
+[    1.245806] memblock_virt_alloc_try_nid: 1024 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_alloc_first_chunk+0xa9/0x21d
+[    1.247376] zz __memblock_find_range_top_down size:400 
+[    1.248012] memblock_reserve: [0x000000023ffd2c00-0x000000023ffd2fff] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.249203] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.249925] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.250917] Call Trace:
+[    1.251216]  dump_stack+0x66/0x90
+[    1.251606]  memblock_reserve+0x4e/0x85
+[    1.252090]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.252695]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.253290]  pcpu_alloc_first_chunk+0xa9/0x21d
+[    1.253837]  pcpu_setup_first_chunk+0x63c/0x683
+[    1.254391]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.254937]  ? pcpup_populate_pte+0xa/0xa
+[    1.255419]  setup_per_cpu_areas+0x5f/0x21b
+[    1.256034]  start_kernel+0x18f/0x4ec
+[    1.256490]  secondary_startup_64+0xa4/0xb0
+[    1.257004] zz memblock_insert_region idx:26 23ffd2c00 400 totla_cnt:67 total_size: 1a542099
+[    1.258035] memblock_virt_alloc_try_nid: 1032 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_alloc_first_chunk+0xc5/0x21d
+[    1.259733] zz __memblock_find_range_top_down size:408 
+[    1.260371] memblock_reserve: [0x000000023ffd27c0-0x000000023ffd2bc7] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.261589] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.262323] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.263306] Call Trace:
+[    1.263607]  dump_stack+0x66/0x90
+[    1.264022]  memblock_reserve+0x4e/0x85
+[    1.264484]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.265085]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.265655]  pcpu_alloc_first_chunk+0xc5/0x21d
+[    1.266188]  pcpu_setup_first_chunk+0x63c/0x683
+[    1.266733]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.267273]  ? pcpup_populate_pte+0xa/0xa
+[    1.267764]  setup_per_cpu_areas+0x5f/0x21b
+[    1.268268]  start_kernel+0x18f/0x4ec
+[    1.268709]  secondary_startup_64+0xa4/0xb0
+[    1.269203] zz memblock_insert_region idx:26 23ffd27c0 408 totla_cnt:67 total_size: 1a5424a1
+[    1.270134] memblock_virt_alloc_try_nid: 160 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 pcpu_alloc_first_chunk+0xd8/0x21d
+[    1.271639] zz __memblock_find_range_top_down size:a0 
+[    1.272255] memblock_reserve: [0x000000023ffd2700-0x000000023ffd279f] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.273428] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.274130] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.275020] Call Trace:
+[    1.275296]  dump_stack+0x66/0x90
+[    1.275702]  memblock_reserve+0x4e/0x85
+[    1.276127]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.276674]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.277201]  pcpu_alloc_first_chunk+0xd8/0x21d
+[    1.277688]  pcpu_setup_first_chunk+0x63c/0x683
+[    1.278188]  pcpu_embed_first_chunk+0x24e/0x2df
+[    1.278688]  ? pcpup_populate_pte+0xa/0xa
+[    1.279133]  setup_per_cpu_areas+0x5f/0x21b
+[    1.279595]  start_kernel+0x18f/0x4ec
+[    1.280011]  secondary_startup_64+0xa4/0xb0
+[    1.280468] zz memblock_insert_region idx:26 23ffd2700 a0 totla_cnt:68 total_size: 1a542541
+[    1.281384]    memblock_free: [0x000000023ffd4000-0x000000023ffd4fff] pcpu_embed_first_chunk+0x29a/0x2df
+[    1.282425] zz memblock_isolate_range idx:28 23ffd4000 1400 totla_cnt:68 total_size: 1a541141
+[    1.283370] zz memblock_insert_region idx:28 23ffd2c00 1400 totla_cnt:69 total_size: 1a542541
+[    1.284381] zz memblock_remove_region idx:29 23ffd4000 1000 totla_cnt:68 total_size: 1a541541
+[    1.285353]    memblock_free: [0x000000023ffd3000-0x000000023ffd3fff] pcpu_embed_first_chunk+0x2cd/0x2df
+[    1.286485] zz memblock_isolate_range idx:28 23ffd3000 400 totla_cnt:68 total_size: 1a541141
+[    1.287501] zz memblock_insert_region idx:28 23ffd2c00 400 totla_cnt:69 total_size: 1a541541
+[    1.288529] zz memblock_remove_region idx:29 23ffd3000 1000 totla_cnt:68 total_size: 1a540541
+[    1.289562] memblock_virt_alloc_try_nid: 8 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.291205] zz __memblock_find_range_top_down size:8 
+[    1.291836] memblock_reserve: [0x000000023ffd5040-0x000000023ffd5047] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.293026] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.293737] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.294703] Call Trace:
+[    1.294999]  dump_stack+0x66/0x90
+[    1.295400]  memblock_reserve+0x4e/0x85
+[    1.295878]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.296472]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.297061]  alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.297631]  setup_node_to_cpumask_map+0x34/0x51
+[    1.298177]  setup_per_cpu_areas+0x20e/0x21b
+[    1.298697]  start_kernel+0x18f/0x4ec
+[    1.299139]  secondary_startup_64+0xa4/0xb0
+[    1.299642] zz memblock_insert_region idx:29 23ffd5040 8 totla_cnt:69 total_size: 1a540549
+[    1.300663] memblock_virt_alloc_try_nid: 8 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.302298] zz __memblock_find_range_top_down size:8 
+[    1.302904] memblock_reserve: [0x000000023ffd5000-0x000000023ffd5007] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.304083] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.304795] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.305753] Call Trace:
+[    1.306041]  dump_stack+0x66/0x90
+[    1.306431]  memblock_reserve+0x4e/0x85
+[    1.306885]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.307472]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.308048]  alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.308589]  setup_cpu_local_masks+0xc/0x30
+[    1.309095]  start_kernel+0x18f/0x4ec
+[    1.309547]  secondary_startup_64+0xa4/0xb0
+[    1.310042] zz memblock_insert_region idx:29 23ffd5000 8 totla_cnt:70 total_size: 1a540551
+[    1.311031] memblock_virt_alloc_try_nid: 8 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.312655] zz __memblock_find_range_top_down size:8 
+[    1.313263] memblock_reserve: [0x000000023ffd4fc0-0x000000023ffd4fc7] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.314442] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.315174] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.316154] Call Trace:
+[    1.316454]  dump_stack+0x66/0x90
+[    1.316859]  memblock_reserve+0x4e/0x85
+[    1.317333]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.317941]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.318532]  alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.319084]  setup_cpu_local_masks+0x18/0x30
+[    1.319607]  start_kernel+0x18f/0x4ec
+[    1.320065]  secondary_startup_64+0xa4/0xb0
+[    1.320557] zz memblock_insert_region idx:29 23ffd4fc0 8 totla_cnt:71 total_size: 1a540559
+[    1.321556] memblock_virt_alloc_try_nid: 8 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.323210] zz __memblock_find_range_top_down size:8 
+[    1.323842] memblock_reserve: [0x000000023ffd4f80-0x000000023ffd4f87] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.325017] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.325730] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.326686] Call Trace:
+[    1.326977]  dump_stack+0x66/0x90
+[    1.327367]  memblock_reserve+0x4e/0x85
+[    1.327830]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.328418]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.328998]  alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.329545]  setup_cpu_local_masks+0x24/0x30
+[    1.330052]  start_kernel+0x18f/0x4ec
+[    1.330486]  secondary_startup_64+0xa4/0xb0
+[    1.330978] zz memblock_insert_region idx:29 23ffd4f80 8 totla_cnt:72 total_size: 1a540561
+[    1.331971] memblock_virt_alloc_try_nid: 8 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.333633] zz __memblock_find_range_top_down size:8 
+[    1.334253] memblock_reserve: [0x000000023ffd4f40-0x000000023ffd4f47] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.335435] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.336143] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.337122] Call Trace:
+[    1.337419]  dump_stack+0x66/0x90
+[    1.337811]  memblock_reserve+0x4e/0x85
+[    1.338280]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.338873]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.339462]  alloc_bootmem_cpumask_var+0x25/0x2a
+[    1.340024]  start_kernel+0x18f/0x4ec
+[    1.340474]  secondary_startup_64+0xa4/0xb0
+[    1.340954] zz memblock_insert_region idx:29 23ffd4f40 8 totla_cnt:73 total_size: 1a540569
+[    1.341929] KVM setup async PF for cpu 0
+[    1.342396] kvm-stealtime: cpu 0, msr 2380161c0
+[    1.342938] memblock_virt_alloc_try_nid_nopanic: 4096 bytes align=0x0 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 alloc_large_system_hash+0x173/0x26e
+[    1.344705] zz __memblock_find_range_top_down size:1000 
+[    1.345341] memblock_reserve: [0x000000023ffd3f40-0x000000023ffd4f3f] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.346525] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.347241] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.348211] Call Trace:
+[    1.348500]  dump_stack+0x66/0x90
+[    1.348909]  memblock_reserve+0x4e/0x85
+[    1.349385]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.349996]  memblock_virt_alloc_try_nid_nopanic+0x69/0x87
+[    1.350672]  alloc_large_system_hash+0x173/0x26e
+[    1.351242]  __pv_init_lock_hash+0x45/0x51
+[    1.351765]  kvm_spinlock_init+0x42/0x83
+[    1.352253]  start_kernel+0x198/0x4ec
+[    1.352699]  secondary_startup_64+0xa4/0xb0
+[    1.353217] zz memblock_insert_region idx:29 23ffd3f40 1000 totla_cnt:74 total_size: 1a541569
+[    1.354263] PV qspinlock hash table entries: 256 (order: 0, 4096 bytes)
+[    1.355085] Built 1 zonelists, mobility grouping on.  Total pages: 1935138
+[    1.355945] Policy zone: Normal
+[    1.356328] Kernel command line: BOOT_IMAGE=/vmlinuz-4.19.91+ root=UUID=fa7126ce-d94f-4477-a18e-ed2a1b592c48 ro crashkernel=215M console=ttyS0,115200n8 nokaslr memblock=debug memmap=500M!4G earlyprintk=serial,0x3f8,115200
+[    1.358774] zz __memblock_find_range_top_down size:1000 
+[    1.359420] memblock_reserve: [0x000000023ffd1000-0x000000023ffd1fff] __alloc_memory_core_early+0x84/0xac
+[    1.360660] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.361382] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.362345] Call Trace:
+[    1.362643]  dump_stack+0x66/0x90
+[    1.363040]  memblock_reserve+0x4e/0x85
+[    1.363496]  __alloc_memory_core_early+0x84/0xac
+[    1.364073]  ___alloc_bootmem_nopanic+0x50/0x5c
+[    1.364612]  __alloc_bootmem+0x12/0x34
+[    1.365057]  spp_getpage+0x48/0x8e
+[    1.365469]  fill_pud+0x55/0x120
+[    1.365854]  set_pte_vaddr+0x2f/0x60
+[    1.366287]  setup_cpu_entry_areas+0xa0/0x1f7
+[    1.366822]  trap_init+0xa/0x67
+[    1.367209]  start_kernel+0x258/0x4ec
+[    1.367658]  secondary_startup_64+0xa4/0xb0
+[    1.368181] zz memblock_insert_region idx:26 23ffd1000 1000 totla_cnt:74 total_size: 1a542569
+[    1.369235] zz __memblock_find_range_top_down size:1000 
+[    1.369873] memblock_reserve: [0x000000023ffd0000-0x000000023ffd0fff] __alloc_memory_core_early+0x84/0xac
+[    1.371059] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.371811] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.372793] Call Trace:
+[    1.373098]  dump_stack+0x66/0x90
+[    1.373508]  memblock_reserve+0x4e/0x85
+[    1.373978]  __alloc_memory_core_early+0x84/0xac
+[    1.374544]  ___alloc_bootmem_nopanic+0x50/0x5c
+[    1.375085]  __alloc_bootmem+0x12/0x34
+[    1.375511]  spp_getpage+0x48/0x8e
+[    1.375913]  fill_pmd+0x69/0x140
+[    1.376299]  __set_pte_vaddr+0x12/0x50
+[    1.376751]  setup_cpu_entry_areas+0xa0/0x1f7
+[    1.377257]  trap_init+0xa/0x67
+[    1.377603]  start_kernel+0x258/0x4ec
+[    1.378004]  secondary_startup_64+0xa4/0xb0
+[    1.378502] zz memblock_insert_region idx:26 23ffd0000 1000 totla_cnt:75 total_size: 1a543569
+[    1.379530] zz __memblock_find_range_top_down size:1000 
+[    1.380124] memblock_reserve: [0x000000023ffcf000-0x000000023ffcffff] __alloc_memory_core_early+0x84/0xac
+[    1.381265] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.381986] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.382957] Call Trace:
+[    1.383254]  dump_stack+0x66/0x90
+[    1.383654]  memblock_reserve+0x4e/0x85
+[    1.384134]  __alloc_memory_core_early+0x84/0xac
+[    1.384710]  ___alloc_bootmem_nopanic+0x50/0x5c
+[    1.385270]  __alloc_bootmem+0x12/0x34
+[    1.385740]  spp_getpage+0x48/0x8e
+[    1.386160]  fill_pte+0x69/0x130
+[    1.386550]  __set_pte_vaddr+0x1d/0x50
+[    1.387017]  setup_cpu_entry_areas+0xa0/0x1f7
+[    1.387555]  trap_init+0xa/0x67
+[    1.387961]  start_kernel+0x258/0x4ec
+[    1.388425]  secondary_startup_64+0xa4/0xb0
+[    1.388944] zz memblock_insert_region idx:26 23ffcf000 1000 totla_cnt:75 total_size: 1a544569
+[    1.390005] memblock_virt_alloc_try_nid_nopanic: 67108864 bytes align=0x1000 nid=-1 from=0x0000000000000000 max_addr=0x00000000ffffffff swiotlb_init+0x4d/0xac
+[    1.391731] zz __memblock_find_range_top_down size:4000000 
+[    1.392406] memblock_reserve: [0x00000000b7efe000-0x00000000bbefdfff] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.393610] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.394339] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.395330] Call Trace:
+[    1.395636]  dump_stack+0x66/0x90
+[    1.396062]  memblock_reserve+0x4e/0x85
+[    1.396533]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.397135]  memblock_virt_alloc_try_nid_nopanic+0x69/0x87
+[    1.397815]  swiotlb_init+0x4d/0xac
+[    1.398244]  pci_swiotlb_init+0x15/0x21
+[    1.398719]  pci_iommu_alloc+0x64/0x6c
+[    1.399176]  mem_init+0x16/0xb9
+[    1.399557]  start_kernel+0x25d/0x4ec
+[    1.400006]  secondary_startup_64+0xa4/0xb0
+[    1.400522] zz memblock_insert_region idx:7 b7efe000 4000000 totla_cnt:75 total_size: 1e544569
+[    1.408746] memblock_virt_alloc_try_nid_nopanic: 32768 bytes align=0x1000 nid=-1 from=0x0000000000000000 max_addr=0x00000000ffffffff swiotlb_init_with_tbl+0x63/0x178
+[    1.410587] zz __memblock_find_range_top_down size:8000 
+[    1.411228] memblock_reserve: [0x00000000bfe05000-0x00000000bfe0cfff] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.412452] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.413183] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.414178] Call Trace:
+[    1.414484]  dump_stack+0x66/0x90
+[    1.414886]  memblock_reserve+0x4e/0x85
+[    1.415354]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.415991]  memblock_virt_alloc_try_nid_nopanic+0x69/0x87
+[    1.416671]  swiotlb_init_with_tbl+0x63/0x178
+[    1.417195]  swiotlb_init+0x90/0xac
+[    1.417622]  pci_swiotlb_init+0x15/0x21
+[    1.418096]  pci_iommu_alloc+0x64/0x6c
+[    1.418536]  mem_init+0x16/0xb9
+[    1.418926]  start_kernel+0x25d/0x4ec
+[    1.419371]  secondary_startup_64+0xa4/0xb0
+[    1.419887] zz memblock_insert_region idx:16 bfe05000 8000 totla_cnt:76 total_size: 1e54c569
+[    1.420917] memblock_virt_alloc_try_nid: 131072 bytes align=0x1000 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 swiotlb_init_with_tbl+0xc3/0x178
+[    1.422679] zz __memblock_find_range_top_down size:20000 
+[    1.423338] memblock_reserve: [0x000000023ffaf000-0x000000023ffcefff] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.424547] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.425272] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.426160] Call Trace:
+[    1.426435]  dump_stack+0x66/0x90
+[    1.426799]  memblock_reserve+0x4e/0x85
+[    1.427226]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.427798]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.428387]  swiotlb_init_with_tbl+0xc3/0x178
+[    1.428925]  swiotlb_init+0x90/0xac
+[    1.429327]  pci_swiotlb_init+0x15/0x21
+[    1.429796]  pci_iommu_alloc+0x64/0x6c
+[    1.430258]  mem_init+0x16/0xb9
+[    1.430645]  start_kernel+0x25d/0x4ec
+[    1.431084]  secondary_startup_64+0xa4/0xb0
+[    1.431604] zz memblock_insert_region idx:28 23ffaf000 20000 totla_cnt:77 total_size: 1e56c569
+[    1.432690] memblock_virt_alloc_try_nid: 262144 bytes align=0x1000 nid=-1 from=0x0000000000000000 max_addr=0x0000000000000000 swiotlb_init_with_tbl+0xf2/0x178
+[    1.434428] zz __memblock_find_range_top_down size:40000 
+[    1.435087] memblock_reserve: [0x000000023ff6f000-0x000000023ffaefff] memblock_virt_alloc_internal+0xc3/0x13e
+[    1.436323] CPU: 0 PID: 0 Comm: swapper Not tainted 4.19.91+ #62
+[    1.437068] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+[    1.438069] Call Trace:
+[    1.438376]  dump_stack+0x66/0x90
+[    1.438775]  memblock_reserve+0x4e/0x85
+[    1.439252]  memblock_virt_alloc_internal+0xc3/0x13e
+[    1.439869]  memblock_virt_alloc_try_nid+0x6a/0xab
+[    1.440416]  swiotlb_init_with_tbl+0xf2/0x178
+[    1.440901]  swiotlb_init+0x90/0xac
+[    1.441282]  pci_swiotlb_init+0x15/0x21
+[    1.441705]  pci_iommu_alloc+0x64/0x6c
+[    1.442115]  mem_init+0x16/0xb9
+[    1.442462]  start_kernel+0x25d/0x4ec
+[    1.442897]  secondary_startup_64+0xa4/0xb0
+[    1.443399] zz memblock_insert_region idx:28 23ff6f000 40000 totla_cnt:77 total_size: 1e5ac569
+[    1.460597] Memory: 7373836K/7870796K available (10252K kernel code, 2342K rwdata, 3576K rodata, 2276K init, 4360K bss, 496960K reserved, 0K cma-reserved)
+[    1.462214] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    1.462944] ftrace: allocating 33814 entries in 133 pages
+[    1.472167] rcu: Hierarchical RCU implementation.
+[    1.472791] rcu: 	RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=8.
+[    1.473641] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=8
+[    1.475924] NR_IRQS: 524544, nr_irqs: 488, preallocated irqs: 16
+[    1.476774] Console: colour dummy device 80x25
+[    1.477362] console [ttyS0] enabled
+[    1.478243] bootconsole [earlyser0] disabled
+[    1.479309] ACPI: Core revision 20180810
+[    1.480083] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+[    1.481275] hpet clockevent registered
+[    1.481297] APIC: Switch to symmetric I/O mode setup
+[    1.482052] x2apic enabled
+[    1.482550] Switched APIC routing to physical x2apic.
+[    1.483192] KVM setup pv IPIs
+[    1.484270] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    1.485091] tsc: Marking TSC unstable due to TSCs unsynchronized
+[    1.485889] Calibrating delay loop (skipped) preset value.. 3393.38 BogoMIPS (lpj=1696693)
+[    1.486885] pid_max: default: 32768 minimum: 301
+[    1.488363] Security Framework initialized
+[    1.488883] SELinux:  Initializing.
+[    1.490401] Dentry cache hash table entries: 1048576 (order: 11, 8388608 bytes)
+[    1.491559] Inode-cache hash table entries: 524288 (order: 10, 4194304 bytes)
+[    1.491920] Mount-cache hash table entries: 16384 (order: 5, 131072 bytes)
+[    1.492905] Mountpoint-cache hash table entries: 16384 (order: 5, 131072 bytes)
+[    1.494191] x86/cpu: Activated the Intel User Mode Instruction Prevention (UMIP) CPU feature
+[    1.495032] Last level iTLB entries: 4KB 512, 2MB 255, 4MB 127
+[    1.495883] Last level dTLB entries: 4KB 512, 2MB 255, 4MB 127, 1GB 0
+[    1.496885] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    1.497883] Spectre V2 : Mitigation: Full AMD retpoline
+[    1.498883] Spectre V2 : Spectre v2 / SpectreRSB mitigation: Filling RSB on context switch
+[    1.499883] Spectre V2 : Enabling Restricted Speculation for firmware calls
+[    1.500888] Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+[    1.501883] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl and seccomp
+[    1.503056] Freeing SMP alternatives memory: 32K
+[    1.506123] TSC deadline timer enabled
+[    1.506138] smpboot: CPU0: AMD Ryzen 7 PRO 4750U with Radeon Graphics (family: 0x17, model: 0x60, stepping: 0x1)
+[    1.506992] Performance Events: Fam17h core perfctr, AMD PMU driver.
+[    1.507804] ... version:                0
+[    1.507890] ... bit width:              48
+[    1.508416] ... generic registers:      6
+[    1.508886] ... value mask:             0000ffffffffffff
+[    1.509551] ... max period:             00007fffffffffff
+[    1.509885] ... fixed-purpose events:   0
+[    1.510401] ... event mask:             000000000000003f
+[    1.510937] rcu: Hierarchical SRCU implementation.
+[    1.512069] smp: Bringing up secondary CPUs ...
+[    1.512718] x86: Booting SMP configuration:
+[    1.512887] .... node  #0, CPUs:      #1
+[    0.006126] kvm-clock: cpu 1, msr 380c041, secondary cpu clock
+[    0.006126] x86/cpu: Activated the Intel User Mode Instruction Prevention (UMIP) CPU feature
+[    0.006126] smpboot: CPU 1 Converting physical 0 to logical die 1
+[    1.518688] KVM setup async PF for cpu 1
+[    1.518761] kvm-stealtime: cpu 1, msr 2380561c0
+[    1.519965]  #2
+[    0.006126] kvm-clock: cpu 2, msr 380c081, secondary cpu clock
+[    0.006126] x86/cpu: Activated the Intel User Mode Instruction Prevention (UMIP) CPU feature
+[    0.006126] smpboot: CPU 2 Converting physical 0 to logical die 2
+[    1.525886] KVM setup async PF for cpu 2
+[    1.525886] kvm-stealtime: cpu 2, msr 2380961c0
+[    1.527015]  #3
+[    0.006126] kvm-clock: cpu 3, msr 380c0c1, secondary cpu clock
+[    0.006126] x86/cpu: Activated the Intel User Mode Instruction Prevention (UMIP) CPU feature
+[    0.006126] smpboot: CPU 3 Converting physical 0 to logical die 3
+[    1.530897] KVM setup async PF for cpu 3
+[    1.531404] kvm-stealtime: cpu 3, msr 2380d61c0
+[    1.531999]  #4
+[    0.006126] kvm-clock: cpu 4, msr 380c101, secondary cpu clock
+[    0.006126] x86/cpu: Activated the Intel User Mode Instruction Prevention (UMIP) CPU feature
+[    0.006126] smpboot: CPU 4 Converting physical 0 to logical die 4
+[    1.538142] KVM setup async PF for cpu 4
+[    1.538882] kvm-stealtime: cpu 4, msr 2381161c0
+[    1.541036]  #5
+[    0.006126] kvm-clock: cpu 5, msr 380c141, secondary cpu clock
+[    0.006126] x86/cpu: Activated the Intel User Mode Instruction Prevention (UMIP) CPU feature
+[    0.006126] smpboot: CPU 5 Converting physical 0 to logical die 5
+[    1.547360] KVM setup async PF for cpu 5
+[    1.547882] kvm-stealtime: cpu 5, msr 2381561c0
+[    1.549939]  #6
+[    0.006126] kvm-clock: cpu 6, msr 380c181, secondary cpu clock
+[    0.006126] x86/cpu: Activated the Intel User Mode Instruction Prevention (UMIP) CPU feature
+[    0.006126] smpboot: CPU 6 Converting physical 0 to logical die 6
+[    1.553387] KVM setup async PF for cpu 6
+[    1.553396] kvm-stealtime: cpu 6, msr 2381961c0
+[    1.553980]  #7
+[    0.006126] kvm-clock: cpu 7, msr 380c1c1, secondary cpu clock
+[    0.006126] x86/cpu: Activated the Intel User Mode Instruction Prevention (UMIP) CPU feature
+[    0.006126] smpboot: CPU 7 Converting physical 0 to logical die 7
+[    1.561614] KVM setup async PF for cpu 7
+[    1.561882] kvm-stealtime: cpu 7, msr 2381d61c0
+[    1.563895] smp: Brought up 1 node, 8 CPUs
+[    1.564899] smpboot: Max logical packages: 8
+[    1.565810] smpboot: Total of 8 processors activated (27147.08 BogoMIPS)
+[    1.566425] devtmpfs: initialized
+[    1.566916] x86/mm: Memory block size: 128MB
+[    1.567907] PM: Registering ACPI NVS region [mem 0x00800000-0x00807fff] (32768 bytes)
+[    1.568823] PM: Registering ACPI NVS region [mem 0x00810000-0x008fffff] (983040 bytes)
+[    1.568903] PM: Registering ACPI NVS region [mem 0xbfb7f000-0xbfbfefff] (524288 bytes)
+[    1.569805] PM: Registering ACPI NVS region [mem 0xbff40000-0xbfffffff] (786432 bytes)
+[    1.569958] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    1.570908] futex hash table entries: 2048 (order: 5, 131072 bytes)
+[    1.571919] NET: Registered protocol family 16
+[    1.572488] audit: initializing netlink subsys (disabled)
+[    1.572910] audit: type=2000 audit(1625816063.593:1): state=initialized audit_enabled=0 res=1
+[    1.574895] cpuidle: using governor menu
+[    1.576116] KVM setup pv remote TLB flush
+[    1.576888] ACPI: bus type PCI registered
+[    1.577398] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[    1.578100] PCI: Using configuration type 1 for base access
+[    1.578895] PCI: Using configuration type 1 for extended access
+[    1.582003] HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
+[    1.582909] HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
+[    1.583942] ACPI: Added _OSI(Module Device)
+[    1.584446] ACPI: Added _OSI(Processor Device)
+[    1.584885] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    1.585424] ACPI: Added _OSI(Processor Aggregator Device)
+[    1.585891] ACPI: Added _OSI(Linux-Dell-Video)
+[    1.586403] ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
+[    1.587227] ACPI: 1 ACPI AML tables successfully acquired and loaded
+[    1.588266] ACPI: Interpreter enabled
+[    1.588702] ACPI: (supports S0 S4 S5)
+[    1.588886] ACPI: Using IOAPIC for interrupt routing
+[    1.589483] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    1.589967] ACPI: Enabled 2 GPEs in block 00 to 0F
+[    1.591867] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    1.591896] acpi PNP0A03:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI]
+[    1.592827] acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
+[    1.592911] zz __request_resource start:0 end:cf7 name:PCI Bus 0000:00 
+[    1.593851] acpiphp: Slot [3] registered
+[    1.593924] acpiphp: Slot [4] registered
+[    1.594416] acpiphp: Slot [5] registered
+[    1.594893] acpiphp: Slot [6] registered
+[    1.595369] acpiphp: Slot [7] registered
+[    1.595836] acpiphp: Slot [8] registered
+[    1.595930] acpiphp: Slot [9] registered
+[    1.596410] acpiphp: Slot [10] registered
+[    1.596906] acpiphp: Slot [11] registered
+[    1.597397] acpiphp: Slot [12] registered
+[    1.597950] acpiphp: Slot [13] registered
+[    1.598515] acpiphp: Slot [14] registered
+[    1.598967] acpiphp: Slot [15] registered
+[    1.599503] acpiphp: Slot [16] registered
+[    1.599914] acpiphp: Slot [17] registered
+[    1.600448] acpiphp: Slot [18] registered
+[    1.600916] acpiphp: Slot [19] registered
+[    1.601450] acpiphp: Slot [20] registered
+[    1.601921] acpiphp: Slot [21] registered
+[    1.602471] acpiphp: Slot [22] registered
+[    1.602920] acpiphp: Slot [23] registered
+[    1.603472] acpiphp: Slot [24] registered
+[    1.603932] acpiphp: Slot [25] registered
+[    1.604457] acpiphp: Slot [26] registered
+[    1.604917] acpiphp: Slot [27] registered
+[    1.605477] acpiphp: Slot [28] registered
+[    1.605934] acpiphp: Slot [29] registered
+[    1.606460] acpiphp: Slot [30] registered
+[    1.606919] acpiphp: Slot [31] registered
+[    1.607438] PCI host bridge to bus 0000:00
+[    1.607888] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    1.608848] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    1.608891] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    1.609751] pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+[    1.609890] pci_bus 0000:00: root bus resource [mem 0x800000000-0x87fffffff window]
+[    1.610780] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    1.610934] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000
+[    1.611546] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100
+[    1.612125] pci 0000:00:01.1: [8086:7010] type 00 class 0x010180
+[    1.613321] pci 0000:00:01.1: reg 0x20: [io  0xc0a0-0xc0af]
+[    1.613856] pci 0000:00:01.1: legacy IDE quirk: reg 0x10: [io  0x01f0-0x01f7]
+[    1.613900] pci 0000:00:01.1: legacy IDE quirk: reg 0x14: [io  0x03f6]
+[    1.614728] pci 0000:00:01.1: legacy IDE quirk: reg 0x18: [io  0x0170-0x0177]
+[    1.614886] pci 0000:00:01.1: legacy IDE quirk: reg 0x1c: [io  0x0376]
+[    1.615877] pci 0000:00:01.3: [8086:7113] type 00 class 0x068000
+[    1.616358] pci 0000:00:01.3: quirk: [io  0xb000-0xb03f] claimed by PIIX4 ACPI
+[    1.616897] pci 0000:00:01.3: quirk: [io  0xb100-0xb10f] claimed by PIIX4 SMB
+[    1.617977] pci 0000:00:02.0: [1234:1111] type 00 class 0x030000
+[    1.618858] pci 0000:00:02.0: reg 0x10: [mem 0xc0000000-0xc0ffffff pref]
+[    1.619636] pci 0000:00:02.0: reg 0x18: [mem 0xc1083000-0xc1083fff]
+[    1.621890] pci 0000:00:02.0: reg 0x30: [mem 0xffff0000-0xffffffff pref]
+[    1.621933] pci 0000:00:02.0: BAR 0: assigned to efifb
+[    1.622779] pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000
+[    1.623363] pci 0000:00:03.0: reg 0x10: [io  0xc080-0xc09f]
+[    1.623825] pci 0000:00:03.0: reg 0x14: [mem 0xc1082000-0xc1082fff]
+[    1.625285] pci 0000:00:03.0: reg 0x20: [mem 0x800000000-0x800003fff 64bit pref]
+[    1.625822] pci 0000:00:03.0: reg 0x30: [mem 0xfff80000-0xffffffff pref]
+[    1.626461] pci 0000:00:04.0: [8086:5845] type 00 class 0x010802
+[    1.627061] pci 0000:00:04.0: reg 0x10: [mem 0x800008000-0x800009fff 64bit]
+[    1.628127] pci 0000:00:04.0: reg 0x20: [mem 0xc1081000-0xc1081fff]
+[    1.629405] pci 0000:00:05.0: [1af4:1001] type 00 class 0x010000
+[    1.629888] pci 0000:00:05.0: reg 0x10: [io  0xc000-0xc07f]
+[    1.630480] pci 0000:00:05.0: reg 0x14: [mem 0xc1080000-0xc1080fff]
+[    1.632642] pci 0000:00:05.0: reg 0x20: [mem 0x800004000-0x800007fff 64bit pref]
+[    1.633770] zz __request_resource start:510 end:51b name:QEMU0002:00 
+[    1.634041] ACPI: PCI Interrupt Link [LNKA] (IRQs 5 10 *11)
+[    1.634873] ACPI: PCI Interrupt Link [LNKB] (IRQs 5 10 *11)
+[    1.635062] ACPI: PCI Interrupt Link [LNKC] (IRQs 5 *10 11)
+[    1.636063] ACPI: PCI Interrupt Link [LNKD] (IRQs 5 *10 11)
+[    1.636968] ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
+[    1.639202] pci 0000:00:02.0: vgaarb: setting as boot VGA device
+[    1.639882] pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    1.639908] pci 0000:00:02.0: vgaarb: bridge control possible
+[    1.640888] vgaarb: loaded
+[    1.641264] SCSI subsystem initialized
+[    1.641710] ACPI: bus type USB registered
+[    1.641899] usbcore: registered new interface driver usbfs
+[    1.642532] usbcore: registered new interface driver hub
+[    1.642946] usbcore: registered new device driver usb
+[    1.643538] pps_core: LinuxPPS API ver. 1 registered
+[    1.643888] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    1.644892] PTP clock support registered
+[    1.645455] EDAC MC: Ver: 3.0.0
+[    1.646076] Registered efivars operations
+[    1.646449] PCI: Using ACPI for IRQ routing
+[    1.646891] PCI: pci_cache_line_size set to 64 bytes
+[    1.647037] e820: reserve RAM buffer [mem 0x00810000-0x008fffff]
+[    1.647042] zz __request_resource start:810000 end:8fffff name:RAM buffer 
+[    1.647901] e820: reserve RAM buffer [mem 0xbe056018-0xbfffffff]
+[    1.647905] zz __request_resource start:be056018 end:bfffffff name:RAM buffer 
+[    1.648898] zz __request_resource start:be0a1058 end:bfffffff name:RAM buffer 
+[    1.649899] zz __request_resource start:be2d8018 end:bfffffff name:RAM buffer 
+[    1.650903] zz __request_resource start:be2e1a58 end:bfffffff name:RAM buffer 
+[    1.651887] zz __request_resource start:bf8ef000 end:bfffffff name:RAM buffer 
+[    1.652793] zz __request_resource start:bfb6f000 end:bfffffff name:RAM buffer 
+[    1.652887] zz __request_resource start:bfb7f000 end:bfffffff name:RAM buffer 
+[    1.653844] zz __request_resource start:bfbff000 end:bfffffff name:RAM buffer 
+[    1.653893] zz __request_resource start:bfebc000 end:bfffffff name:RAM buffer 
+[    1.654792] zz __request_resource start:bff40000 end:bfffffff name:RAM buffer 
+[    1.654894] e820: reserve RAM buffer [mem 0xbe2d8018-0xbfffffff]
+[    1.654896] zz __request_resource start:be2d8018 end:bfffffff name:RAM buffer 
+[    1.655824] zz __request_resource start:be2e1a58 end:bfffffff name:RAM buffer 
+[    1.655895] zz __request_resource start:bf8ef000 end:bfffffff name:RAM buffer 
+[    1.656788] zz __request_resource start:bfb6f000 end:bfffffff name:RAM buffer 
+[    1.656905] zz __request_resource start:bfb7f000 end:bfffffff name:RAM buffer 
+[    1.657766] zz __request_resource start:bfbff000 end:bfffffff name:RAM buffer 
+[    1.657889] zz __request_resource start:bfebc000 end:bfffffff name:RAM buffer 
+[    1.658728] zz __request_resource start:bff40000 end:bfffffff name:RAM buffer 
+[    1.658896] e820: reserve RAM buffer [mem 0xbf8ef000-0xbfffffff]
+[    1.658898] zz __request_resource start:bf8ef000 end:bfffffff name:RAM buffer 
+[    1.659716] zz __request_resource start:bfb6f000 end:bfffffff name:RAM buffer 
+[    1.659895] zz __request_resource start:bfb7f000 end:bfffffff name:RAM buffer 
+[    1.660709] zz __request_resource start:bfbff000 end:bfffffff name:RAM buffer 
+[    1.660890] zz __request_resource start:bfebc000 end:bfffffff name:RAM buffer 
+[    1.661788] zz __request_resource start:bff40000 end:bfffffff name:RAM buffer 
+[    1.661892] e820: reserve RAM buffer [mem 0xbfebc000-0xbfffffff]
+[    1.661894] zz __request_resource start:bfebc000 end:bfffffff name:RAM buffer 
+[    1.662790] zz __request_resource start:bff40000 end:bfffffff name:RAM buffer 
+[    1.662986] NetLabel: Initializing
+[    1.663424] NetLabel:  domain hash size = 128
+[    1.663886] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    1.664625] NetLabel:  unlabeled traffic allowed by default
+[    1.664981] hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0
+[    1.665598] hpet0: 3 comparators, 64-bit 100.000000 MHz counter
+[    1.668932] clocksource: Switched to clocksource kvm-clock
+[    1.675713] VFS: Disk quotas dquot_6.6.0
+[    1.676455] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    1.677395] pnp: PnP ACPI init
+[    1.677819] pnp 00:00: Plug and Play ACPI device, IDs PNP0b00 (active)
+[    1.677836] pnp 00:01: Plug and Play ACPI device, IDs PNP0303 (active)
+[    1.677845] pnp 00:02: Plug and Play ACPI device, IDs PNP0f13 (active)
+[    1.677850] pnp 00:03: [dma 2]
+[    1.677855] pnp 00:03: Plug and Play ACPI device, IDs PNP0700 (active)
+[    1.677899] pnp 00:04: Plug and Play ACPI device, IDs PNP0400 (active)
+[    1.677922] pnp 00:05: Plug and Play ACPI device, IDs PNP0501 (active)
+[    1.678047] pnp: PnP ACPI: found 6 devices
+[    1.684860] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    1.685961] pci 0000:00:02.0: can't claim BAR 6 [mem 0xffff0000-0xffffffff pref]: no compatible bridge window
+[    1.687144] pci 0000:00:03.0: can't claim BAR 6 [mem 0xfff80000-0xffffffff pref]: no compatible bridge window
+[    1.688362] pci 0000:00:03.0: BAR 6: assigned [mem 0xc1000000-0xc107ffff pref]
+[    1.689223] pci 0000:00:02.0: BAR 6: assigned [mem 0xc1090000-0xc109ffff pref]
+[    1.690093] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    1.690093] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    1.690094] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    1.690095] pci_bus 0000:00: resource 7 [mem 0xc0000000-0xfebfffff window]
+[    1.690095] pci_bus 0000:00: resource 8 [mem 0x800000000-0x87fffffff window]
+[    1.690132] NET: Registered protocol family 2
+[    1.690756] tcp_listen_portaddr_hash hash table entries: 4096 (order: 4, 65536 bytes)
+[    1.691727] TCP established hash table entries: 65536 (order: 7, 524288 bytes)
+[    1.692746] TCP bind hash table entries: 65536 (order: 8, 1048576 bytes)
+[    1.693638] TCP: Hash tables configured (established 65536 bind 65536)
+[    1.694476] UDP hash table entries: 4096 (order: 5, 131072 bytes)
+[    1.695325] UDP-Lite hash table entries: 4096 (order: 5, 131072 bytes)
+[    1.696250] NET: Registered protocol family 1
+[    1.696794] pci 0000:00:01.0: PIIX3: Enabling Passive Release
+[    1.697493] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+[    1.698206] pci 0000:00:01.0: Activating ISA DMA hang workarounds
+[    1.699030] pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    1.700142] PCI: CLS 0 bytes, default 64
+[    1.700144] zz __request_resource start:b000 end:b003 name:ACPI PM1a_EVT_BLK 
+[    1.700987] zz __request_resource start:b000 end:b003 name:ACPI PM1a_EVT_BLK 
+[    1.701825] zz __request_resource start:b004 end:b005 name:ACPI PM1a_CNT_BLK 
+[    1.702690] zz __request_resource start:b004 end:b005 name:ACPI PM1a_CNT_BLK 
+[    1.703589] zz __request_resource start:b008 end:b00b name:ACPI PM_TMR 
+[    1.704435] zz __request_resource start:b008 end:b00b name:ACPI PM_TMR 
+[    1.705216] zz __request_resource start:afe0 end:afe3 name:ACPI GPE0_BLK 
+[    1.706076] Unpacking initramfs...
+[    1.876317] Freeing initrd memory: 18320K
+[    1.876960] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    1.877708] software IO TLB: mapped [mem 0xb7efe000-0xbbefe000] (64MB)
+[    1.880629] Initialise system trusted keyrings
+[    1.881206] Key type blacklist registered
+[    1.881735] workingset: timestamp_bits=35 max_order=21 bucket_order=0
+[    1.883128] zbud: loaded
+[    1.883617] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    1.919107] NET: Registered protocol family 38
+[    1.920184] Key type asymmetric registered
+[    1.921119] Asymmetric key parser 'x509' registered
+[    1.922242] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 249)
+[    1.924230] io scheduler noop registered
+[    1.925340] io scheduler deadline registered (default)
+[    1.926741] io scheduler cfq registered
+[    1.927793] io scheduler mq-deadline registered (default)
+[    1.929249] io scheduler kyber registered
+[    1.930730] atomic64_test: passed for x86-64 platform with CX8 and with SSE
+[    1.932686] efifb: probing for efifb
+[    1.933169] zz __request_resource start:c0000000 end:c01d4fff name:efifb 
+[    1.933985] zz __request_resource start:c0000000 end:c01d4fff name:efifb 
+[    1.934805] efifb: framebuffer at 0xc0000000, using 1876k, total 1875k
+[    1.935596] efifb: mode is 800x600x32, linelength=3200, pages=1
+[    1.936334] efifb: scrolling: redraw
+[    1.936765] efifb: Truecolor: size=8:8:8:8, shift=24:16:8:0
+[    1.938647] Console: switching to colour frame buffer device 100x37
+[    1.940192] fb0: EFI VGA frame buffer device
+[    1.941168] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    1.942024] zz __request_resource start:3f8 end:3ff name:serial 
+[    1.966082] 00:05: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    1.967201] zz __request_resource start:2f8 end:2ff name:serial 
+[    1.968078] zz __request_resource start:3e8 end:3ef name:serial 
+[    1.968988] zz __request_resource start:2e8 end:2ef name:serial 
+[    1.970092] Non-volatile memory driver v1.3
+[    1.970651] Linux agpgart interface v0.103
+[    1.972366] rdac: device handler registered
+[    1.973166] hp_sw: device handler registered
+[    1.973701] emc: device handler registered
+[    1.974313] alua: device handler registered
+[    1.974902] libphy: Fixed MDIO Bus: probed
+[    1.975470] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    1.976338] ehci-pci: EHCI PCI platform driver
+[    1.976893] uhci_hcd: USB Universal Host Controller Interface driver
+[    1.977683] usbcore: registered new interface driver usbserial_generic
+[    1.978463] usbserial: USB Serial support registered for generic
+[    1.979207] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+[    1.980907] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    1.981514] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    1.982289] mousedev: PS/2 mouse device common for all mice
+[    1.983145] rtc_cmos 00:00: RTC can wake from S4
+[    1.983802] zz __request_resource start:70 end:71 name:rtc_cmos 
+[    1.985082] rtc_cmos 00:00: registered as rtc0
+[    1.985655] rtc_cmos 00:00: alarms up to one day, y3k, 114 bytes nvram, hpet irqs
+[    1.986604] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
+[    1.988475] EFI Variables Facility v0.08 2004-May-17
+[    1.989442] hidraw: raw HID events driver (C) Jiri Kosina
+[    1.990343] usbcore: registered new interface driver usbhid
+[    1.991043] usbhid: USB HID core driver
+[    1.991670] drop_monitor: Initializing network drop monitor service
+[    1.992647] Initializing XFRM netlink socket
+[    1.993308] NET: Registered protocol family 10
+[    1.994274] Segment Routing with IPv6
+[    1.994805] NET: Registered protocol family 17
+[    1.995487] NET: Registered protocol family 41
+[    1.997229] mce: Using 10 MCE banks
+[    1.997698] zz __request_resource start:fed00000 end:fed003ff name:HPET 0 
+[    1.998708] registered taskstats version 1
+[    1.999283] Loading compiled-in X.509 certificates
+[    2.017925] Loaded X.509 cert 'Build time autogenerated kernel key: 974e4a7e383a9dc8279e3aefa7ee84d0b2762b45'
+[    2.019338] zswap: loaded using pool lzo/zbud
+[    2.024254] Key type big_key registered
+[    2.027018] Key type trusted registered
+[    2.029653] Key type encrypted registered
+[    2.030812] ima: No TPM chip found, activating TPM-bypass!
+[    2.032326] ima: Allocated hash algorithm: sha1
+[    2.033574] evm: Initialising EVM extended attributes:
+[    2.034974] evm: security.selinux
+[    2.035901] evm: security.ima
+[    2.036713] evm: security.capability
+[    2.037688] evm: HMAC attrs: 0x1
+[    2.039183] rtc_cmos 00:00: setting system clock to 2021-07-09 07:34:24 UTC (1625816064)
+[    2.041138] Unstable clock detected, switching default tracing clock to "global"
+If you want to keep using the local clock, then add:
+  "trace_clock=local"
+on the kernel command line
+[    2.045146] Freeing unused kernel image memory: 2276K
+[    2.054937] Write protecting the kernel read-only data: 16384k
+[    2.057919] Freeing unused kernel image memory: 2012K
+[    2.059755] Freeing unused kernel image memory: 520K
+[    2.061231] Run /init as init process
+[    2.066795] random: systemd: uninitialized urandom read (16 bytes read)
+[    2.069119] random: systemd: uninitialized urandom read (16 bytes read)
+[    2.075781] systemd[1]: systemd 219 running in system mode. (+PAM +AUDIT +SELINUX +IMA -APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 -SECCOMP +BLKID +ELFUTILS +KMOD +IDN)
+[    2.078057] systemd[1]: Detected virtualization kvm.
+[    2.078674] systemd[1]: Detected architecture x86-64.
+[    2.079291] systemd[1]: Running in initial RAM disk.
+[    2.081196] systemd[1]: No hostname configured.
+[    2.081765] systemd[1]: Set hostname to <localhost>.
+[    2.117068] random: systemd: uninitialized urandom read (16 bytes read)
+[    2.128038] systemd[1]: Reached target Timers.
+[    2.130496] systemd[1]: Reached target Swap.
+[    2.132631] systemd[1]: Reached target Local File Systems.
+[    2.134490] systemd[1]: Created slice Root Slice.
+[    2.292137] floppy: module verification failed: signature and/or required key missing - tainting kernel
+[    2.294142] Floppy drive(s): fd0 is 2.88M AMI BIOS
+[    2.294972] zz __request_resource start:3f2 end:3f2 name:floppy 
+[    2.295875] zz __request_resource start:3f4 end:3f5 name:floppy 
+[    2.296723] zz __request_resource start:3f7 end:3f7 name:floppy 
+[    2.300956] zz __request_resource start:800008000 end:800009fff name:nvme 
+[    2.303106] zz __request_resource start:800008000 end:800009fff name:nvme 
+[    2.305307] zz __request_resource start:c1081000 end:c1081fff name:nvme 
+[    2.307353] zz __request_resource start:c1081000 end:c1081fff name:nvme 
+[    2.308958] nvme nvme0: pci function 0000:00:04.0
+[    2.309922] FDC 0 is a S82078B
+[    2.328253] PCI Interrupt Link [LNKD] enabled at IRQ 10
+[    2.328976] PCI Interrupt Link [LNKC] enabled at IRQ 11
+[    2.330656] zz __request_resource start:800000000 end:800003fff name:virtio-pci-modern 
+[    2.333045] zz __request_resource start:800000000 end:800003fff name:virtio-pci-modern 
+[    2.346717] PCI Interrupt Link [LNKA] enabled at IRQ 11
+[    2.347919] zz __request_resource start:800004000 end:800007fff name:virtio-pci-modern 
+[    2.348859] zz __request_resource start:800004000 end:800007fff name:virtio-pci-modern 
+[    2.354269] virtio_blk virtio1: [vda] 41943040 512-byte logical blocks (21.5 GB/20.0 GiB)
+[    2.356201]  vda: vda1 vda2 vda3
+[    2.379935] random: fast init done
+[    2.399541] EXT4-fs (vda3): mounted filesystem with ordered data mode. Opts: (null)
+[    2.653718] random: crng init done
+[    2.653718] random: 7 urandom warning(s) missed due to ratelimiting
+[    2.688974] systemd-journald[163]: Received SIGTERM from PID 1 (systemd).
+[    2.702232] systemd: 17 output lines suppressed due to ratelimiting
+[    2.711487] SELinux:  Disabled at runtime.
+[    2.739379] audit: type=1404 audit(1625816065.200:2): enforcing=0 old_enforcing=0 auid=4294967295 ses=4294967295 enabled=0 old-enabled=1 lsm=selinux res=1
+[    2.762608] systemd[1]: Inserted module 'ip_tables'
+[    2.852762] input: ImExPS/2 Generic Explorer Mouse as /devices/platform/i8042/serio1/input/input2
+[    2.872088] EXT4-fs (vda3): re-mounted. Opts: (null)
+[    2.884690] systemd-journald[426]: Received request to flush runtime journal from PID 1
+[    2.897168] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input3
+[    2.898473] input: PC Speaker as /devices/platform/pcspkr/input/input4
+[    2.900048] ACPI: Power Button [PWRF]
+[    2.907526] cryptd: max_cpu_qlen set to 1000
+[    2.922239] AVX2 version of gcm_enc/dec engaged.
+[    2.924018] AES CTR mode by8 optimization enabled
+[    2.925610] EXT4-fs (vda2): mounted filesystem with ordered data mode. Opts: (null)
+[    2.945818] alg: No test for pcbc(aes) (pcbc-aes-aesni)
+[    2.947635] FAT-fs (vda1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
+[    3.452330] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[    3.778764] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.

@@ -30,7 +30,7 @@ class ProcTList(object):
             #print(lastitem)
 
         for item in self.mShowStrList:
-            print("%-15s"%item, end="")
+            print("{:<15}".format(item), end="")
         print("")
 
         for index_l1 in range(len(self.mDataList)):
@@ -38,9 +38,9 @@ class ProcTList(object):
             for index in range(len(xitem)):
                 if lastitem and index != 0:
                     yitem = lastitem[index_l1]
-                    print("%-15s"%(xitem[index]+"("+str(int(xitem[index])- int(yitem[index]))+")"), end="")
+                    print("{:<15}".format(xitem[index]+"("+str(int(xitem[index])- int(yitem[index]))+")"), end="")
                 else:
-                    print("%-15s"%xitem[index], end="")
+                    print("{:<15}".format(xitem[index]), end="")
 
             print("")
 
