@@ -9,6 +9,10 @@ bpf_text = """
 #include <linux/blkdev.h>
 #include <linux/list.h>
 
+#define container_of(ptr, type, member) ({          \
+    const typeof( ((type *)0)->member ) *__mptr = (ptr);    \
+    (type *)( (char *)__mptr - offsetof(type,member) );})
+
 typedef struct disk_key {
     char disk[DISK_NAME_LEN];
     u64 slot;
@@ -32,24 +36,41 @@ static void bio_dump(struct bio *bio)
    struct dentry *dentry;
    struct hlist_head   *i_dentry;
    struct hlist_node *first;
+   struct super_block  *i_sb;
+
+   if (bio->bi_vcnt == 0)
+        return;
 
    bi_vecs = bio->bi_io_vec;
    page = bi_vecs->bv_page;
    mapping = page->mapping;
    inode = mapping->host;
+   i_sb = inode->i_sb;
+
+   //bpf_trace_printk("mapping %lx inode:%lx i_sb:%lx", mapping, inode, i_sb);
+
+   //bpf_trace_printk("supper: %s", i_sb->s_id);
 
    //dentry = hlist_entry(inode->i_dentry.first, struct dentry, d_u.d_alias);
    i_dentry = &inode->i_dentry;
    first = i_dentry->first;
    dentry = container_of(first, struct dentry, d_u.d_alias);
+   if (!first)
+        return;
 
-   bpf_trace_printk("bio->bi_vcnt:%lx", bio->bi_vcnt);
+   //bpf_trace_printk("dentry %lx %s", dentry, dentry->d_iname);
+   //if (dentry)
+   //   bpf_trace_printk("dentry %lx %s", dentry, dentry->d_iname);
+
+   bpf_trace_printk("%s: bi_vcnt:%lx ", dentry->d_iname, bio->bi_vcnt);
+   #if 0
    for (i = 0; i <= 2; ++i) {
         bpf_trace_printk("bv_page:%lx bv_len:%lx bv_offset:%lx", (unsigned long)bi_vecs->bv_page, (unsigned long)bi_vecs->bv_len, (unsigned long)bi_vecs->bv_offset);
         bi_vecs++;
         if ( (i + 1) == bio->bi_vcnt)
             break;
    }
+   #endif
 }
 
 // time block I/O
