@@ -97,6 +97,27 @@ def RunSysbench(name, workdir):
         return sysbenchresult[name](res)
     return ""
 
+
+unixbenchpre={
+"shell1":"export PROGDIR=./pgms",
+"shell8":"export PROGDIR=./pgms"
+}
+unixbenchrun={
+"dhry2reg":"./pgms/dhry2reg 10",
+"whetstone-double":"./pgms/whetstone-double",
+"execl":"./pgms/execl 30",
+"fstime":"./pgms/fstime -c -t 30 -d ./tmp  -b 1024 -m 2000",
+"fsbuffer":"./pgms/fstime -c -t 30 -d ./tmp  -b 256 -m 500",
+"fsdisk":"./pgms/fstime -c -t 30 -d ./tmp  -b 4096 -m 8000",
+"pipe":"./pgms/pipe 10",
+"context1":"./pgms/context1 10",
+"spawn":"./pgms/spawn 30",
+"syscall":"./pgms/syscall 10",
+"shell1":"export UB_BINDIR=./pgms;./pgms/looper 60 pgms/multi.sh 1",
+"shell8":"export UB_BINDIR=./pgms;./pgms/looper 60 pgms/multi.sh 8",
+"all":"./Run -i 1"
+}
+
 def CaseUnixbenchBaseResult(context, numbers, name):
     jsdict={}
     lines=context.split("\n")
@@ -121,30 +142,9 @@ def CaseUnixbenchLogfileResult(context):
            sigcpudict["sig "+linearr[0]]=linearr[1].split(" ")[0]
            sigcpudict["mult "+linearr[0]]=linearr[2]
 
-    RunSaveBenchJson("unixbench-sig", sigcpudict)
-    RunSaveBenchJson("unixbench-mult", sigcpudict)
+    SaveBenchJson("unixbench-sig", sigcpudict)
+    SaveBenchJson("unixbench-mult", sigcpudict)
     #return CaseSysbenchBaseResult(context,[14,26], "cpu")
-
-unixbenchpre={
-"shell1":"export PROGDIR=./pgms",
-"shell8":"export PROGDIR=./pgms"
-}
-unixbenchrun={
-"dhry2reg":"./pgms/dhry2reg 10",
-"whetstone-double":"./pgms/whetstone-double",
-"execl":"./pgms/execl 30",
-"fstime":"./pgms/fstime -c -t 30 -d ./tmp  -b 1024 -m 2000",
-"fsbuffer":"./pgms/fstime -c -t 30 -d ./tmp  -b 256 -m 500",
-"fsdisk":"./pgms/fstime -c -t 30 -d ./tmp  -b 4096 -m 8000",
-"pipe":"./pgms/pipe 10",
-"context1":"./pgms/context1 10",
-"spawn":"./pgms/spawn 30",
-"syscall":"./pgms/syscall 10",
-"shell1":"export UB_BINDIR=./pgms;./pgms/looper 60 pgms/multi.sh 1",
-"shell8":"export UB_BINDIR=./pgms;./pgms/looper 60 pgms/multi.sh 8",
-"all":"./Run -i 1"
-}
-
 
 unixbenchresult={
 "logfile": CaseUnixbenchLogfileResult,
@@ -172,7 +172,7 @@ def CaseRedisbenchLogfileResult(context):
            print(linearr[0], linearr[1].split(" ")[1])
            redisdict[linearr[0]] = linearr[1].split(" ")[1]
 
-    RunSaveBenchJson("redisbench", redisdict)
+    SaveBenchJson("redisbench", redisdict)
     #RunSaveBenchJson("unixbench-mult", sigcpudict)
 
 redisbenchrun={
@@ -182,19 +182,85 @@ redisbenchresult={
 "logfile": CaseRedisbenchLogfileResult,
 }
 
-wrkbenchrun={
-"get": "-t10 -c30 -d 20s -T5s --latency http://{IP}"
+def CaseWrkLogfileResult(context):
+    wrkdict={}
+    #api.dumpline(context)
+    lines=context.split("\n")
+    #print(context)
+    #Requests/sec:   2204.34
+    #Transfer/sec:    421.36MB
+    #Latency   191.68ms  108.46ms 999.94ms   84.62%
+    #Req/Sec   138.25     50.87     1.05k    82.43%
+    reqline=lines[-4]
+    reqline=re.sub(' +', '', reqline).split(":")
+    tranline=lines[-3]
+    tranline=re.sub(' +', '', tranline).split(":")
+    latencyline=lines[-9]
+    latencyline=re.sub('^ +', '', latencyline)
+    latencyline=re.sub(' +', ' ', latencyline)
+    latencyline=re.sub('ms', '', latencyline).split(" ")
+    threadreqline=lines[-8]
+    threadreqline=re.sub('^ +', '', threadreqline)
+    threadreqline=re.sub(' +', ' ', threadreqline).split(" ")
+    #print(reqline)
+    #print(tranline)
+    #print(latencyline)
+    #print(threadreqline)
+    wrkdict[reqline[0]]=reqline[1]
+    wrkdict[tranline[0]]=tranline[1]
+    wrkdict[latencyline[0]]=latencyline[1]
+    wrkdict[threadreqline[0]]=threadreqline[1]
+    #print(wrkdict)
+    SaveBenchJson("wrk", wrkdict)
+
+
+wrkresult={
+"connect": CaseRedisbenchLogfileResult,
+"logfile": CaseWrkLogfileResult,
 }
 
-def RunSaveBenchJson(name, resdict):
+wrkrun={
+"connect":"./wrk -t 16 -c 1024  -H \"Connection: close\" -d 30 --timeout 1 -d 30 --timeout 1 http://{host}/"
+}
+
+parser = OptionParser()
+parser.add_option("-i", "--install", type="string", dest="install",
+                  help="--install  all/sysbench/unixbench/hackbench/wrk/niginx/radis/cpuspec")
+parser.add_option("-l", "--list", action="store_true", dest="list",
+                  help="--list list all benchmark test name") 
+parser.add_option("-r", "--run", type="string", dest="run",
+                  help="--run all/sysbench/unixbench/hackbench/wrk/niginx/radis/cpuspec")
+parser.add_option("-f", "--logfile", type="string", dest="logfile",
+                  help="--logfile  logfile") 
+parser.add_option("-t", "--type", type="string", dest="type",
+                  help="--type log ")
+parser.add_option("-s", "--description", type="string", dest="description",
+                  help="--description case description") 
+parser.add_option("-d", "--directory", type="string", dest="directory",
+                  help="--directroy work directroy") 
+parser.add_option("-c", "--case", type="string", dest="case",
+                  help="--case all/sysbench/unixbench/hackbench/wrk/niginx/radis/cpuspec")
+
+(options, args) = parser.parse_args()
+
+"save jion result of benchmark"
+def SaveBenchJson(name, resdict):
     timestr=time.strftime("%Y%m%d%H%M%S", time.localtime())
     benchmarkdict = {"type": "", "name": "", "data": ""}
     benchmarkdict['type']=name
-    benchmarkdict['name']=timestr+"_"+name
+    if options.description:
+        benchmarkdict['name']=name+"_" + options.description + "_" + timestr;
+    else:
+        benchmarkdict['name']=name+"_" + timestr;
 
     benchmarkdict["data"]=resdict
     benchmarkjson=json.dumps(benchmarkdict, ensure_ascii=False,indent=2)
-    filename="/tmp/"+benchmarkdict["name"]
+
+    if options.directory:
+        filename=os.path.join(options.directory,benchmarkdict["name"])
+    else:
+        filename=os.path.join("/tmp",benchmarkdict["name"])
+
     fd=open(filename, "w")
     json.dump(benchmarkdict, fd)
     fd.close()
@@ -211,7 +277,10 @@ def RunSimpleLogfileBench(name, filename):
         unixbenchresult["logfile"](context)
     elif name == "redis":
         redisbenchresult["logfile"](context)
+    elif name == "wrk":
+        wrkresult["logfile"](context)
 
+"Run benchmark case as interface entry"
 def RunSimpleBench(name, subname):
     resdict={}
     if name == "sysbench":
@@ -220,15 +289,15 @@ def RunSimpleBench(name, subname):
                 res=RunSysbench(key, "work/sysbench-master/")
                 for key in res:
                     resdict[key]=res[key]
-            RunSaveBenchJson(name, resdict)
         else:
-            RunSysbench(subname, "work/sysbench-master/")
+            resdict=RunSysbench(subname, "work/sysbench-master/")
     elif name == "unixbench":
         if subname == "all":
-            RunUnixbench(subname, "work/byte-unixbench-master/UnixBench/")
+            resdict=RunUnixbench(subname, "work/byte-unixbench-master/UnixBench/")
             #RunSaveBenchJson(name, resdict)
         else:
-            RunUnixbench(subname, "work/byte-unixbench-master/UnixBench/")
+            resdict=RunUnixbench(subname, "work/byte-unixbench-master/UnixBench/")
+    SaveBenchJson(name, resdict)
 
 
 def BuildSimpleBench(name):
@@ -238,9 +307,9 @@ def InstallSimpleBench(name):
     if not os.path.exists("work"):
         os.mkdir("work")
     if benchmark[name]:
-        #res=api.excuteCommand("wget "+benchmark[name]+ " -O work/"+name+".zip", 0, 1)
-        #if res:
-        #    printf("wget ",name, "download error")
+        res=api.excuteCommand("wget "+benchmark[name]+ " -O work/"+name+".zip", 0, 1)
+        if res:
+            printf("wget ",name, "download error")
         res=api.excuteCommand("unzip -o -xd ./work ./work/"+name+".zip", 0, 1)
         #res=api.excuteCommand("./script/build/"+name+"__build.sh", 0, 1)
         BuildSimpleBench(name)
@@ -250,22 +319,6 @@ def BenchmarkInstall(name):
         pass
     else:
         InstallSimpleBench(name)
-
-parser = OptionParser()
-parser.add_option("-i", "--install", type="string", dest="install",
-                  help="--install  all/sysbench/unixbench/hackbench/wrk/niginx/radis/cpuspec")
-parser.add_option("-l", "--list", action="store_true", dest="list",
-                  help="--list list all benchmark test name") 
-parser.add_option("-r", "--run", type="string", dest="run",
-                  help="--run all/sysbench/unixbench/hackbench/wrk/niginx/radis/cpuspec")
-parser.add_option("-f", "--logfile", type="string", dest="logfile",
-                  help="--logfile  logfile") 
-parser.add_option("-t", "--type", type="string", dest="type",
-                  help="--type log ")
-parser.add_option("-c", "--case", type="string", dest="case",
-                  help="--case all/sysbench/unixbench/hackbench/wrk/niginx/radis/cpuspec")
-
-(options, args) = parser.parse_args()
 
 
 if options.install:
