@@ -3,6 +3,7 @@ import re
 import json
 import subprocess
 import random
+from API import api
 from optparse import OptionParser
 
 parser = OptionParser()
@@ -14,6 +15,8 @@ parser.add_option("-l", "--list", action="store_true", dest="list",
                   help="--list list all benchmark test name") 
 parser.add_option("-c", "--cmd", type="string", dest="cmd",
                   help="--cmd stat_event ")
+parser.add_option("-r", "--run", type="string", dest="run",
+                  help="--run command")
 (options, args) = parser.parse_args()
 
 vmenv={
@@ -24,14 +27,17 @@ mekerneldict={
 "srcdir":"~/github/cloud-kernel",
 "builddir": "~/github/cache/cloud-kernel",
 "image":"arch/x86/boot/bzImage",
+"version": "include/config/kernel.release",
+"vm_vmlinux_path": "root@vm:/boot/vmlinuz-4.19.91+",
 }
 
+
 mekernelcmddict={
-"build_bzImage":"make O=args1 bzImage -j args2",
-"build_all":"make O=args1 -j args2",
-"install_bzImage":"make O=args1 install -j args2",
-"install_all_into_vm":"arch/x86/boot/bzImage",
-"install_bzImage_into_vm":"arch/x86/boot/bzImage",
+"build_bzImage":"''.join(['make O=', mekerneldict['builddir'], ' bzImage  -j16 '])",
+"build_all":"''.join(['make O=', mekerneldict['builddir'], ' -j16 '])",
+"install_bzImage":"''.join(['scp ', mekerneldict['builddir'],'/', mekerneldict['image'], ' ', mekerneldict['vm_vmlinux_path']])",
+"install_modules":"''.join(['make O=', mekerneldict['builddir'], '  modules_install  INSTALL_MOD_PATH=', mekerneldict['builddir'],'/modules'])",
+"vm_restart":"''.join(['ssh root@vm \"shutdown -r 0\"'])",
 }
 
 mejsonfile={
@@ -40,18 +46,33 @@ mejsonfile={
 "command":mekernelcmddict,
 }
 
+def RunCommand(name):
+    name=name.replace(" ","")
+    name=name.split("+")
+    for item in name:
+        cmd=eval(mekernelcmddict[item])
+        print(item,cmd)
+        ret=api.excuteCommand(cmd, stdshow=1)
+        if ret != 0:
+            return
+
+def GetVersion():
+    versionfile = os.path.join(mekerneldict['builddir'],mekerneldict['version'])
+    version=api.FileRead(versionfile)
+    print(version,versionfile)
+
 def LoadMachineJson(file=""):
     if file == "":
         file ="~/.metooljson"
 
-def ListCommand():
+def ListAll():
     for key in mejsonfile:
         for k2 in mejsonfile[key]:
             print(("%s%--10s%--30s%--30s")%("config:", key, k2, mejsonfile[key][k2]))
-            #print(("%s%--10s%--20s%--20s")("config:",key, k2, mejsonfile[key][k2]))
-        #print(key, mejsonfile[key])
 
-def RunCommand():
+def ListCommand():
+    for key in mejsonfile["command"]:
+        print(("%s  %--20s%--30s")%("command:", key, eval(mejsonfile["command"][key])))
 
 if options.template:
     benchmarkjson=json.dumps(mejsonfile, ensure_ascii=False,indent=2)
@@ -60,6 +81,8 @@ if options.template:
 if options.list:
     ListCommand()
 
-if options.cmd:
-    if options.type:
-        RunCommand(options.type)
+if options.run:
+    RunCommand(options.run)
+#print((mekernelcmddict["build_all"]))
+#print(eval(mekernelcmddict["build_all"]))
+#GetVersion()

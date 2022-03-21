@@ -38,4 +38,12 @@
 	python3 performance.py -r sysbench -c all
 
 
+2.2  mefiletool.py
+------------------
+	python mefiletool.py -f ~/Downloads/test -t read  -c 8096
+	python mefiletool.py -f ~/Downloads/test -t write -c 8096
+
+2.3  mkernel.py
+------------------
+	python ~/github/python-me/prj/metool/metools/mkernel.py -r "build_bzImage + install_bzImage"
 
