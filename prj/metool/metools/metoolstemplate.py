@@ -23,7 +23,7 @@ mejsonfile={
 "command":mecommandfuncdict,
 }
 
-def ListCommand():
+def ListCommand(dictlist):
     for key in mejsonfile["command"]:
         print(("%s  %--20s%--30s")%("command:", key, mejsonfile["command"][key]))
 

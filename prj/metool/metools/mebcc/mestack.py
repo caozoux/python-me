@@ -47,7 +47,7 @@ parser = OptionParser()
 parser.add_option("-l", "--list", action="store_true", dest="list",
                   help="--list list all benchmark test name") 
 parser.add_option("-f", "--func", type="string", dest="func",
-                  help="--run command")
+                  help="--f print the stacktrace of kernel function")
 
 (options, args) = parser.parse_args()
 
@@ -63,12 +63,14 @@ for func in funclist:
 
 #b.attach_kprobe(event="try_to_wake_up", fn_name="stacktrace")
 
+exiting = 0
 while (1):
     try:
-        sleep(1)
+        sleep(10)
     except KeyboardInterrupt:
+        exiting = 1
         # as cleanup can take many seconds, trap Ctrl-C:
-        signal.signal(signal.SIGINT, signal_ignore)
+        #signal.signal(signal.SIGINT, signal_ignore)
     counts = b.get_table("counts")
     stack_traces = b.get_table("stack_traces")
     for k, v in sorted(counts.items(), key=lambda counts: counts[1].value):
@@ -85,4 +87,5 @@ while (1):
         #printb(b"4    %-16s %s" % (b"waker:", k.waker))
         print("5        %d\n" % v.value)
     counts.clear()
-    exit()
+    if exiting:
+        exit()
