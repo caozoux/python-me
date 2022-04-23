@@ -87,5 +87,6 @@ while (1):
         #printb(b"4    %-16s %s" % (b"waker:", k.waker))
         print("5        %d\n" % v.value)
     counts.clear()
+    exit()
     if exiting:
         exit()
