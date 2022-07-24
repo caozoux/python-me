@@ -138,7 +138,7 @@ class PatchMergeItem(object):
     def isBranchMerge(self):
         res = re.search("Merge branch .*\n", self.buf)
         if res:
-            print res.group(0)
+            print(res.group(0))
             #res = re.search("\n\n", self.buf)
             return 1
         return 0
@@ -153,9 +153,9 @@ class PatchMergeItem(object):
         if res:
             self.mergeStartCommit =  res.group(0)[7:].split(" ")[0]
             self.mergeEndCommit = res.group(0)[7:].split(" ")[1][:-1]
-            print self.mergeStartCommit, self.mergeEndCommit
+            print(self.mergeStartCommit, self.mergeEndCommit)
 
 if __name__ == "__main__":
     #print PatchBase.getPatchModifiedItem(sys.argv[1], 0)
     #print PatchBase.getPatchModifiedFileByItem(sys.argv[1], 0)
-    print PatchBase.getPatchModifiedItemByConflictNumber(sys.argv[1], 494, "")
+    print(PatchBase.getPatchModifiedItemByConflictNumber(sys.argv[1], 494, ""))

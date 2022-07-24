@@ -82,8 +82,8 @@ class patchConflictItem:
                 line_s=""
             if line_p[1:-1] != line_s[:-1]:
                 colorprint.err("Err:{:<90}".format("     "+line_p[:-1].replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
-                print "1. replace with src file"
-                print "2. remove it"
+                print("1. replace with src file")
+                print("2. remove it")
                 answer_a =raw_input("select: ")
                 if answer_a == "1":
                     if line_s == "":
@@ -163,13 +163,13 @@ class patchModifyItem:
         self.mType=type
 
     def saveModifyItem(self):
-        print self.mFile, self.mStart
+        print(self.mFile, self.mStart)
         oFileFilter = FileFilter(self.mFile) 
         for i in range(len(self.mPItemConList)):
             line = oFileFilter.getLine(i+self.mStart)
             if line[:-1] != self.mPItemConList[i]:
-                print "is different"
-                print line[:-1],  self.mPItemConList[i]
+                print("is different")
+                print(line[:-1],  self.mPItemConList[i])
                 os.system("sed -i 's/"+line[:-1]+"/"+self.mPItemConList[i].replace("/","\/")+"/' "+self.mFile);
 
     def getSrcCode(self):
@@ -236,8 +236,8 @@ class patchModifyItem:
             last_num_p = obj_s[1]
 
             if oPatchConflictItem.isConflict():
-                print "1. replace"
-                print "2. rm item"
+                print("1. replace")
+                print("2. rm item")
 
                 answer=raw_input("select:")
                 if answer == "1":
@@ -264,7 +264,7 @@ class patchModifyItem:
         #show the patch item
         for i in range(self.mStart, self.mEnd):
             line = oFileFilter.getLine(i)
-            print line[:-1]
+            print(line[:-1])
         answer=raw_input("are you sure to rm these y/n?:")
         if answer == "y":
             line = oFileFilter.getLine(self.mStart-1)
@@ -278,7 +278,7 @@ class patchModifyItem:
         os.system("sed -i \""+str(self.mStart+1)+","+str(self.mEnd+1)+"d\" "+self.mFile)
         if needRmFileTag == 1:
             for i in range(self.mStart-4, self.mStart):
-                print oFileFilter.getLine(i)[:-1]
+                print(oFileFilter.getLine(i)[:-1])
             answer=raw_input("are you sure to rm these, the file patch will be ignore y/n?:")
             if answer == "y":
                 os.system("sed -i \""+str(self.mStart-4)+","+str(self.mStart)+"d\" "+self.mFile)
@@ -329,14 +329,14 @@ class patchModifyItem:
             line = self.mPItemConList[i]
             if line[0] == '+':
                 colorprint.warn(line+"       <----add new")
-                print ""
+                print("")
             elif line[0] == ' ':
                 #print line[1:], srcstart
-                print oFileFilter.getLine(srcstart)
+                print(oFileFilter.getLine(srcstart))
                 srcstart += 1
             elif line[0] == '-':
                 #print line[1:], srcstart
-                print oFileFilter.getLine(srcstart)
+                print(oFileFilter.getLine(srcstart))
                 srcstart += 1
 
     def checkAddline(self, srcfile):
@@ -351,7 +351,7 @@ class patchModifyItem:
                     if words[0] == "#define":
                         resLine = oFileFilter.searchByLine(words[1])
                         colorprint.blue("Find:"+srcfile+"/"+self.mOPatch.mFilename+":"+str(resLine.mLineNumber))
-                        print line[:-1]
+                        print(line[:-1])
                     else:
                         #print "Not find "+line[1:0]+" in "+srcfile+"/"+self.mOPatch.mFilename
                         pass
@@ -368,7 +368,7 @@ class patchModifyItem:
             #self.dump()
             return
 
-        print "dump patch:"
+        print("dump patch:")
         self.getSrcCode()
 
         #search this in patch file:@ -1825,7 +1825,7 @@ config FB_PS3_DEFAULT_SIZE_M
@@ -492,7 +492,7 @@ class patchModifyItem:
             colorprint.info("   "+self.mPItemConList[i])
         #for line in self.mPItemConList:
         for i in range(4,len(self.mPItemConList)-3):
-            print "   "+self.mPItemConList[i];
+            print("   "+self.mPItemConList[i])
         for i in range(1,4):
             colorprint.info("   "+self.mPItemConList[i-4])
 
@@ -587,7 +587,7 @@ class patchcontext:
 
     def dump_patch(self):
         #colorprint.info("{:<90}".format(self.mPatchName)+"{:<20}".format("||  "+self.mFiles))
-        print self.omfile.mFileName
+        print(elf.omfile.mFileName)
         for oPatchModifyItem in self.mPatchItem:
             oPatchModifyItem.dump_patch()
 

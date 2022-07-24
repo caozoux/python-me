@@ -1,13 +1,15 @@
 
-from mfiles import *;
+from pyme  import mfiles;
+#from mfiles import *;
 import os;
+import re;
 class patchFilter:
     def __init__(self, name):
         self.mPatchName = name
 
     @staticmethod
     def getCommit(patchname):
-        ofile = FileFilter(patchname)
+        ofile = mfiles.FileFilter(patchname)
         ret = ofile.searchByLine("Subject.*$")
         commitStartLine = re.sub(r'Subject.*]\s',"", ret.mLine)
         commitEndLine=ofile.getLine(ret.mLineNumber+1)
@@ -39,7 +41,7 @@ class patchOperation:
                short   \
         "
 
-        print gitsrc, filename
+        print(gitsrc, filename)
         if os.path.exists(gitsrc) and os.path.exists(filename):
             pass
         else:
@@ -48,7 +50,7 @@ class patchOperation:
 
         if mode == "oneline":
             listPatchBuf = os.popen("git -C "+gitsrc+ " log --no-merges --pretty=oneline "+filename+" |  cut -d ' ' -f 2-").readlines()
-            print "git -C "+gitsrc+ " log --pretty=oneline | cut -d ' ' -f 2-"
+            print("git -C "+gitsrc+ " log --pretty=oneline | cut -d ' ' -f 2-")
             if len(listPatchBuf):
                 return listPatchBuf
 

@@ -21,7 +21,7 @@ class FileFilterResLine:
         self.mLineNumber = linenumber;
         self.mLine = line;
     def dump(self):
-        print self.mLineNumber," :",self.mLine
+        print(self.mLineNumber," :",self.mLine)
 
 class FileFilter:
     mFileName=""
@@ -105,6 +105,6 @@ class FileFilter:
 
 if __name__ == "__main__":
     obfile = FileFilter("/home/zoucao/github/linux-stable/patches/0200-net-core-datagram-Add-skb_copy_datagram_to_kernel_io.patch");
-    print obfile.searchByLine('Subject.*$').mLine
+    print(obfile.searchByLine('Subject.*$').mLine)
 
 

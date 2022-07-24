@@ -86,9 +86,9 @@ class patchMerge:
             else:
                 endlist.append(oPatchModifyItem.mPItemConList[i-4][1:])
 
-        print "3S:"
+        print("3S:")
         patchMerge.check3Lines(startlist, oFileFilter.mFileName, "./")
-        print "3E:"
+        print("3E:")
         patchMerge.check3Lines(endlist, oFileFilter.mFileName, "./")
 
     @staticmethod
@@ -124,7 +124,7 @@ class patchMerge:
                 endlist.append(oPatchModifyItem.mPItemConList[i-4][1:])
 
         patchMerge.check3Lines(startlist, oFileFilter.mFileName, "./")
-        print "3E:"
+        print("3E:")
         patchMerge.check3Lines(endlist, oFileFilter.mFileName, "./")
 
     @staticmethod
@@ -142,15 +142,15 @@ class patchMerge:
         patchMerge.check3SInSrc(oPatchModifyItem, target_git_dir)
         patchMerge.check3SInDstc(oPatchModifyItem, target_git_dir)
         
-        print ("what do you want to handle:")
-        print "1. rm this item."
-        print "2. replace the conflict lines"
-        print "3. exit it"
+        print("what do you want to handle:")
+        print("1. rm this item.")
+        print("2. replace the conflict lines")
+        print("3. exit it")
         answer=raw_input("select: ")
         if answer == "1":
             patchMerge.rmItem(oPatchModifyItem);
         elif answer == "2":
             patchMerge.rePatchItem(oPatchModifyItem)
         elif answer == "3":
-            print "you select 2"
+            print("you select 2")
         
