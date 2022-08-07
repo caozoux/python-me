@@ -1,5 +1,6 @@
 import subprocess
 import os
+import json
 
 def excuteCommand(cmd, redirect=0, debug=0, stdshow=0):
     if redirect:
@@ -39,4 +40,13 @@ def FileRead(filename, line=-1):
 
     fd.close()
     return res
+
+def DumpJsonByFilename(filename):
+    res=""
+    filename=os.path.expanduser(filename)
+    if not os.path.exists(filename):
+        return 1
+
+    fd=open(filename, "r")
+    return json.load(fd)
 

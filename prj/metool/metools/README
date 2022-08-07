@@ -45,5 +45,34 @@
 
 2.3  mkernel.py
 ------------------
-	python ~/github/python-me/prj/metool/metools/mkernel.py -r "build_bzImage + install_bzImage"
+
+2.3.1  add json file in $HOME
+-----------------------------
+	$ cat ~/.mkernel.json
+		{
+		"srcdir":"/export/disk1T/github/cloud-kernel/",
+		"builddir": "/export/disk1T/github/cache/cloud-kernel",
+		"image":"arch/x86/boot/bzImage",
+		"version": "include/config/kernel.release",
+		"vm_vmlinux_path": "root@vm:/boot/vmlinuz-4.19.91+"
+		}
+
+2.3.2  get command list
+-----------------------------
+	~/github/python-me/prj/metool/metools/mkernel.py -l
+		"
+			command:  build_bzImage       make O=/export/disk1T/github/cache/cloud-kernel bzImage  -j16
+			command:  build_all           make O=/export/disk1T/github/cache/cloud-kernel -j16
+			command:  install_bzImage     scp /export/disk1T/github/cache/cloud-kernel/arch/x86/boot/bzImage root@vm:/boot/vmlinuz-4.19.91+
+			command:  install_modules     make O=/export/disk1T/github/cache/cloud-kernel  modules_install  INSTALL_MOD_PATH=/export/disk1T/github/cache/cloud-kernel/modules
+			command:  vm_restart          ssh root@vm "shutdown -r 0"
+		"
+
+2.3.3  run commands
+-----------------------------
+	~/github/python-me/prj/metool/metools/mkernel.py -r "build_bzImage"
+
+2.3.4  run multiple commands
+-----------------------------
+	~/github/python-me/prj/metool/metools/mkernel.py -r "build_bzImage + install_bzImage"
 

@@ -1,4 +1,7 @@
+#!/bin/python3
+
 import os
+import sys
 import re
 import json
 import subprocess
@@ -6,6 +9,7 @@ import random
 from API import api
 from optparse import OptionParser
 
+BuildThreadsCount=16
 parser = OptionParser()
 parser.add_option("-e", "--show_template", action="store_true", dest="template",
                   help="--cmd stat_event ")
@@ -33,8 +37,8 @@ mekerneldict={
 
 
 mekernelcmddict={
-"build_bzImage":"''.join(['make O=', mekerneldict['builddir'], ' bzImage  -j16 '])",
-"build_all":"''.join(['make O=', mekerneldict['builddir'], ' -j16 '])",
+"build_bzImage":"''.join(['make O=', mekerneldict['builddir'], ' bzImage  -j32 '])",
+"build_all":"''.join(['make O=', mekerneldict['builddir'], ' -j32 '])",
 "install_bzImage":"''.join(['scp ', mekerneldict['builddir'],'/', mekerneldict['image'], ' ', mekerneldict['vm_vmlinux_path']])",
 "install_modules":"''.join(['make O=', mekerneldict['builddir'], '  modules_install  INSTALL_MOD_PATH=', mekerneldict['builddir'],'/modules'])",
 "vm_restart":"''.join(['ssh root@vm \"shutdown -r 0\"'])",
@@ -71,8 +75,15 @@ def ListAll():
             print(("%s%--10s%--30s%--30s")%("config:", key, k2, mejsonfile[key][k2]))
 
 def ListCommand():
+    print("You can run this commands by '-r':")
     for key in mejsonfile["command"]:
-        print(("%s  %--20s%--30s")%("command:", key, eval(mejsonfile["command"][key])))
+        print(("%++13s  %--20s%--30s")%("command:", key, eval(mejsonfile["command"][key])))
+
+if len(sys.argv) == 1:
+    parser.print_help()
+    
+if os.path.exists(os.path.expanduser("~/.mkernel.json")):
+    mekerneldict=api.DumpJsonByFilename("~/.mkernel.json")
 
 if options.template:
     benchmarkjson=json.dumps(mejsonfile, ensure_ascii=False,indent=2)
