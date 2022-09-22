@@ -1,0 +1,40 @@
+1. patchTool
+============
+
+fast handle patch merge/format/am an so on
+
+
+2. format
+=========
+
+2.1 format patch by commitlist
+------------------------------
+
+python ~/github/python-me/prj/pathTool/patchTool.py  --commitlist commitlist -d patche
+
+2.1 format patch to attend author and upstream
+----------------------------------------------
+
+	(1) only patch
+
+	    patchTool.py --fm *.patch
+
+	(2) only patch with extra
+
+	    patchTool.py --fm *.patch -fmex openeuler
+
+	(3) only patch with extra + mail
+
+	    --fm xx.patch  --fmex openeuler --fmma "Zou Cao <zoucao@kernelsoft.com>"
+
+	(4) only patch with extra + mail in dirctory
+
+	    --fm xx.patch  --fmex openeuler --fmma "Zou Cao <zoucao@kernelsoft.com>"
+
+3. am
+=====
+
+3. am
+=====
+
+

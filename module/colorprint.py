@@ -1,6 +1,6 @@
 def info(dictArg):
     "green "
-    print('\033[1;32;32m',end="")
+    print('\033[1;32;32m',end=' ')
     print(dictArg,end="")
     print('\033[0m')
     return

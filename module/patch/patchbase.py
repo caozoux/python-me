@@ -32,12 +32,34 @@ class PatchBase(object):
         return retlist
 
     @staticmethod
+    def getPatchCommit(patchfile):
+        res = open(patchfile).read()
+        le=re.search("^From .*\n", res)
+        if le.group(0):
+            return le.group(0)[:-1].split(" ")[1]
+        return ""
+
+    @staticmethod
+    def readPatchToBuf(patchfile, readtype=0):
+        #readtype:
+        #    0    return list
+        #    1    return rawbuf
+        if readtype == 0:
+            res = open(patchfile).read()
+        else:
+            res = open(patchfile).readlines()
+        return ""
+
+    @staticmethod
     def transferPatchToBuf(remote, commit):
         "transfer the patch to memory buf"
         return os.popen("git -C "+remote+" show "+commit).read()
 
     @staticmethod
     def getPatchModifiedItem(patchname, number):
+        """
+            the line list of patch modefiye 
+        """
         "get the patch item txt context by the specified number"
         filebuflines = open(patchname).readlines()
         filebuf = open(patchname).read()
@@ -87,6 +109,7 @@ class PatchBase(object):
             index = filebuflines.index(retlist[number][1:])
             retlistfiles=re.findall("\n\+\+\+ b.*\n", "".join(filebuflines[:index]))
             return retlistfiles[-1][7:-1]
+
 
 class PatchContext(PatchBase):
     """Docstring for PatchContext. """
