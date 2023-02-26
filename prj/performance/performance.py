@@ -1,3 +1,4 @@
+#!/bin/python3
 import os
 import re
 import json
@@ -10,7 +11,18 @@ benchmark={
 "unixbench":"https://github.com/kdlucas/byte-unixbench/archive/refs/heads/master.zip",
 "wrk": "https://github.com/wg/wrk/archive/refs/heads/master.zip",
 "ltp": "https://github.com/HIT-SCIR/ltp/archive/refs/heads/master.zip",
-"netperf": "https://github.com/HewlettPackard/netperf/archive/refs/heads/master.zip"
+"netperf": "https://github.com/HewlettPackard/netperf/archive/refs/heads/master.zip",
+"fio": "local command"
+}
+
+#"rand_read":"fio --filename=/tmp/testdata  --rw=write --bs=4k --size=5G --numjobs=1  --name=test",
+#"order_read":"fio --filename=/tmp/testdata  --rw=write --bs=4k --size=5G --numjobs=1  --name=test",
+#"order_write":"fio --filename=/tmp/testdata  --rw=write --bs=4k --size=5G --numjobs=1  --name=test",
+fiorun={
+"write":"fio --filename=/tmp/testdata  --rw=write --bs=4k --size=5G --numjobs=1  --name=test --runtime=10",
+"read":"fio --filename=/tmp/testdata  --rw=read --bs=4k --size=5G --numjobs=1  --name=test --runtime=10",
+"randwrite":"fio --filename=/tmp/testdata  --rw=randwrite --bs=4k --size=5G --numjobs=1  --name=test --runtime=10",
+"randread":"fio --filename=/tmp/testdata  --rw=randread --bs=4k --size=5G --numjobs=1  --name=test --runtime=10",
 }
 
 sysbenchpre={
@@ -40,8 +52,6 @@ def CaseSysbenchBaseResult(context, numbers, name):
         #jsdict[name+"_"+res[0]]=  res[1].replace(" ", "")
         jsdict[name+"_"+res[0]]=  re.sub('^ ', ' ', res[1]).strip()
     #print(jsdict)
-    return jsdict
-
 def CaseSysbenchFileioResult(context):
     resdict={}
     valdict=CaseSysbenchBaseResult(context,[23,24,25], "fileio")
@@ -102,6 +112,7 @@ unixbenchpre={
 "shell1":"export PROGDIR=./pgms",
 "shell8":"export PROGDIR=./pgms"
 }
+
 unixbenchrun={
 "dhry2reg":"./pgms/dhry2reg 10",
 "whetstone-double":"./pgms/whetstone-double",
@@ -149,7 +160,6 @@ def CaseUnixbenchLogfileResult(context):
 unixbenchresult={
 "logfile": CaseUnixbenchLogfileResult,
 }
-
 
 def RunUnixbench(name, workdir):
     if unixbenchpre.get(name):
@@ -223,6 +233,39 @@ wrkrun={
 "connect":"./wrk -t 16 -c 1024  -H \"Connection: close\" -d 30 --timeout 1 -d 30 --timeout 1 http://{host}/"
 }
 
+
+#==============================================
+#fio performance
+#==============================================
+def CaseFioNormalfileResult(context, numbers, name):
+    jsdict={}
+    lines=context.split("\n")
+    res=re.sub(' +', ' ', lines[numbers]).replace(",","").strip()
+    jsdict[name]=res
+    return jsdict
+
+def CaseFioResult(context, name):
+    return CaseFioNormalfileResult(context, 5, name)
+
+fioresult={
+"write": CaseFioResult,
+"read":  CaseFioResult,
+"randwrite": CaseFioResult,
+"randread":  CaseFioResult,
+}
+
+def RunFio(name, workdir):
+    if fiorun.get(name):
+        res=api.excuteCommand(fiorun[name], 1, 1)
+
+    if fioresult.get(name):
+        return fioresult[name](res, name)
+
+#==============================================
+#fio performance end
+#==============================================
+
+
 parser = OptionParser()
 parser.add_option("-i", "--install", type="string", dest="install",
                   help="--install  all/sysbench/unixbench/hackbench/wrk/niginx/radis/cpuspec")
@@ -253,6 +296,7 @@ def SaveBenchJson(name, resdict):
     else:
         benchmarkdict['name']=name+"_" + timestr;
 
+    print(resdict)
     benchmarkdict["data"]=resdict
     benchmarkjson=json.dumps(benchmarkdict, ensure_ascii=False,indent=2)
 
@@ -297,8 +341,16 @@ def RunSimpleBench(name, subname):
             #RunSaveBenchJson(name, resdict)
         else:
             resdict=RunUnixbench(subname, "work/byte-unixbench-master/UnixBench/")
-    SaveBenchJson(name, resdict)
+    elif name == "fio":
+        if subname == "all":
+            for key in fiorun:
+                res=RunFio(key, "")
+                for key in res:
+                    resdict[key]=res[key]
+        else:
+            resdict=RunFio(subname, "")
 
+    SaveBenchJson(name, resdict)
 
 def BuildSimpleBench(name):
     return api.excuteCommand(". ./script/build/"+name+"__build.sh ", 0, 1)
@@ -320,9 +372,9 @@ def BenchmarkInstall(name):
     else:
         InstallSimpleBench(name)
 
-
 if options.install:
     BenchmarkInstall(options.install)
+
 if options.run:
     if options.logfile:
         RunSimpleLogfileBench(options.run, options.logfile)
@@ -331,4 +383,4 @@ if options.run:
 
 if options.list:
     for key in benchmark:
-        print(key, benchmark[key])
+        print("%-15s %-30s"%(key, benchmark[key]))
