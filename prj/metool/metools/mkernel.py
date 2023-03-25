@@ -28,8 +28,8 @@ vmenv={
 }
 
 mekerneldict={
-"srcdir":"~/github/cloud-kernel",
-"builddir": "~/github/cache/cloud-kernel",
+"srcdir":"/home/zc/github/cloud-kernel",
+"builddir": "/home/zc/github/cache/cloud-kernel",
 "image":"arch/x86/boot/bzImage",
 "version": "include/config/kernel.release",
 "vm_vmlinux_path": "root@vm:/boot/vmlinuz-4.19.91+",

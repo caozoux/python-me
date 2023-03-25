@@ -108,6 +108,7 @@ int trace_req_done(struct pt_regs *ctx, struct request *req)
 }
 """
 
+bpf_test
 bpf_text = bpf_text.replace('STORAGE', 'BPF_HISTOGRAM(dist);')
 bpf_text = bpf_text.replace('STORE',
     'dist.increment(bpf_log2l(delta));')

@@ -4,49 +4,15 @@
 2. metool modules
 =================
 
-2.1 performance.py
-------------------
-
-2.1.1 show all benchmark project
-
-	# python3 performance.py -l
-	sysbench https://github.com/akopytov/sysbench/archive/master.zip
-	unixbench https://github.com/kdlucas/byte-unixbench/archive/refs/heads/master.zip
-	wrk https://github.com/wg/wrk/archive/refs/heads/master.zip
-	ltp https://github.com/HIT-SCIR/ltp/archive/refs/heads/master.zip
-	netperf https://github.com/HewlettPackard/netperf/archive/refs/heads/master.zip
-
-2.1.2 install  benchmark project
-
-	python3 performance.py -i ltp
-
-2.1.3 run benchmark case
-    for sysbench:
-		sudo yum install mariadb-server -y		
-		set mariadb default passwd 123456
-		enable remote login in mariadb:
-			1. use mysql; update user set password=password("root")where user='root';
-			2. GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'IDENTIFIED BY '123456' WITH GRANT OPTION;
-			3. create database MyDB;
-
-2.1.3.1 run benchmark sigal case
-
-	python3 performance.py -r sysbench -c cpu
-
-2.1.3.2 run benchmark whole run
-
-	python3 performance.py -r sysbench -c all
-
-
-2.2  mefiletool.py
+2.1  mefiletool.py
 ------------------
 	python mefiletool.py -f ~/Downloads/test -t read  -c 8096
 	python mefiletool.py -f ~/Downloads/test -t write -c 8096
 
-2.3  mkernel.py
+2.2  mkernel.py
 ------------------
 
-2.3.1  add json file in $HOME
+2.2.1  add json file in $HOME
 -----------------------------
 	$ cat ~/.mkernel.json
 		{
@@ -57,7 +23,7 @@
 		"vm_vmlinux_path": "root@vm:/boot/vmlinuz-4.19.91+"
 		}
 
-2.3.2  get command list
+2.2.2  get command list
 -----------------------------
 	~/github/python-me/prj/metool/metools/mkernel.py -l
 		"
@@ -68,11 +34,12 @@
 			command:  vm_restart          ssh root@vm "shutdown -r 0"
 		"
 
-2.3.3  run commands
+2.2.3  run commands
 -----------------------------
 	~/github/python-me/prj/metool/metools/mkernel.py -r "build_bzImage"
 
-2.3.4  run multiple commands
+2.2.4  run multiple commands
 -----------------------------
 	~/github/python-me/prj/metool/metools/mkernel.py -r "build_bzImage + install_bzImage"
+
 
