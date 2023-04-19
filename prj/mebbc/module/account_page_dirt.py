@@ -35,8 +35,8 @@ struct key_t {
     u64 ip;
     u32 pid;
     u32 uid;
-    char block[16];
-    char comm[16];
+    char block[8];
+    char comm[32];
 };
 
 BPF_HASH(counts, struct key_t);
@@ -51,8 +51,8 @@ int do_count(struct pt_regs *ctx) {
     key.ip = PT_REGS_IP(ctx);
     //key.pid = pid & 0xFFFFFFFF;
     key.pid = pid>>32;
-    key.uid = uid & 0xFFFFFFFF;
-    bpf_get_current_comm(&(key.comm), 16);
+    //key.uid = uid & 0xFFFFFFFF;
+    bpf_get_current_comm(&(key.comm), 32);
     bpf_probe_read_kernel(&(key.block), 4, inode->i_sb->s_id);
 
     counts.increment(key);
@@ -61,7 +61,8 @@ int do_count(struct pt_regs *ctx) {
 
 """
 b = BPF(text=bpf_text)
-b.attach_kprobe(event="account_page_dirtied", fn_name="do_count")
+#b.attach_kprobe(event="account_page_dirtied", fn_name="do_count")
+b.attach_kprobe(event="__folio_mark_dirty", fn_name="do_count")
 counts = b.get_table("counts")
 
 exiting = 0
@@ -69,6 +70,8 @@ stats = defaultdict(lambda: defaultdict(int))
 report= defaultdict(int)
 stats_list = []
 cnt=0
+total_iops=0
+topdickt={}
 while 1:
     try:
         iotps = 0
@@ -76,12 +79,19 @@ while 1:
           exit(0)
         for k, v in counts.items():
             #print(k.pid, k.uid, k.comm, k.block, "zz")
-            if not k.block == "sda2": 
+            if not k.block == "sdb":
               continue;
         #    stats["%d-%d-%s" % (k.pid, k.uid, k.comm.decode('utf-8', 'replace'))][k.ip] = v.value
             #print(v.value)
             report["%d-%d-%s" % (k.pid, k.uid, k.comm.decode('utf-8', 'replace'))] += v.value
             iotps += v.value
+            total_iops += int(iotps)
+            pid = int(k.pid)
+            pid_iops= int(v.value)
+            if pid in topdickt.keys():
+              topdickt[pid] += pid_iops;
+            else:
+              topdickt[pid] = pid_iops;
             #report["%d" % (k.pid)] += 1
         #for pid, count in sorted(stats.items(), key=lambda stat: stat[0]):
         #  for k, v in count.items():
@@ -98,18 +108,25 @@ while 1:
         #print(len(report))
         #print((report))
         #report_list = sorted(report, key=lambda report: report[1], reverse=False)
-        if iotps > 3000:
-          report_list = sorted(report.items(), key=lambda x: x[1])
-          fd = open("log", 'a')
-          fd.write("zz:" + str(report_list) + "\n")
-          fd.flush()
-          fd.close()
-          print(report_list)
+        #if iotps > 3000:
+        report_list = sorted(report.items(), key=lambda x: x[1])
+        fd = open("log", 'a')
+        fd.write("zz:" + str(report_list) + "\n")
+        fd.flush()
+        fd.close()
+        print(report_list)
 
         stats_list=[]
         report= defaultdict(int)
         cnt += 1
         if cnt == 10:
+          res=sorted(topdickt.items(), key=lambda item:item[1])
+          print("%-10s %-10s %-15s"%("pid", "iops", "comm"))
+          for item in res:
+            command=open("/proc/"+str(item[0])+"/cmdline").read()
+            print("%-10d %10dKB %-15s"%(item[0], item[1]*4, command[:-1]))
+            #print(item[0],item[1])
+          print("Total write:%dKB\n"%(total_iops*4))
           exit(0)
         sleep(1)
     except KeyboardInterrupt:
