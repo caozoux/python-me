@@ -2,6 +2,155 @@ import os
 import re
 import time
 
+
+"""
+ /proc/buddyinfo
+ /proc/diskstats
+ /proc/loadavg
+ /proc/meminfo
+ /proc/schedstat
+ /proc/buddyinfo
+ /proc/slabinfo
+ /proc/softirqs
+ /proc/schedstat
+ /proc/stat
+ /proc/vmstat
+ /proc/vmstat
+ /proc/zoneinfo
+"""
+
+CPU_NUM=0
+def proc_format(procfile, context):
+    procdict={}
+    array=[]
+    desarray=[]
+    if procfile == "/proc/buddyinfo":
+        datades=["node", "4k", "8k", "16k", "32k", "64k", "128k", "256k", "512k", "1M", "2M", "4M"]
+        procdict["datades"] = datades
+        for line in context:
+            item=line.split(" ")
+            des=item[3]
+            data=item[4:]
+            array.append(data)
+            desarray.append(des)
+        procdict["data"] = array
+        procdict["des"] = desarray
+        return procdict
+    if procfile == "/proc/stat":
+        datades =["cpu", "user", "nice", "system", "idle", "iowait", "irq", "softirq", "steal", "guest", "guest_nice"]
+        for line in context:
+            linearray=line.strip().split(" ")
+            if linearray[0][:3] != "cpu":
+                break
+            data=linearray[1:]
+            des=linearray[0]
+            array.append(data)
+            desarray.append(des)
+        procdict["datades"] = datades
+        procdict["data"] = array
+        procdict["des"] = desarray
+        return procdict
+    if procfile == "/proc/diskstats":
+        datades=["disk", "r_io", "r_merge", "r_sector", "r_time" ,"w_io", "w_merge", "w_sector", "w_time", "inflight", "io_tick", "t_queue", "w_time","d_io", "d_merge", "d_sector", "d_time","unkown", "unkown", "unkown", "unkown"]
+        procdict["datades"] = datades
+        for line in context:
+            linearray=line.strip().split(" ")
+            data=linearray[3:]
+            des=linearray[2]
+            array.append(data)
+            desarray.append(des)
+
+        procdict["datades"] = datades
+        procdict["data"] = array
+        procdict["des"] = desarray
+        #print(desarray)
+        #print(datades)
+        #print(array)
+        #exit(1)
+        return procdict
+    if procfile == "/proc/vmstat":
+
+        exit(1)
+
+def proc_array(procfile):
+    resarray=[]
+    res = open(procfile, 'r').readlines()
+    for item in res:
+        linearray=re.sub(" +"," ",item[:-1].strip(" "))
+        resarray.append(linearray)
+
+    return resarray
+
+def proc_vmstat_diff():
+    array_old=proc_array("/proc/vmstat")
+    time.sleep(1)
+    array_new=proc_array("/proc/vmstat")
+    for i in range(len(array_old)):
+        old = array_old[i]
+        new = array_new[i]
+        if old != new:
+            item_old=old.split(" ")
+            item_new=new.split(" ")
+            print("%-15s %d"%(item_old[0], int(item_new[1]) - int(item_old[1])))
+def proc_dump(procfile):
+    array=proc_array(procfile )
+    procdict=proc_format(procfile, array)
+    des=procdict["des"]
+    data=procdict["data"]
+    datades=procdict["datades"]
+    #try:
+    #except Exception as e:
+    #    return 
+
+    for item in datades:
+        print("%-10s"%item, end="")
+    print()
+    for i in range(len(data)):
+        item=data[i]
+        print("%-10s"%des[i], end="")
+        for iteml1 in item:
+            print("%-10s"%iteml1, end="")
+        print()
+
+def proc_diff_dump(procfile,inter):
+    array_old=proc_array(procfile )
+    procdict_old=proc_format(procfile, array_old)
+    des=procdict_old["des"]
+    datades=procdict_old["datades"]
+
+    data_old=procdict_old["data"]
+
+    time.sleep(inter)
+
+    array_new=proc_array(procfile )
+    procdict_new=proc_format(procfile, array_new)
+    data_new=procdict_new["data"]
+
+    for item in datades:
+        print("%-10s"%item, end="")
+    print()
+
+    for i in range(len(data_new)):
+        item_new=data_new[i]
+        item_old=data_old[i]
+        print("%-10s"%des[i], end="")
+        for l in range(len(item_new)):
+            diff = int(item_new[l]) - int(item_old[l])
+            print("%-10s"%diff, end="")
+        print()
+
+class ProcMonitor(object):
+
+    """Docstring for ProcMonitor. """
+
+    def __init__(self, procfile):
+        """TODO: to be defined. """
+        self.mProcfile = procfile
+
+    def dump(self, show=0):
+        array=proc_array(self.mProcfile) 
+        proc_format(self.mProcfile, array)
+
 class ProcTList(object):
 
     """title and list to map the /proc/xx """
@@ -110,6 +259,13 @@ class ProcManage(object):
 
 
 if __name__ == "__main__":
+    proc_vmstat_diff()
+    #array=proc_dump("/proc/diskstats")
+    #exit(1)
+    while 1:
+        print("=============")
+        proc_vmstat_diff()
+        #array=proc_diff_dump("/proc/diskstats",1)
     mProcManage=ProcManage("/proc/stat")
     mProcManage.initialization()
     mProcManage.decodeProc()
