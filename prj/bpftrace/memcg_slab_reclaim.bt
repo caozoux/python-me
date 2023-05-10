@@ -1,0 +1,88 @@
+#include</usr/src/kernels/4.18.0-2.6.4.1.kwai.x86_64/include/linux/dcache.h>
+#include</usr/src/kernels/4.18.0-2.6.4.1.kwai.x86_64/include/linux/fs.h>
+#include</usr/src/kernels/4.18.0-2.6.4.1.kwai.x86_64/include/linux/memcontrol.h>
+#include</usr/src/kernels/4.18.0-2.6.4.1.kwai.x86_64/include/linux/mm_types.h>
+#include</usr/src/kernels/4.18.0-2.6.4.1.kwai.x86_64/include/linux/slab.h>
+#include</usr/src/kernels/4.18.0-2.6.4.1.kwai.x86_64/include/linux/slub_def.h>
+//#include</home/relay/zoucao/zc.h>
+#define SLAB_TYPESAFE_BY_RCU    ((slab_flags_t __force)0x00080000U)
+
+BEGIN
+{
+  printf("Tracing block device I/O... Hit Ctrl-C to end.\n");
+  @subs = 0 ;
+  @max = 0 ;
+  @min = 0 ;
+  @recfail = 0 ;
+}
+
+tracepoint:vmscan:mm_vmscan_memcg_reclaim_end
+{
+  if (comm == "find") {
+    if (args->nr_reclaimed == 0) {
+      @recfail += 1;
+      printf("vmreclaim failed %ld %ld %ld %ld\n", @max, @min, @subs, nsecs);
+    }
+    //printf("memcg rec end %ld %s\n", args->nr_reclaimed, comm);
+  }
+}
+
+
+kprobe:__memcg_kmem_uncharge_memcg
+{
+  $c= (struct mem_cgroup *)arg0;
+  $n= arg1;
+  if ($c != 0) {
+    if ( $c->id.id == 142) {
+       //@[kstack()] = count();
+       if ($c->kmem.usage.counter > @max) { 
+          @max = $c->kmem.usage.counter;
+       }
+
+       if ($c->kmem.usage.counter < @min) { 
+          @min  = $c->kmem.usage.counter;
+       }
+       if (@recfail) {
+          @recfail = 0;
+          printf("slab %ld %ld %ld\n",  $c->memory.usage.counter, $c->kmem.usage.counter, $c->id.id);
+       }
+       @subs = $c->kmem.usage.counter
+    }
+  }
+}
+
+
+/*
+kprobe:shrink_slab
+{
+  $c =(struct mem_cgroup *)arg2;
+  if ($c != 0) {
+    if ( $c->id.id == 142) {
+      printf("slab %ld %ld %ld\n",  $c->memory.usage.counter, $c->kmem.usage.counter, $c->id.id);
+    }
+  }
+}
+*/
+
+
+kprobe:mem_cgroup_out_of_memory
+{
+  $c =(struct mem_cgroup *)arg0;
+  printf("mem_cgroup_out_of_memory %ld %ld %ld\n",  $c->memory.usage.counter, $c->kmem.usage.counter, $c->id.id);
+  printf("mem_cgroup_out_of_memory %ld %ld %ld\n", @max, @min, @subs);
+}
+
+/*
+tracepoint:vmscan:mm_shrink_slab_end
+{
+  if (comm == "find") {
+  //if (pid == 4523) {
+    //@[kstack()] = count();
+    printf("shrink end free %ld \n", args->retval);
+  }
+}
+*/
+
+END
+{
+}

@@ -1,0 +1,40 @@
+#include</usr/src/kernels/version/include/linux/dcache.h>
+#include</usr/src/kernels/version/include/linux/fs.h>
+#include</usr/src/kernels/version/include/linux/memcontrol.h>
+#include</usr/src/kernels/version/include/linux/mm_types.h>
+#include</home/relay/zoucao/local.h>
+
+BEGIN
+{
+  printf("Tracing block device I/O... Hit Ctrl-C to end.\n");
+}
+
+kprobe:mem_cgroup_charge_statistics
+{
+  $c =(struct mem_cgroup *)arg0;
+  if (arg2) {
+    //printf("add %ld %s\n", arg3, comm);
+    //printf("add %ld %s\n", $c->memory.max, comm);
+    @adds += arg3;
+    @[kstack()] = count();
+  }
+}
+kprobe:mem_cgroup_split_huge_fixup
+{
+    @subs += 512;
+    printf("sub  %s\n", comm);
+    @[kstack()] = count();
+}
+kprobe:uncharge_batch
+{
+  $h=((struct uncharge_gather *)arg0)->nr_huge;
+  if ($h) {
+    @[kstack()] = count();
+    @subs += ((struct uncharge_gather *)arg0)->nr_huge;
+    //printf("sub %ld %s\n", ((struct uncharge_gather *)arg0)->nr_huge, comm);
+  }
+}
+
+END
+{
+}

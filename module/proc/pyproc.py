@@ -19,6 +19,10 @@ import time
  /proc/zoneinfo
 """
 
+filer_type_workingset = ["workingset_nodes", "workingset_refault", "workingset_activate", "workingset_nodereclaim", "workingset_restore"]
+filer_type_pgreclaim = ["pgpgin" , "pgalloc_normal", "pgfree", "pgsteal_kswapd",  "pgscan_kswapd"]
+
+
 CPU_NUM=0
 def proc_format(procfile, context):
     procdict={}
@@ -81,17 +85,32 @@ def proc_array(procfile):
 
     return resarray
 
-def proc_vmstat_diff():
+def proc_vmstat_diff(threshold, filter_type=0):
+    show_title=0
     array_old=proc_array("/proc/vmstat")
     time.sleep(1)
     array_new=proc_array("/proc/vmstat")
     for i in range(len(array_old)):
+        show=1
         old = array_old[i]
         new = array_new[i]
         if old != new:
             item_old=old.split(" ")
             item_new=new.split(" ")
-            print("%-15s %d"%(item_old[0], int(item_new[1]) - int(item_old[1])))
+            diff = int(item_new[1]) - int(item_old[1])
+
+            if filter_type: 
+                if not item_old[0] in filter_type:
+                    show = 0
+            if show:
+                if threshold and  diff < threshold:
+                    continue
+
+                if show_title == 0:
+                    print("=================")
+                    show_title = 1
+                print("%-15s %d"%(item_old[0], int(item_new[1]) - int(item_old[1])))
+
 def proc_dump(procfile):
     array=proc_array(procfile )
     procdict=proc_format(procfile, array)
@@ -259,12 +278,12 @@ class ProcManage(object):
 
 
 if __name__ == "__main__":
-    proc_vmstat_diff()
+    proc_vmstat_diff(0)
     #array=proc_dump("/proc/diskstats")
     #exit(1)
     while 1:
         print("=============")
-        proc_vmstat_diff()
+        proc_vmstat_diff(0,filer_type_workingset)
         #array=proc_diff_dump("/proc/diskstats",1)
     mProcManage=ProcManage("/proc/stat")
     mProcManage.initialization()
