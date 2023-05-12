@@ -5,12 +5,12 @@ from bcc import BPF
 from time import sleep, strftime
 import argparse
 import signal
+import bpftcp
 
 matched = 0
 kprobe_funs=[]
 seconds=0
 exiting=0
-
 
 trace_count_text = b"""
 int PROBE_FUNCTION(void *ctx) {
@@ -26,7 +26,6 @@ int PROBE_FUNCTION(void *ctx) {
 }
 """
 bpf_text = b"""#include <uapi/linux/ptrace.h>
-BPF_ARRAY(counts, u64, NUMLOCATIONS);
 """
 
 examples = """examples:
@@ -44,8 +43,6 @@ parser = argparse.ArgumentParser(
 parser.add_argument("-i", "--interval", type=int, help="summary interval in seconds")
 parser.add_argument("-d", "--duration", type=int,
     help="total duration of trace, in seconds")
-parser.add_argument("pattern",type=ArgString,
-    help="search expression for functions")
 parser.add_argument("-r", "--regexp", action="store_true",
     help="use regular expressions. Default is \"*\" wildcards only.")
 parser.add_argument("-p", "--pid", type=int,
@@ -61,17 +58,17 @@ if args.duration and not args.interval:
 if not args.interval:
     args.interval = 99999999
 
-
-
-parts = bytes(args.pattern).split(b':')
-
 class KprobeBase(object):
 
     """Docstring for KprobeBase. """
 
-    def __init__(self, funcname, bpf_text):
+    def __init__(self, funcname):
         """TODO: to be defined. """
         self.funcname=funcname
+
+    def __init__(self ):
+        """TODO: to be defined. """
+        self.funcname=""
 
     def filter(self, cpu, pid):
         if pid:
@@ -81,7 +78,6 @@ class KprobeBase(object):
         else:
             self.bpf_text = self.bpf_text.replace(b'FILTERPID', b'')
 
-
         if cpu:
             self.bpf_text = self.bpf_text.replace(b'FILTERCPU',
                 b"""u32 cpu = bpf_get_smp_processor_id();
@@ -89,45 +85,84 @@ class KprobeBase(object):
         else:
             self.bpf_text = self.bpf_text.replace(b'FILTERCPU', b'')
 
-    def attach(self):
+    # attach kprobe event
+    def attach(self,bpf):
         pass
+
+    # load bpf txt to bpf
+    def append(self):
+        return self.bpf_text
 
     def update(self):
         pass
 
-    def report(self):
+    def dump(self):
+        print(self.bpf_text)
+
+    def report(self, bpf):
         pass
 
-class tcpconnect(KprobeBase):
-    def __init__(self, funcname):
+class tcp_sendmsg(KprobeBase):
+    def __init__(self):
         self.bpf_text= b"""
-        int kprobe_tcp_connect(void *ctx) {
+        #include <net/sock.h>
+        BPF_HASH(tcpsendmsg_sock, struct sock *);
+        int kprobe__tcp_sendmsg(struct pt_regs *ctx, struct sock *sk,
+                 struct msghdr *msg, size_t size) 
+        {
+            //struct sock * sk= (struct sock *)ctx->di;
             FILTERPID
             FILTERCPU
-            int loc = LOCATION;
-            u64 *val = counts.lookup(&loc);
-            if (!val) {
-                return 0;   // Should never happen, # of locations is known
-            }
-            (*val)++;
+            bpf_trace_printk("zz\\n");
+            tcpsendmsg_sock.increment(sk, 1);
+            //psock.update(&sk, &ts);
             return 0;
         }
         """
-        super(tcp,self).__init__(funcname, self.bpf_text)
+        super(tcp_sendmsg, self).__init__()
 
     def attach(self, bpf):
         bpf.attach_kprobe(
                 event=self.funcname,
-                fn_name="get_kprobe_functions")
+                fn_name="bpf_tcp_connect")
 
-bpf = BPF(text=bpf_text,
-               usdt_contexts=[])
+    def report(self, bpf):
+        sk=bpf["tcpsendmsg_sock"];
+        for k, v in sorted(sk.items(),key=lambda counts: counts[1].value, reverse=True):
+            print(k.value,v.value)
 
-for i in range(len(kprobe_funs)):
-    function=kprobe_funs[i]
-    bpf.attach_kprobe(
-            event=function,
-            fn_name="trace_count_%d" % i)
+class tcpconnect(KprobeBase):
+    def __init__(self ):
+        self.bpf_text= b"""
+        #include <net/sock.h>
+        BPF_HASH(psock, struct sock *);
+        int kprobe__tcp_connect(struct pt_regs *ctx, struct sock *sk)
+        {
+            //struct sock * sk= (struct sock *)ctx->di;
+            FILTERPID
+            FILTERCPU
+            psock.increment(sk, 1);
+            return 0;
+        }
+        """
+        super(tcpconnect, self).__init__()
+
+    def report(self, bpf):
+        sk=bpf["psock"];
+        for k, v in sorted(sk.items(),key=lambda counts: counts[1].value, reverse=True):
+            print(k.value,v.value)
+
+mTcp=bpftcp.bpftcp_connect()
+#mTcp=tcpconnect()
+#mTcp.filter(args.cpu, args.pid)
+#bpf_text += mTcp.append()
+
+#mTcpMsg=tcp_sendmsg()
+#mTcpMsg.filter(args.cpu, args.pid)
+#bpf_text += mTcpMsg.append()
+
+bpf = BPF(text=bpf_text, usdt_contexts=[])
+#mTcp.attach(bpf)
 
 if args.duration and not args.interval:
     args.interval = args.duration
@@ -141,15 +176,8 @@ while True:
     except KeyboardInterrupt:
         exiting = 1
 
-    print()
-    counts = bpf["counts"]
-    for k, v in sorted(counts.items(),
-                       key=lambda counts: counts[1].value):
-        if v.value == 0:
-            continue
-        print("%-36s %8d" %(kprobe_funs[k.value].decode('utf-8'), v.value))
-    counts.clear()
-
+    #mTcp.report(bpf)
+    #mTcpMsg.report(bpf)
     if exiting:
         print("Detaching...")
         exit()
