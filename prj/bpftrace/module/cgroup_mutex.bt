@@ -1,0 +1,38 @@
+#!/bin/bpftrace
+
+kprobe:mutex_lock
+{
+	//if (arg0 == kaddr("cgroup_mutex"))
+	if ((kptr(arg0)) == (uint64)(0xffffffff980b9380) )
+	{
+		printf("%lx\n", arg0);
+		@start[tid] = nsecs;
+	}
+}
+
+
+tracepoint:sched:sched_switch
+{
+	if (@start[args->next_pid] != 0)
+	{
+		@start[tid] = nsecs;
+	}
+}
+
+kprobe:mutex_unlock  /@start[tid] != 0/
+{
+	if (arg0 == kaddr("cgroup_mutex"))
+	{
+		//@stack[kstack()]=count();
+		@nsecs = hist(((nsecs - @start[tid])));
+		delete(@start[tid]);
+	}		 
+}
+
+interval:s:1
+{
+	//print(@stack);
+	print(@nsecs);
+	clear(@nsecs);
+	//clear(@stack);
+}
