@@ -1,0 +1,47 @@
+#!/bin/bpftrace
+#include<linux/fs.h>
+#include<linux/genhd.h>
+#include<linux/blk_types.h>
+
+BEGIN {
+	@record=0;
+	@total=0;
+}
+
+//kprobe:page_cache_sync_readahead
+//{
+//	$inode=((struct address_space *)arg0)->host;
+//	$name=str(((struct inode *)$inode)->i_sb->s_id);
+//	$s = (int64)arg3;
+
+//	@sa[comm, $name] = $s;
+//	@total +=  $s;
+//}
+kprobe:submit_bio
+{
+	$name = ((struct bio*)arg0)->bi_disk->disk_name;
+	$size = ((struct bio*)arg0)->bi_iter.bi_size;
+
+	if ($name == "sda1" || $name == "sda2" || $name == "sda3")
+	{
+		@sa[comm, $name] += $size;
+		@total +=  $size;
+	}
+
+}
+
+interval:s:1
+{
+
+	print(@total);
+	print(@sa);
+	clear(@sa);
+	@total = 0;
+	@record += 1;
+
+	if (@record >= 30) {
+		exit();
+	}
+}
+
+
