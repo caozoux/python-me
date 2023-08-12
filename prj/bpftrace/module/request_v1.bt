@@ -1,0 +1,17 @@
+#!/usr/bin/env bpftrace
+
+#include <linux/blk-mq.h>
+
+kprobe:scsi_queue_rq
+{
+        $rq=((struct blk_mq_queue_data*)arg1)->rq;
+        $tag=$rq->tag;
+        printf("request: %p, tag: %d\n", $rq, $tag);
+}
+
+kprobe:scsi_end_request
+{
+        $rq = (struct request*)arg0;
+        $tag=$rq->tag;
+        printf("end request: %p, tag: %d\n", $rq, $tag);
+}

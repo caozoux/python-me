@@ -2,8 +2,6 @@
 
 from __future__ import absolute_import
 from __future__ import division
-# Do not import unicode_literals until #623 is fixed
-# from __future__ import unicode_literals
 from __future__ import print_function
 
 from bcc import BPF
@@ -43,6 +41,9 @@ struct key_t {
 BPF_HASH(counts, struct key_t);
 
 int do_count(struct pt_regs *ctx) {
+    struct kiocb *iocb;
+    struct iov_iter *to;
+
     struct key_t key = {};
     struct address_space *mapping = (struct address_space *)ctx->si;
     u64 pid = bpf_get_current_pid_tgid();
@@ -62,8 +63,7 @@ int do_count(struct pt_regs *ctx) {
 
 """
 b = BPF(text=bpf_text)
-b.attach_kprobe(event="account_page_dirtied", fn_name="do_count")
-#b.attach_kprobe(event="__folio_mark_dirty", fn_name="do_count")
+b.attach_kprobe(event="ext4_file_read_iter", fn_name="do_read")
 counts = b.get_table("counts")
 
 exiting = 0

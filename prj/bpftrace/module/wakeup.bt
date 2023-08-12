@@ -1,19 +1,21 @@
 #!/bin/bpftrace
 
-tracepoint:sched:sched_wakeup 
-{ 
-	if(args->pid == xxx)
-	{ 
-		@start[pid] = nsecs;
-	}
+tracepoint:sched:sched_wakeup
+{
+  if(args->pid == 2084233)
+  {
+    printf("wake pid :%d %s\n", pid, comm);
+    print(kstack());
+    @[kstack()]=count();
+    @start[args->pid] = nsecs;
+  }
 }
 
-tracepoint:sched:sched_switch
-{ 
-	if(args->next_pid == xxx)
-	{ 
-		@[kstack()]=count();
-		printf("wake lantency:%ld\n", (nsecs - @start[arg0]) / 1000);
-	}
+tracepoint:sched:sched_switch / args->next_pid == 2084233 /
+{
+    if (@start[args->next_pid] != 0) {
+      printf("wake lantency:%ld\n", (nsecs - @start[args->next_pid]));
+      delete(@start[args->next_pid]);
+    }
 }
 

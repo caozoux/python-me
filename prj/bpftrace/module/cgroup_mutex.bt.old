@@ -1,0 +1,42 @@
+#!/bin/bpftrace
+
+kprobe:mutex_lock
+{
+	if (arg0 == kaddr("cgroup_mutex"))
+	{
+		@schedpid[pid] = 1;
+		printf("%s %d lock\n", comm, pid);
+	}
+}
+
+kretprobe:mutex_lock
+{
+	if (@schedpid[pid] == 1) {
+		delete(@schedpid[pid]);
+		@start[pid] = nsecs;
+		printf("%s %d lock ret\n", comm, pid);
+	}
+}
+
+kprobe:mutex_unlock
+{
+	if (arg0 == kaddr("cgroup_mutex"))
+	{
+		printf("%s %d unlock %d\n", comm, pid, (nsecs - @start[pid]) / 1000);
+		@stack[kstack()]=count();
+		//if ( ((nsecs - @start[pid]) / 1000) > 1000000)
+		//{
+		//	printf("%s %d\n", comm, pid);
+		//}
+		@usecs = hist(((nsecs - @start[pid]) / 1000));
+		delete(@start[pid]);
+	}		 
+}
+
+interval:s:1
+{
+	print(@stack);
+	print(@usecs);
+	clear(@usecs);
+	clear(@stack);
+}

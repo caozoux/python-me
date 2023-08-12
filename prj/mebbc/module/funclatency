@@ -115,7 +115,8 @@ typedef struct hist_key {
 TYPEDEF
 
 BPF_ARRAY(avg, u64, 2);
-STORAGE
+BPF_HISTOGRAM(dist);
+BPF_HASH(start, u32);
 FUNCTION
 
 int trace_func_entry(struct pt_regs *ctx)
@@ -126,7 +127,7 @@ int trace_func_entry(struct pt_regs *ctx)
     u64 ts = bpf_ktime_get_ns();
 
     FILTER
-    ENTRYSTORE
+    start.update(&pid, &ts);
 
     return 0;
 }
@@ -139,17 +140,20 @@ int trace_func_return(struct pt_regs *ctx)
     u32 tgid = pid_tgid >> 32;
 
     // calculate delta time
-    CALCULATE
+    tsp = start.lookup(&pid);
+    if (tsp == 0) {
+        return 0;   // missed start
+    }
+    delta = bpf_ktime_get_ns() - *tsp;
+    start.delete(&pid);
 
     u32 lat = 0;
     u32 cnt = 1;
     avg.atomic_increment(lat, delta);
     avg.atomic_increment(cnt);
 
-    FACTOR
-
     // store as histogram
-    STORE
+    dist.atomic_increment(bpf_log2l(delta));
 
     return 0;
 }
@@ -164,173 +168,10 @@ if args.pid:
         'if (tgid != %d) { return 0; }' % args.pid)
 else:
     bpf_text = bpf_text.replace('FILTER', '')
-if args.milliseconds:
-    bpf_text = bpf_text.replace('FACTOR', 'delta /= 1000000;')
-    label = "msecs"
-elif args.microseconds:
-    bpf_text = bpf_text.replace('FACTOR', 'delta /= 1000;')
-    label = "usecs"
-else:
-    bpf_text = bpf_text.replace('FACTOR', '')
-    label = "nsecs"
-if need_key:
-    pid = '-1' if not library else 'tgid'
-
-    if args.level and args.level > 1:
-        bpf_text = bpf_text.replace('TYPEDEF',
-            """
-#define STACK_DEPTH %s
-
-typedef struct {
-    u64 ip;
-    u64 start_ts;
-} func_cache_t;
-
-/* LIFO */
-typedef struct {
-    u32          head;
-    func_cache_t cache[STACK_DEPTH];
-} func_stack_t;
-            """ % args.level)
-
-        bpf_text = bpf_text.replace('STORAGE',
-            """
-BPF_HASH(func_stack, u32, func_stack_t);
-BPF_HISTOGRAM(dist, hist_key_t);
-            """)
-
-        bpf_text = bpf_text.replace('FUNCTION',
-            """
-static inline int stack_pop(func_stack_t *stack, func_cache_t *cache) {
-    if (stack->head <= 0) {
-        return -1;
-    }
-
-    u32 index = --stack->head;
-    if (index < STACK_DEPTH) {
-        /* bound check */
-        cache->ip       = stack->cache[index].ip;
-        cache->start_ts = stack->cache[index].start_ts;
-    }
-
-    return 0;
-}
-
-static inline int stack_push(func_stack_t *stack, func_cache_t *cache) {
-    u32 index = stack->head;
-
-    if (index > STACK_DEPTH - 1) {
-        /* bound check */
-        return -1;
-    }
-
-    stack->head++;
-    stack->cache[index].ip       = cache->ip;
-    stack->cache[index].start_ts = cache->start_ts;
-
-    return 0;
-}
-            """)
-
-        bpf_text = bpf_text.replace('ENTRYSTORE',
-            """
-    u64 ip = PT_REGS_IP(ctx);
-    func_cache_t cache = {
-        .ip       = ip,
-        .start_ts = ts,
-    };
-
-    func_stack_t *stack = func_stack.lookup(&pid);
-    if (!stack) {
-        func_stack_t new_stack = {
-            .head = 0,
-        };
-
-        if (!stack_push(&new_stack, &cache)) {
-            func_stack.update(&pid, &new_stack);
-        }
-
-        return 0;
-    }
-
-    if (!stack_push(stack, &cache)) {
-        func_stack.update(&pid, stack);
-    }
-            """)
-
-        bpf_text = bpf_text.replace('CALCULATE',
-            """
-    u64 ip, start_ts;
-    func_stack_t *stack = func_stack.lookup(&pid);
-    if (!stack) {
-        /* miss start */
-        return 0;
-    }
-
-    func_cache_t cache = {};
-    if (stack_pop(stack, &cache)) {
-        func_stack.delete(&pid);
-
-        return 0;
-    }
-    ip       = cache.ip;
-    start_ts = cache.start_ts;
-    delta    = bpf_ktime_get_ns() - start_ts;
-            """)
-
-        bpf_text = bpf_text.replace('STORE',
-            """
-    hist_key_t key;
-    key.key.ip  = ip;
-    key.key.pid = %s;
-    key.slot    = bpf_log2l(delta);
-    dist.atomic_increment(key);
-
-    if (stack->head == 0) {
-        /* empty */
-        func_stack.delete(&pid);
-    }
-            """ % pid)
-
-    else:
-        bpf_text = bpf_text.replace('STORAGE', 'BPF_HASH(ipaddr, u32);\n'\
-            'BPF_HISTOGRAM(dist, hist_key_t);\n'\
-            'BPF_HASH(start, u32);')
-        # stash the IP on entry, as on return it's kretprobe_trampoline:
-        bpf_text = bpf_text.replace('ENTRYSTORE',
-            'u64 ip = PT_REGS_IP(ctx); ipaddr.update(&pid, &ip);'\
-            ' start.update(&pid, &ts);')
-        bpf_text = bpf_text.replace('STORE',
-                """
-    u64 ip, *ipp = ipaddr.lookup(&pid);
-    if (ipp) {
-        ip = *ipp;
-        hist_key_t key;
-        key.key.ip = ip;
-        key.key.pid = %s;
-        key.slot = bpf_log2l(delta);
-        dist.atomic_increment(key);
-        ipaddr.delete(&pid);
-    }
-                """ % pid)
-else:
-    bpf_text = bpf_text.replace('STORAGE', 'BPF_HISTOGRAM(dist);\n'\
-                                           'BPF_HASH(start, u32);')
-    bpf_text = bpf_text.replace('ENTRYSTORE', 'start.update(&pid, &ts);')
-    bpf_text = bpf_text.replace('STORE',
-        'dist.atomic_increment(bpf_log2l(delta));')
+label = "nsecs"
 
 bpf_text = bpf_text.replace('TYPEDEF', '')
 bpf_text = bpf_text.replace('FUNCTION', '')
-bpf_text = bpf_text.replace('CALCULATE',
-                """
-    tsp = start.lookup(&pid);
-    if (tsp == 0) {
-        return 0;   // missed start
-    }
-    delta = bpf_ktime_get_ns() - *tsp;
-    start.delete(&pid);
-                """)
 
 if args.verbose or args.ebpf:
     print(bpf_text)
@@ -345,16 +186,9 @@ def signal_ignore(signal, frame):
 b = BPF(text=bpf_text)
 
 # attach probes
-if not library:
-    b.attach_kprobe(event_re=pattern, fn_name="trace_func_entry")
-    b.attach_kretprobe(event_re=pattern, fn_name="trace_func_return")
-    matched = b.num_open_kprobes()
-else:
-    b.attach_uprobe(name=library, sym_re=pattern, fn_name="trace_func_entry",
-                    pid=args.pid or -1)
-    b.attach_uretprobe(name=library, sym_re=pattern,
-                       fn_name="trace_func_return", pid=args.pid or -1)
-    matched = b.num_open_uprobes()
+b.attach_kprobe(event_re=pattern, fn_name="trace_func_entry")
+b.attach_kretprobe(event_re=pattern, fn_name="trace_func_return")
+matched = b.num_open_kprobes()
 
 if matched == 0:
     print("0 functions matched by \"%s\". Exiting." % args.pattern)

@@ -1,0 +1,129 @@
+#!/usr/libexec/platform-python
+
+from __future__ import absolute_import
+from __future__ import division
+# Do not import unicode_literals until #623 is fixed
+# from __future__ import unicode_literals
+from __future__ import print_function
+
+from bcc import BPF
+from bcc.utils import printb
+from collections import defaultdict
+from time import strftime
+
+import argparse
+import curses
+import pwd
+import re
+import signal
+from time import sleep
+
+bpf_text = """
+#include <uapi/linux/ptrace.h>
+#include <linux/mm.h>
+#include <linux/fs.h>
+#include <linux/cgroup-defs.h>
+
+struct taskstackkey {
+    u32 pid;
+    int kernel_stack_id;
+};
+struct taskkey {
+    u32 pid;
+    //char comm[16];
+};
+
+//BPF_HASH(taskpid, u64, u64);
+BPF_HASH(taskstack, struct taskstackkey);
+BPF_HASH(taskpid, struct taskkey);
+BPF_HISTOGRAM(csstask, struct task_struct *);
+BPF_STACK_TRACE(stack_traces, 1024);
+
+int trace_mutex_unlock(struct pt_regs *ctx) {
+    struct taskkey key;
+    u64 *ts, delta;
+    key.pid = bpf_get_current_pid_tgid();
+    //bpf_get_current_comm(key.comm, 16);
+
+    ts = taskpid.lookup(&key);
+    if (ts == 0)
+        return 0;
+
+    delta = bpf_ktime_get_ns() - *ts;
+
+    if (delta > 10000000) {
+          struct taskstackkey stackkey;
+          stackkey.pid = bpf_get_current_pid_tgid()>>32;
+          stackkey.kernel_stack_id = stack_traces.get_stackid((struct pt_regs *)ctx, 0);
+          //bpf_trace_printk("%d %s\\n", key.pid, key.comm);
+          taskstack.increment(stackkey);
+     }
+    taskpid.delete(&key);
+
+    return 0;
+}
+
+int trace_mutex_lock(struct pt_regs *ctx, struct cgroup *dst_cgrp,
+   const char *path, struct task_struct *task, bool threadgroup)
+{
+    struct taskkey key;
+    u64 ts = bpf_ktime_get_ns();
+    key.pid = bpf_get_current_pid_tgid();
+    //bpf_get_current_comm(key.comm, 16);
+    taskpid.update(&key, &ts);
+
+    return 0;
+}
+
+//int trace_cgroup_css_put(struct pt_regs *ctx, struct cgroup_subsys_state *css, unsigned int n, bool istr)
+TRACEPOINT_PROBE(sched, sched_switch) 
+{
+    u32 pid= (u32)args->next_pid;
+    struct taskkey key;
+    u64 *ts, delta;
+
+    key.pid = args->next_pid;
+
+    ts = taskpid.lookup(&key);
+    if (ts == 0)
+        return 0;
+
+    delta = bpf_ktime_get_ns();
+    taskpid.update(&key, &delta);
+
+    return 0;
+}
+
+"""
+
+b = BPF(text=bpf_text)
+b.attach_kprobe(event="mutex_lock", fn_name="trace_mutex_lock")
+b.attach_kprobe(event="mutex_unlock", fn_name="trace_mutex_unlock")
+
+
+exiting = 0
+
+stack_traces = b.get_table("stack_traces")
+taskstack = b.get_table("taskstack")
+taskpid = b.get_table("taskpid")
+while 1:
+    try:
+        sleep(1)
+    except KeyboardInterrupt:
+        exiting = 1
+
+    if exiting:
+        print("");
+        print("task pid");
+        for key in taskpid.keys():
+          print("%ld %lx"%(key.pid, taskpid[key].value))
+          #print("%ld %s %lx"%(key.pid, key.comm, taskpid[key].value))
+
+        for k, v in sorted(taskstack.items(),
+                           key=lambda taskstack: taskstack[1].value):
+            kernel_stack = stack_traces.walk(k.kernel_stack_id)
+            for addr in kernel_stack:
+                printb(b"    %-16x %s" % (addr, b.ksym(addr)))
+            print("    %d\n" % v.value)
+
+        exit(1)

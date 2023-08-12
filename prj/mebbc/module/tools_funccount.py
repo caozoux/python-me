@@ -11,7 +11,6 @@ kprobe_funs=[]
 seconds=0
 exiting=0
 
-
 trace_count_text = b"""
 int PROBE_FUNCTION(void *ctx) {
     FILTERPID
@@ -28,7 +27,6 @@ int PROBE_FUNCTION(void *ctx) {
 bpf_text = b"""#include <uapi/linux/ptrace.h>
 BPF_ARRAY(counts, u64, NUMLOCATIONS);
 """
-
 examples = """examples:
     ./funclatency do_sys_open       # time the do_sys_open() kernel function
     ./funclatency -i 2 -d 10 open   # output every 2 seconds, for duration 10s
@@ -61,14 +59,12 @@ if args.duration and not args.interval:
 if not args.interval:
     args.interval = 99999999
 
-
 if args.pid:
     trace_count_text = trace_count_text.replace(b'FILTERPID',
         b"""u32 pid = bpf_get_current_pid_tgid() >> 32;
            if (pid != %d) { return 0; }""" % args.pid)
 else:
     trace_count_text = trace_count_text.replace(b'FILTERPID', b'')
-
 
 if args.cpu:
     trace_count_text = trace_count_text.replace(b'FILTERCPU',
@@ -91,6 +87,7 @@ for funcname in parts:
     bpf_text += text
     matched += 1
     kprobe_funs.append(funcname)
+    print("add func", funcname)
 
 bpf_text = bpf_text.replace(b"NUMLOCATIONS",
                         b"%d" % len(parts))

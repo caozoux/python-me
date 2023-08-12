@@ -1,0 +1,16 @@
+#!/bin/bpftrace
+#include<linux/fs.h>
+
+kprobe:account_page_dirtied
+{
+  $inode=((struct address_space *)arg1)->host;
+  if (((struct inode *)$inode)->i_sb->s_id == "sda2" ) {
+    @dp[kstack()] = count();
+  }
+  @sa[((struct inode *)$inode)->i_sb->s_id] += 1;
+}
+interval:s:1
+{
+  print(@sa);
+  clear(@sa);
+}
