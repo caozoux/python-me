@@ -16,7 +16,7 @@ parser.add_option("-e", "--show_template", action="store_true", dest="template",
 parser.add_option("-t", "--type", type="string", dest="type",
                   help="--cmd stat_event ")
 parser.add_option("-l", "--list", action="store_true", dest="list",
-                  help="--list list all benchmark test name") 
+                  help="--list list all benchmark test name")
 parser.add_option("-c", "--cmd", type="string", dest="cmd",
                   help="--cmd stat_event ")
 parser.add_option("-r", "--run", type="string", dest="run",
@@ -75,9 +75,13 @@ def ListAll():
             print(("%s%--10s%--30s%--30s")%("config:", key, k2, mejsonfile[key][k2]))
 
 def ListCommand():
-    print("You can run this commands by '-r':")
+    print("You can run this commands by '-r' or multipte by '-r build_bzImage + install_bzImage'")
     for key in mejsonfile["command"]:
         print(("%++13s  %--20s%--30s")%("command:", key, eval(mejsonfile["command"][key])))
+    if (os.path.exists(os.path.expanduser("~/.mkernel.json"))):
+        print(api.DumpJsonByFilename("~/.mkernel.json"))
+    else:
+        print("Err: /home/zc/.mkernel.json no exists")
 
 if len(sys.argv) == 1:
     parser.print_help()
