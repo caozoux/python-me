@@ -2,13 +2,11 @@
 
 from __future__ import print_function
 from bcc import BPF
-from time import sleep, strftime
 
-#!/usr/bin/python3
-# @lint-avoid-python-3-compatibility-imports
+# usr/bin/python3
+#from __future__ import print_function
+#from bpfcc import BPF, USDT
 
-from __future__ import print_function
-from bpfcc import BPF, USDT
 from time import sleep, strftime
 import argparse
 import signal
@@ -34,7 +32,6 @@ typedef struct {
 } lock_data;
 
 BPF_HASH(ipaddr, u32);
-BPF_HISTOGRAM(dist);
 BPF_HASH(start, u32, lock_data);
 BPF_ARRAY(avg, u64, 2);
 BPF_HASH(lock_hash, lock_key);
@@ -49,12 +46,10 @@ int trace_func_entry(struct pt_regs *ctx)
 
     lock.lock = ctx->di;
     lock.ts = ts;
-    if (lock.lock != 0xffffffffa3c4f6e0)
+
+    if (LOCK)
       return 0;
 
-    //u64 ip = PT_REGS_IP(ctx);
-    //ipaddr.update(&pid, &ip);
-    //start.update(&pid, &ts);
     start.update(&pid, &lock);
 
     return 0;
@@ -77,19 +72,15 @@ int trace_func_return(struct pt_regs *ctx)
     delta = bpf_ktime_get_ns() - lock->ts;
     start.delete(&pid);
 
-    u32 lat = 0;
-    u32 cnt = 1;
-    avg.atomic_increment(lat, delta);
-    avg.atomic_increment(cnt);
 
     delta = delta/1000000;
-    if (delta > 100) {
+    //if (FILTER) {
+    if (1) {
         lock_key key = {};
         key.lock_addr = lock->lock;
         key.pid = pid;
         key.latency = delta;
         bpf_get_current_comm(&key.comm, 16);
-        //dist.atomic_increment(bpf_log2l(delta));
         lock_hash.atomic_increment(key);
      }
 
@@ -98,25 +89,50 @@ int trace_func_return(struct pt_regs *ctx)
 """
 
 examples = """examples:
+    -m  throstle msecondecs
+    -t  mutex_lock/rwsem/percpu_rwsem
 """
+
 parser = argparse.ArgumentParser(
     description="Trace slow kernel or user function calls.",
     formatter_class=argparse.RawDescriptionHelpFormatter,
     epilog=examples)
 parser.add_argument("-m", "--min-ms", type=float, dest="min_ms",
     help="minimum duration to trace (ms)")
+parser.add_argument("-l", "--lock", type=float, dest="lock",
+    help="specify the lock addr")
+parser.add_argument("-t", "--type-ms", type=str, dest="type",
+    help="minimum duration to trace (ms)")
 args = parser.parse_args()
 
+if args.min_ms:
+    bpf_text = bpf_text.replace('FILTER', 'delta >= %d' % args.min_ms)
+        
+else:
+    bpf_text = bpf_text.replace('FILTER', '1')
+
+if args.lock:
+    bpf_text = bpf_text.replace('LOCK', ('lock.lock != %s')%args.lock)
+else:
+    bpf_text = bpf_text.replace('LOCK', '0')
+        
+
 b = BPF(text=bpf_text)
-#b.attach_kprobe(event_re="down_read", fn_name="trace_func_entry")
-#b.attach_kretprobe(event_re="down_read", fn_name="trace_func_return")
-#b.attach_kprobe(event_re="percpu_down_write", fn_name="trace_func_entry")
-#b.attach_kretprobe(event_re="percpu_down_write", fn_name="trace_func_return")
-b.attach_kprobe(event_re="mutex_lock", fn_name="trace_func_entry")
-b.attach_kretprobe(event_re="mutex_lock", fn_name="trace_func_return")
+if args.type == "rwsem":
+    b.attach_kprobe(event="down_read", fn_name="trace_func_entry")
+    b.attach_kretprobe(event="down_read", fn_name="trace_func_return")
+elif args.type == "percpu_rwsem":
+    b.attach_kprobe(event="percpu_down_read", fn_name="trace_func_entry")
+    b.attach_kretprobe(event="percpu_down_read", fn_name="trace_func_return")
+elif args.type == "mutex":
+    print("zz")
+    b.attach_kprobe(event="mutex_lock", fn_name="trace_func_entry")
+    b.attach_kretprobe(event="mutex_lock", fn_name="trace_func_return")
+else:
+    print("not specify the lock type");
+    exit(0)
 
 exiting = 0
-dist = b.get_table("dist")
 lock_key = b.get_table("lock_hash")
 while (1):
     try:
@@ -128,8 +144,6 @@ while (1):
         print("comm:%s addr:%x latency:%ld"%(key.comm, key.lock_addr, key.latency))
 
     lock_key.clear()
-    dist.print_log2_hist("nsecs")
-    dist.clear()
 
     if exiting:
         print("Detaching...")
