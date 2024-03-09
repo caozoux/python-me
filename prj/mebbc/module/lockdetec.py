@@ -19,6 +19,7 @@ typedef struct {
     u64 pid;
     char comm[16];
     u64 latency;
+    u64 sched_latency;
 } lock_key;
 
 typedef struct {
@@ -29,6 +30,7 @@ typedef struct {
 typedef struct {
     u64 ts;
     u64 lock;
+    u64 wake_ts;
 } lock_data;
 
 BPF_HASH(ipaddr, u32);
@@ -46,6 +48,7 @@ int trace_func_entry(struct pt_regs *ctx)
 
     lock.lock = ctx->di;
     lock.ts = ts;
+    lock.wake_ts = 0;
 
     if (LOCK)
       return 0;
@@ -62,30 +65,78 @@ int trace_func_return(struct pt_regs *ctx)
     u32 pid = pid_tgid;
     u32 tgid = pid_tgid >> 32;
     lock_data *lock;
+    u64 ts;
 
     // calculate delta time
     lock = start.lookup(&pid);
     if (lock == 0) {
         return 0;   // missed start
     }
-
-    delta = bpf_ktime_get_ns() - lock->ts;
+    
+    ts = bpf_ktime_get_ns();
+    delta = ts - lock->ts;
     start.delete(&pid);
 
-
-    delta = delta/1000000;
-    //if (FILTER) {
-    if (1) {
+    if (FILTER) {
         lock_key key = {};
         key.lock_addr = lock->lock;
         key.pid = pid;
         key.latency = delta;
+        if (SCHED_TRACE) {
+            key.sched_latency = ts - lock->wake_ts;
+        }
         bpf_get_current_comm(&key.comm, 16);
         lock_hash.atomic_increment(key);
      }
 
     return 0;
 }
+
+#if ENABLE_SCHED
+TRACEPOINT_PROBE(sched, sched_wakeup_new)
+{
+    u32 pid;
+    lock_data *lock;
+
+    pid = args->pid;
+
+    lock = start.lookup(&pid);
+    if (lock == 0)
+        return 0;   // missed start
+
+    lock->wake_ts = bpf_ktime_get_ns();
+}
+
+TRACEPOINT_PROBE(sched, sched_waking)
+{
+    u32 pid;
+    lock_data *lock;
+
+    pid = args->pid;
+
+    lock = start.lookup(&pid);
+    if (lock == 0)
+        return 0;   // missed start
+
+    lock->wake_ts = bpf_ktime_get_ns();
+}
+
+TRACEPOINT_PROBE(sched, sched_wakeup)
+{
+    u32 pid;
+    lock_data *lock;
+
+    pid = args->pid;
+
+    lock = start.lookup(&pid);
+
+    if (lock == 0)
+        return 0;   // missed start
+
+    lock->wake_ts = bpf_ktime_get_ns();
+}
+#endif
+
 """
 
 examples = """examples:
@@ -99,33 +150,35 @@ parser = argparse.ArgumentParser(
     epilog=examples)
 parser.add_argument("-m", "--min-ms", type=float, dest="min_ms",
     help="minimum duration to trace (ms)")
-parser.add_argument("-l", "--lock", type=float, dest="lock",
+parser.add_argument("-l", "--lock", type=str, dest="lock",
     help="specify the lock addr")
 parser.add_argument("-t", "--type-ms", type=str, dest="type",
-    help="minimum duration to trace (ms)")
+    help="mutex/rwsem/per_rwsemu")
+
 args = parser.parse_args()
 
 if args.min_ms:
-    bpf_text = bpf_text.replace('FILTER', 'delta >= %d' % args.min_ms)
-        
+    bpf_text = bpf_text.replace('FILTER', 'delta >= %ld' % (args.min_ms * 1000000))
 else:
     bpf_text = bpf_text.replace('FILTER', '1')
 
 if args.lock:
     bpf_text = bpf_text.replace('LOCK', ('lock.lock != %s')%args.lock)
+    bpf_text = bpf_text.replace('SCHED_TRACE', '1')
+    bpf_text = bpf_text.replace('ENABLE_SCHED', '1')
 else:
     bpf_text = bpf_text.replace('LOCK', '0')
-        
+    bpf_text = bpf_text.replace('SCHED_TRACE', '0')
+    bpf_text = bpf_text.replace('ENABLE_SCHED', '0')
 
 b = BPF(text=bpf_text)
 if args.type == "rwsem":
     b.attach_kprobe(event="down_read", fn_name="trace_func_entry")
     b.attach_kretprobe(event="down_read", fn_name="trace_func_return")
-elif args.type == "percpu_rwsem":
+elif args.type == "per_rwsem":
     b.attach_kprobe(event="percpu_down_read", fn_name="trace_func_entry")
     b.attach_kretprobe(event="percpu_down_read", fn_name="trace_func_return")
 elif args.type == "mutex":
-    print("zz")
     b.attach_kprobe(event="mutex_lock", fn_name="trace_func_entry")
     b.attach_kretprobe(event="mutex_lock", fn_name="trace_func_return")
 else:
@@ -134,6 +187,7 @@ else:
 
 exiting = 0
 lock_key = b.get_table("lock_hash")
+
 while (1):
     try:
         sleep(1)

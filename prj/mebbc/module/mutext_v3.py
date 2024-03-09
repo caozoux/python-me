@@ -1,4 +1,4 @@
-!#!/usr/bin/python3
+#!/usr/bin/python3
 from __future__ import print_function
 from bpfcc import BPF
 from time import sleep, strftime
@@ -18,6 +18,8 @@ bpf_text = """
 
 struct taskstackkey {
     u64 delta;
+    //0: start 1:switch in 2:switch_out 3:end
+    int type;
     int kernel_stack_id;
 };
 
@@ -27,13 +29,13 @@ struct data_t {
     int kernel_stack_id;
 };
 
-struct mutex_lock_key{
+struct mutex_lock_key {
     u32 pid;
     u64 delta_s;
     u64 delta_e;
 };
 
-BPF_HASH(taskstack, struct taskstackkey);
+BPF_HASH(task_switch, u64, struct taskstackkey);
 BPF_HASH(mutex_start_pid, u32, struct mutex_lock_key);
 BPF_HASH(timeoutpid, u32, struct taskkey);
 BPF_STACK_TRACE(stack_traces, 1024);
@@ -41,6 +43,7 @@ BPF_PERF_OUTPUT(events);
 
 static u32 trace_pid = 0;
 static u32 trace_pid_pend = 0;
+static u64 trace_pid_ts = 0;
 int trace_mutex_lock(struct pt_regs *ctx)
 {
     struct mutex_lock_key key = {};
@@ -56,7 +59,7 @@ int trace_mutex_lock(struct pt_regs *ctx)
     key.pid = pid;
     key.delta_s = ts;
     key.delta_e = 0;
-    taskpid.update(&pid, &key);
+    mutex_start_pid.update(&pid, &key);
     trace_pid = pid;
     trace_pid_pend = 0;
 
@@ -65,103 +68,44 @@ int trace_mutex_lock(struct pt_regs *ctx)
 
 int trace_mutex_lock_ret(struct pt_regs *ctx)
 {
+    struct mutex_lock_key *key;
     u32 pid = bpf_get_current_pid_tgid();
-    if (trace_pid == pid)
+    key = taskpid.lookup(&pid);
+    if (key == 0)
+        return 0;
+
+    mutex_start_pid.delete(&pid);
+
+    if (trace_pid != 0)
+        return 0;
+
+    trace_pid_pend = pid;
+    trace_pid_ts = ts;
+
+    struct taskstackkey stack_key;
+    u64 ts = bpf_ktime_get_ns();
+    stack_key.delta = ts;
+    stack_key.kernel_stack_id = stack_traces.get_stackid((struct pt_regs *)ctx, 0);
+
+    task_switch.update(&ts, &stack_key);
 
     return 0;
 }
 
 int trace_mutex_unlock(struct pt_regs *ctx) {
-    struct taskkey *key;
-    u64 *ts, delta;
-    int per_key=0;
-    u64 *value;
     u32 pid = bpf_get_current_pid_tgid();
 
-    //bpf_get_current_comm(key.comm, 16);
-
-    if (ctx->di != LOCK)
-      return 0;
-
-    key = taskpid.lookup(&pid);
-    if (key == 0)
+    if (pid != trace_pid)
         return 0;
 
-    delta = bpf_ktime_get_ns() - key->delta;
+    u64 ts = bpf_ktime_get_ns();
 
-    if (delta > 100000000) {
-        key->delta = delta;
-        key->kernel_stack_id = stack_traces.get_stackid((struct pt_regs *)ctx, 0);
-        timeoutpid.update(&pid, key);
-     }
+    delta = ts - trace_pid_ts;
 
-    taskpid.delete(&pid);
-
-    return 0;
-}
-
-TRACEPOINT_PROBE(sched, sched_switch)
-{
-    struct taskkey *key;
-    u64 *ts, *value, delta;
-    u32 pid;
-
-    pid = args->prev_pid;
-    key = taskpid.lookup(&pid);
-    if (key && (key->delta &1)) {
-        delta = bpf_ktime_get_ns() - key->delta;
-        int offset = key->offset;
-        if (key->offset < 4 ) {
-            if (key->offset == 0) {
-                key->delta1 = delta;
-                key->kernel_stack_id0 = stack_traces.get_stackid((struct pt_regs *)args, 0);
-            } else if (key->offset == 1) {
-                key->delta2 = delta;
-                key->kernel_stack_id1 = stack_traces.get_stackid((struct pt_regs *)args, 0);
-            } else if (key->offset == 2) {
-                key->delta3 = delta;
-                key->kernel_stack_id2 = stack_traces.get_stackid((struct pt_regs *)args, 0);
-            } else if (key->offset == 4) {
-                key->delta4 = delta;
-                key->kernel_stack_id3 = stack_traces.get_stackid((struct pt_regs *)args, 0);
-            } 
-            key->offset += 1;
-        }
+    if (delta > 2000000000) {
+         bpf_trace_printk("switch n %ld %ld", pid, delta);
     }
-
-    pid = args->next_pid;
-    key = taskpid.lookup(&pid);
-    if (key) {
-        if (!(key->delta &0xf)) {
-          delta = bpf_ktime_get_ns();
-          delta &= ~(15UL);
-          delta += 1;
-          key->delta = delta;
-          taskpid.update(&pid, key);
-          if (DEBUG)
-              bpf_trace_printk("switch n %ld %ld", pid, delta);
-        } else {
-          delta = bpf_ktime_get_ns() - key->delta;
-          int offset = key->offset;
-          if (key->offset < 4 ) {
-              if (key->offset == 0) {
-                  key->delta1 = delta;
-                  key->kernel_stack_id0 = stack_traces.get_stackid((struct pt_regs *)args, 0);
-              } else if (key->offset == 1) {
-                  key->delta2 = delta;
-                  key->kernel_stack_id1 = stack_traces.get_stackid((struct pt_regs *)args, 0);
-              } else if (key->offset == 2) {
-                  key->delta3 = delta;
-                  key->kernel_stack_id2 = stack_traces.get_stackid((struct pt_regs *)args, 0);
-              } else if (key->offset == 4) {
-                  key->delta4 = delta;
-                  key->kernel_stack_id3 = stack_traces.get_stackid((struct pt_regs *)args, 0);
-              } 
-              key->offset += 1;
-          }
-        }
-    }
-
+    trace_pid = 0;
     return 0;
 }
 
@@ -185,35 +129,5 @@ while 1:
     except KeyboardInterrupt:
         exiting = 1
 
-    if 1:
-      for k in timeoutpid.keys():
-          print("total delay us: %ld"%(int(timeoutpid[k].delta)/1000))
-          if (int(timeoutpid[k].kernel_stack_id) != 0):
-            kernel_stack = stack_traces.walk(timeoutpid[k].kernel_stack_id)
-            for addr in kernel_stack:
-                print("    %-16x %s" % (addr, b.ksym(addr)))
-           
-          if (timeoutpid[k].kernel_stack_id0 != 0):
-            print("sub delay us: %ld"%(int(timeoutpid[k].delta1)/1000))
-            kernel_stack = stack_traces.walk(timeoutpid[k].kernel_stack_id0)
-            for addr in kernel_stack:
-                print("    %-16x %s" % (addr, b.ksym(addr)))
-          if (timeoutpid[k].kernel_stack_id1 != 0):
-            print("sub delay us: %ld"%(int(timeoutpid[k].delta2)/1000))
-            kernel_stack = stack_traces.walk(timeoutpid[k].kernel_stack_id1)
-            for addr in kernel_stack:
-                print("    %-16x %s" % (addr, b.ksym(addr)))
-          if (timeoutpid[k].kernel_stack_id2 != 0):
-            print("sub delay us: %ld"%(int(timeoutpid[k].delta3)/1000))
-            kernel_stack = stack_traces.walk(timeoutpid[k].kernel_stack_id2)
-            for addr in kernel_stack:
-                print("    %-16x %s" % (addr, b.ksym(addr)))
-          if (timeoutpid[k].kernel_stack_id3 != 0):
-            print("sub delay us: %ld"%(int(timeoutpid[k].delta4)/1000))
-            kernel_stack = stack_traces.walk(timeoutpid[k].kernel_stack_id3)
-            for addr in kernel_stack:
-                print("    %-16x %s" % (addr, b.ksym(addr)))
-    timeoutpid.clear()
-    stack_traces.clear()
     if exiting:
         exit(1)
