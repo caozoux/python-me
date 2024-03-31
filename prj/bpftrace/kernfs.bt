@@ -1,0 +1,66 @@
+#!/bin/bpftrace
+BEGIN {
+@sysfs_reader_cnt = 0;
+@sysfs_writer_cnt = 0;
+@cgroupfs_reader_cnt = 0;
+@cgroupfs_writer_cnt = 0;
+}
+kprobe:down_read
+{
+  $addr = arg0 & 0xffffffffffffff;
+  if ( $addr == 0x2cbec0402faf60)
+  {
+      @sysfs_reader_cnt += 1;
+      @sysfs_reader[pid, comm] += 1;
+
+  } else if  ( $addr == 0x2cbfe4169ee560)
+  {
+
+      @cgroupfs_reader_cnt += 1;
+      @cgroupfs_reader[pid, comm] += 1;
+
+  }
+
+  return 0;
+}
+
+kprobe:down_write
+{
+  $addr = arg0 & 0xffffffffffffff;
+  if ( $addr == 0x2cbec0402faf60)
+  {
+      @sysfs_writer_cnt += 1;
+      @sysfs_writer[pid, comm] += 1;
+
+  } else if ( $addr == 0x2cbfe4169ee560)
+  {
+
+      @cgroupfs_writer_cnt += 1;
+      @cgroupfs_writer[pid, comm] += 1;
+
+  }
+  return 0;
+}
+
+i:s:60 {
+
+  //@val=printf("time: %s", strftime("%H:%M:%S", nsecs));
+  $val=strftime("%H:%M:%S", nsecs);
+  printf("%s sysfs_read_cnt:%d sysfs_write_cnt:%d\n",$val, @sysfs_reader_cnt, @sysfs_writer_cnt);
+  print(@sysfs_reader);
+  print(@sysfs_writer);
+
+  printf("%s cgroupfs_read_cnt:%d cgroupfs_write_cnt:%d\n",$val, @cgroupfs_reader_cnt, @cgroupfs_writer_cnt);
+  print(@cgroupfs_reader);
+  print(@cgroupfs_writer);
+
+  @sysfs_reader_cnt = 0;
+  @sysfs_writer_cnt = 0;
+  @cgroupfs_reader_cnt = 0;
+  @cgroupfs_writer_cnt = 0;
+
+  clear(@sysfs_reader);
+  clear(@sysfs_writer);
+  clear(@cgroupfs_reader);
+  clear(@cgroupfs_writer);
+}
