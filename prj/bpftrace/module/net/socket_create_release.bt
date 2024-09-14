@@ -1,0 +1,42 @@
+#!/bin/bpftrace
+#include <net/tcp.h>
+#include <net/sock.h>
+
+/*
+kprobe:tcp_v4_inbound_md5_hash
+{
+	if (((struct sock *)arg0)->sk_socket->state == SS_CONNECTING) {
+		printf("find\n");
+	}
+}
+*/
+kprobe:__inet_stream_connect
+{
+	@sa[(int64)arg0] = nsecs;
+}
+
+/*
+kprobe:release_sock
+{
+	$socket = (int64) (((struct sock *)arg0)->sk_socket);
+	//if (((struct sock *)arg0)->sk_socket->state == SS_CONNECTING) {
+		if (@sa[$socket] != 0 ) {
+			//if ( (nsecs - @sa[$socket]) > 10000000) {
+				printf("find %ld\n", nsecs - @sa[$socket]);
+			//}
+			delete(@sa[$socket]);
+		}
+	//}
+}
+*/
+
+kprobe:inet_release
+{
+		if (@sa[arg0] != 0 ) {
+			if ( (nsecs - @sa[arg0]) > 1000000000) {
+				printf("find %ld\n", nsecs - @sa[arg0]);
+			}
+			delete(@sa[arg0]);
+		}
+
+}

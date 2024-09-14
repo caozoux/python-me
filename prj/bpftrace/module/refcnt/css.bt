@@ -1,0 +1,7 @@
+#!/bin/bpftrace
+
+tracepoint:cgroup:cgroup_refcnt
+{ 
+	@sa[args->ref_p, kstack()] = count();
+}
+
