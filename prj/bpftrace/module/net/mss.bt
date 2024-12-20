@@ -1,0 +1,80 @@
+#!/bin/bpftrace
+
+#include <linux/socket.h>
+#include <linux/tcp.h>
+#include <net/sock.h>
+#include <net/route.h>
+
+/*
+//kprobe:tcp_sync_mss  / pid == $1 / {
+kprobe:tcp_sync_mss {
+  @["call", arg1] = count();
+}  
+
+kretprobe:tcp_sync_mss  {
+  @["ret", retval] = count();
+}
+*/
+
+kprobe:tcp_sync_mss  / pid == $1 / {
+  $sk = (struct sock *) arg0;
+  $tp = (struct tcp_sock *) arg0;
+  $inet_family = $sk->__sk_common.skc_family;
+  $dst = (struct dst_entry *) $sk->sk_dst_cache;
+
+  if ($inet_family == AF_INET || $inet_family == AF_INET6) {
+    $now = nsecs;
+
+    $daddr = ntop(0);
+    $saddr = ntop(0);
+    if ($inet_family == AF_INET) {
+      $daddr = ntop($sk->__sk_common.skc_daddr);
+      $saddr = ntop($sk->__sk_common.skc_rcv_saddr);
+    } else {
+      $daddr = ntop($sk->__sk_common.skc_v6_daddr.in6_u.u6_addr8);
+      $saddr = ntop($sk->__sk_common.skc_v6_rcv_saddr.in6_u.u6_addr8)
+    }
+    $dport = $sk->__sk_common.skc_dport;
+    $dport = ($dport >> 8) | (($dport << 8) & 0x00FF00);
+
+    $dev = $dst->dev->name;
+    $devmtu = $dst->dev->mtu;
+    $rt_pmtu = ((struct rtable*)$dst)->rt_pmtu;
+    
+    printf("%s.%09d %14s %14s:%-6d pmtu:%d dev:%s devmtu:%d %lx %lx\n",
+           strftime("%H:%M:%S", $now), $now % 1000000000,
+           $saddr, $daddr, $dport, arg1, $dev, $devmtu, $sk, $sk->sk_dst_cache);
+  }
+}
+
+kprobe:tcp_retransmit_timer {
+  $sk = (struct sock *) arg0;
+  $tp = (struct tcp_sock *) arg0;
+  $inet_family = $sk->__sk_common.skc_family;
+  $dst = (struct dst_entry *) $sk->sk_dst_cache;
+
+  if ($inet_family == AF_INET || $inet_family == AF_INET6) {
+    $now = nsecs;
+
+    $daddr = ntop(0);
+    $saddr = ntop(0);
+    if ($inet_family == AF_INET) {
+      $daddr = ntop($sk->__sk_common.skc_daddr);
+      $saddr = ntop($sk->__sk_common.skc_rcv_saddr);
+    } else {
+      $daddr = ntop($sk->__sk_common.skc_v6_daddr.in6_u.u6_addr8);
+      $saddr = ntop($sk->__sk_common.skc_v6_rcv_saddr.in6_u.u6_addr8)
+    }
+    $dport = $sk->__sk_common.skc_dport;
+    $dport = ($dport >> 8) | (($dport << 8) & 0x00FF00);
+
+    $dev = $dst->dev->name;
+    $devmtu = $dst->dev->mtu;
+    $rt_pmtu = ((struct rtable*)$dst)->rt_pmtu;
+    
+    printf("re %s.%09d %14s %14s:%-6d pmtu:%d dev:%s devmtu:%d %lx %lx\n",
+           strftime("%H:%M:%S", $now), $now % 1000000000,
+           $saddr, $daddr, $dport, arg1, $dev, $devmtu, $sk, $sk->sk_dst_cache);
+  }
+}
+

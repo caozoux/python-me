@@ -1,0 +1,20 @@
+#!/bin/bpftrace
+#include <linux/socket.h>
+#include <linux/tcp.h>
+#include <net/sock.h>
+#include <net/route.h>
+#include <linux/icmp.h>
+
+kprobe:icmp_unreach
+{
+  $skb = (struct sk_buff *)arg0;
+  $iph = (struct iphdr *)((struct sk_buff *)arg0)->data;
+  $icmph = (struct icmphdr *)($skb->head + $skb->transport_header);
+  $saddr = ntop($iph->saddr);
+  $daddr = ntop($iph->daddr);
+  if ($iph->ihl < 5) {
+    return;
+  }
+  printf("%s %s\n", $saddr, $daddr);
+}
+

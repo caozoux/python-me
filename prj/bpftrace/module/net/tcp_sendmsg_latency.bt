@@ -1,0 +1,69 @@
+#!/usr/bin/bpftrace
+
+#include <linux/socket.h>
+#include <linux/tcp.h>
+#include <net/sock.h>
+
+// 不能指定pid，因为有部分调用是在时间中断中执行的，
+// 这部分pid 是不确定的
+
+BEGIN {
+ // $ptr= (struct sock *) 0;
+  @addr[0] = ntop(0);
+  @pids[0] = 0;
+  @time[0] = 0;
+  @port[0] = 0;
+}
+
+
+kprobe:__tcp_transmit_skb {
+  $sk = (struct sock *) arg0;
+  $tp = (struct tcp_sock *) arg0;
+  $inet_family = $sk->__sk_common.skc_family;
+
+  if ($inet_family == AF_INET || $inet_family == AF_INET6) {
+    $now = nsecs;
+
+    if (@time[arg0]) {
+      $gap = $now - @time[arg0];
+      if ( $gap > 100000000 ) {
+        printf("%s.%-9d sendmsg pid:%-8d dst:%14s:%-6d delay:%-10d\n",
+                strftime("%H:%M:%S", $now), $now % 1000000000,
+                @pids[arg0], @addr[arg0], @port[arg0], $gap);
+      }
+    }
+
+    $daddr = ntop(0);
+    if ($inet_family == AF_INET) {
+      $daddr = ntop($sk->__sk_common.skc_daddr);
+    } else {
+      $daddr = ntop($sk->__sk_common.skc_v6_daddr.in6_u.u6_addr8);
+    }
+    $dport = $sk->__sk_common.skc_dport;
+    $dport = ($dport >> 8) | (($dport << 8) & 0x00FF00);
+
+    @addr[arg0]=$daddr;
+    @port[arg0]=$dport;
+    @pids[arg0]=pid;
+    @time[arg0]=nsecs;
+  }
+}
+
+kprobe:dev_hard_start_xmit {
+  $skb = (struct sk_buff*)arg0;
+  $sk = (uint64) ($skb->sk);
+
+  if (@time[$sk]) {
+    delete(@addr[$sk]);
+    delete(@time[$sk]);
+    delete(@pids[$sk]);
+    delete(@port[$sk]);
+  }
+}
+
+END {
+   clear(@addr);
+   clear(@pids);
+   clear(@time);
+   clear(@port);
+}

@@ -1,0 +1,52 @@
+#!/bin/bpftrace
+#include <linux/skbuff.h>
+#include <net/ip.h>
+#include <net/inet_sock.h>
+#include <net/inet_sock.h>
+#include <linux/socket.h>
+#include <linux/tcp.h>
+#include <net/sock.h>
+#include <net/route.h>
+#include <net/dst.h>
+
+kprobe:tcp_sync_mss
+{
+  $sock = (struct sock*)arg0;
+  //@sa[arg1]  += 1;
+  $inet_family = $sock->__sk_common.skc_family;
+
+  if (arg1 == 1500) 
+  {
+     return;  
+  }
+
+  $tp = (struct tcp_sock *) arg0;
+
+  if ($tp->rx_opt.mss_clamp != 3460) 
+  {
+    return;
+  }
+
+  if ($inet_family == AF_INET) {
+    $daddr = ntop($sock->__sk_common.skc_daddr);
+    $saddr = ntop($sock->__sk_common.skc_rcv_saddr);
+    @sa[$daddr] += 1;
+  } else {
+    $daddr = ntop($sock->__sk_common.skc_v6_daddr.in6_u.u6_addr8);
+    $saddr = ntop($sock->__sk_common.skc_v6_rcv_saddr.in6_u.u6_addr8);
+    @sa[$daddr] += 1;
+  }
+  $rt = (struct rtable *)($sock->sk_dst_cache);
+  @stack[kstack()] = count();
+  @ea[$sock] += 1;
+  //@ba[$sock->sk_state] += 1;
+  //@rt[$rt] += 1;
+  //@rz[$rt->dst.expires] += 1;
+
+
+  //printf("%s %s\n", $saddr, $daddr);
+}
+
+END {
+  //clear(@sa);
+}
