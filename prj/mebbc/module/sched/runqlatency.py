@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#! /usr/bin/python3
 from __future__ import print_function
-from bcc import BPF
+from bcc import BPF, PerfType, PerfSWConfig
 import argparse
 from time import strftime,sleep
 
