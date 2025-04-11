@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/bin/python3
 
 #from pyme  import mfiles
 from pyme  import mfiles;
@@ -13,13 +13,13 @@ import re;
 opatch = []
 
 def threadSearch(buf, start, end):
-    print "start: ", start, " end:", end
+    print("start: ", start, " end:", end)
     for index in range(start,end):
         commit = patchop.patchFilter.getCommit(options.patchdir+opatch.filelist[index][:-1])
         #commit=commit.replace("(","\(").replace(")","\)").replace(".", "\.").replace("[", "\[").replace("]", "\]")
         commit= re.escape(commit)
-	print commit+ "patch:"+opatch.filelist[index][:-1]
-        print opatch.filelist[index][:-1]+" commit:{"+commit[:-1]+"}"
+	print(commit+ "patch:"+opatch.filelist[index][:-1])
+        print(opatch.filelist[index][:-1]+" commit:{"+commit[:-1]+"}")
         result = re.search(commit, buf);
         if result:
             colorprint.info(" find "+opatch.filelist[index][:-1]+": "+commit[:-1]+":")
@@ -82,9 +82,7 @@ if options.threadsCount > 0 and options.cmp:
     pool = multiprocessing.Pool(processes=options.threadsCount)
     result=[]
 
-    print size
     for i in range(options.threadsCount):
-        print i
         if (i+1)*size > listlen:
             result.append(pool.apply_async(threadSearch, (bufShortLog, i*size, listlen)))
         else:

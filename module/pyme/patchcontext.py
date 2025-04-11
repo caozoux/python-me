@@ -1,8 +1,11 @@
 #!/usr/bin/env python2.7
-from mfiles import *;
+from pyme import patchop;
+from pyme import mfiles;
 import colorprint;
-import leveldbg;
-import patchop;
+import re
+import sys
+import os
+
 
 class patchConflictItem:
     def __init__(self, patchName, srcfile):
@@ -16,7 +19,7 @@ class patchConflictItem:
         self.mSLines_ls=[]   # list lines of code file
 
     def setPatchContext(self, startNum, size):
-        oFileFilter = FileFilter(self.mPatch_s)
+        oFileFilter = mfiles.FileFilter(self.mPatch_s)
         self.mP_SLNumber_n=startNum;
         self.mP_ELNumber_n=startNum+size;
         for i in range(size):
@@ -24,7 +27,7 @@ class patchConflictItem:
             self.mPLines_ls.append(line)
 
     def setFileContext(self, startNum, size):
-        oFileFilter = FileFilter(self.mSrcFile_s)
+        oFileFilter = mfiles.FileFilter(self.mSrcFile_s)
         self.mS_SLNumber_n=startNum;
         self.mS_ELNumber_n=startNum+size;
         #print startNum, size
@@ -84,7 +87,7 @@ class patchConflictItem:
                 colorprint.err("Err:{:<90}".format("     "+line_p[:-1].replace("\t","    "))+"{:<20}".format("||  "+line_s[:-1].replace("\t","    ")))
                 print("1. replace with src file")
                 print("2. remove it")
-                answer_a =raw_input("select: ")
+                answer_a = input("select: ")
                 if answer_a == "1":
                     if line_s == "":
                         self.mSLines_ls.append(self.mSLines_ls[i][0]+line_s)
@@ -164,7 +167,7 @@ class patchModifyItem:
 
     def saveModifyItem(self):
         print(self.mFile, self.mStart)
-        oFileFilter = FileFilter(self.mFile) 
+        oFileFilter = mfiles.FileFilter(self.mFile) 
         for i in range(len(self.mPItemConList)):
             line = oFileFilter.getLine(i+self.mStart)
             if line[:-1] != self.mPItemConList[i]:
@@ -202,7 +205,7 @@ class patchModifyItem:
         srcSandELines=[] #it save the lines of src file between item 3S and 3E
         srcLine=""  #it save the src context of one line
         patchLine="" #it save the patch context of one line
-        oFileFilter = FileFilter(self.mOPatch.mFilename)
+        oFileFilter = mfiles.FileFilter(self.mOPatch.mFilename)
         cmp_cnt=[]
 
 
@@ -239,12 +242,12 @@ class patchModifyItem:
                 print("1. replace")
                 print("2. rm item")
 
-                answer=raw_input("select:")
+                answer= input("select:")
                 if answer == "1":
                     oPatchConflictItem.reConflictLines()
                 elif answer == "2":
                     self.mPItemConList.remove(i+last_num_p+1)
-                    answer=raw_input("Do you want to save y/n:")
+                    answer= input("Do you want to save y/n:")
                     if answer == "y":
                         self.saveModifyItem()
                     else:
@@ -259,13 +262,13 @@ class patchModifyItem:
     def rmInPatch(self):
         "rm this modify item in patch file"
         needRmFileTag=0
-        oFileFilter = FileFilter(self.mFile)
+        oFileFilter = mfiles.FileFilter(self.mFile)
 
         #show the patch item
         for i in range(self.mStart, self.mEnd):
             line = oFileFilter.getLine(i)
             print(line[:-1])
-        answer=raw_input("are you sure to rm these y/n?:")
+        answer= input("are you sure to rm these y/n?:")
         if answer == "y":
             line = oFileFilter.getLine(self.mStart-1)
             res=re.search("^\+\+\+ b*", line)
@@ -279,7 +282,7 @@ class patchModifyItem:
         if needRmFileTag == 1:
             for i in range(self.mStart-4, self.mStart):
                 print(oFileFilter.getLine(i)[:-1])
-            answer=raw_input("are you sure to rm these, the file patch will be ignore y/n?:")
+            answer= input("are you sure to rm these, the file patch will be ignore y/n?:")
             if answer == "y":
                 os.system("sed -i \""+str(self.mStart-4)+","+str(self.mStart)+"d\" "+self.mFile)
 
@@ -322,7 +325,7 @@ class patchModifyItem:
     def showItemAddDelpart(self, srcstart, patchstart):
         "flag : \
             1: merge "
-        oFileFilter = FileFilter(self.mOPatch.mFilename)
+        oFileFilter = mfiles.FileFilter(self.mOPatch.mFilename)
 
         startline = patchstart
         for i in range(len(self.mPItemConList)):
@@ -340,7 +343,7 @@ class patchModifyItem:
                 srcstart += 1
 
     def checkAddline(self, srcfile):
-        oFileFilter = FileFilter(srcfile+"/"+self.mOPatch.mFilename)
+        oFileFilter = mfiles.FileFilter(srcfile+"/"+self.mOPatch.mFilename)
         addLines=[]
         for line in self.mPItemConList:
             if line[0] == "+":
@@ -362,7 +365,7 @@ class patchModifyItem:
         patchItemTarg=""
 
         try:
-            oFileFilter = FileFilter(self.mOPatch.mFilename)
+            oFileFilter = mfiles.FileFilter(self.mOPatch.mFilename)
         except IOError:
             colorprint.err(self.mOPatch.mFilename+" isn't found")
             #self.dump()
@@ -378,7 +381,7 @@ class patchModifyItem:
             colorprint.err(self.mStartLine)
             colorprint.err("ERR:TAG:-->"+patchItemTarg+"<--NOT FIND")
             self.dump()
-            answer=raw_input("Do you want to continue y/n? ")
+            answer= input("Do you want to continue y/n? ")
             if answer == "y":
                 pass
             else:
@@ -520,16 +523,90 @@ class patchcontext:
     def __init__(self, patchname):
         self.mPatchName=patchname
         #patch name
-        self.omfile = FileFilter(patchname)
+        self.omfile = mfiles.FileFilter(patchname)
         #it is the patch modify file name
         self.mFiles=[]
         # patch modify items list
         self.mPatchItem=[]
 
+    def format_to_json(self):
+        report_json={}
+        lines_list = open(self.mPatchName).readlines();
+        for index in range(len(lines_list)):
+            line = lines_list[index]
+            result = re.search('diff --git a.*\w b/', line)
+            #获取patch的修改文件单位的内容，已start_num和end_num
+            if result:
+                name = result.group(0)
+                data={}
+                data["start_num"] = index
+                for start in range(index+1, len(lines_list)):
+                    line = lines_list[start]
+                    result = re.search('diff --git a.*\w b/', line)
+                    if result:
+                        data["end_num"] = start -1
+                        break
+                    else:
+                        result = re.search('2\.25\.1', line)
+                        if result:
+                            data["end_num"] = start - 2
+                            break
+
+                report_json[name] = data
+
+        for key in report_json.keys():
+            data = report_json[key]
+            start_num = data["start_num"]
+            end_num = data["end_num"]
+            diff_json={}
+
+            diff_data_func=[]
+            #扫描当前修改文件的所要内容，并存下来
+
+            for index in range(start_num, end_num):
+                line = lines_list[index]
+                if line[0:3] == "@@ ":
+                    res = re.sub('@@.*@@', "", line)
+                    item=[res, index, -1]
+                    if len(diff_data_func) != 0:
+                        diff_data_func[-1][2] = index-1
+                    diff_data_func.append(item)
+
+            diff_data_func[-1][2] = end_num
+            for item in diff_data_func:
+                diff_data=[]
+                for index in range(item[1], item[2]):
+                    line = lines_list[index]
+                    if line[0] == '-' or line[0] == '+':
+                        diff_data.append(line)
+                diff_json[item[0]] = diff_data
+
+
+            data["patch_items"] = diff_json
+            """
+            {
+                '@@ -23,6 +23,7 @@\n':
+                        ['+#include <linux/sched/batch.h>\n'],
+                '@@ -31,7 +32,11 @@ static int convert_prio(int prio)\n':
+                        ['+#ifdef CONFIG_BT_SCHED\n', '+\telse if (prio >= MAX_PRIO - BT_PRIO_INTER)\n', '+#else\n', '+#endif\n']
+            }
+            """
+            data["patch_func"] = diff_data_func
+
+            diff_data=[]
+            for index in range(start_num, end_num):
+                line = lines_list[index]
+                if line[0] == '-' or line[0] == '+':
+                    if line[1] == '-' or line[1] == '+':
+                        continue
+                    diff_data.append(line)
+            data["patch_lines"] = diff_data
+
+        return report_json
+
     def formatPatchMFileToList(self):
         "save one diff item of patch to patchModifyFile"
 
-        leveldbg.dbg("dbg formatPatchMFileToList+")
         varlist = self.omfile.searchByLine1("diff --git a.*$")
         for index in range(len(varlist)):
             if index+1 < len(varlist):
@@ -546,15 +623,12 @@ class patchcontext:
             else:
                 obj.setFileName("")
 
-        leveldbg.dbg("dbg formatPatchMFileToList-")
 
     #format the patch, the modified files of patch saved into mFiles
     #the diff item of patch of mFiles saved into mPatchItem
     def formatPatch(self):
-        leveldbg.dbg("dbg formatPatch+") #dbg
         self.formatPatchMFileToList();
         for objp in self.mFiles:
-            leveldbg.dbg("dbg "+objp.mFilename)
             varlist = self.omfile.searchByRange("^@@.*$",objp.start,objp.end)
             for obj in varlist:
                 patchitem = patchModifyItem(obj.mLine, obj.mLineNumber)
@@ -564,7 +638,6 @@ class patchcontext:
                 patchitem.analysis(self.omfile.mFileLines)
                 self.mPatchItem.append(patchitem)
                 objp.addPatchItem(patchitem)
-        leveldbg.dbg("dbg formatPatch-")
 
     def analysis(self):
         "format the patch, split the patch to list objesc by modifed files \
@@ -587,7 +660,7 @@ class patchcontext:
 
     def dump_patch(self):
         #colorprint.info("{:<90}".format(self.mPatchName)+"{:<20}".format("||  "+self.mFiles))
-        print(elf.omfile.mFileName)
+        #print(elf.omfile.mFileName)
         for oPatchModifyItem in self.mPatchItem:
             oPatchModifyItem.dump_patch()
 
@@ -601,7 +674,7 @@ class patchcontext:
         len3=0
         nStartLine = 0;
 
-        oFileFilter = FileFilter(oPatchModifyItem.mOPatch.mFilename)
+        oFileFilter = mfiles.FileFilter(oPatchModifyItem.mOPatch.mFilename)
 
         patchItemTarg = re.sub('^@.*@@\s', "", oPatchModifyItem.mPItemConList[0][1:])
         mfileitem1 = oFileFilter.searchByWholeLine(patchItemTarg)
