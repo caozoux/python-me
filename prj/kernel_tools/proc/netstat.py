@@ -34,14 +34,22 @@ def get_netstat():
 def netstat_report():
     netstat_old = get_netstat()
     while True:
+        report_dist={}
         time.sleep(options.interval)
         current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         print("============",current_time,"==============")
         netstat_new = get_netstat()
+
         for i in range(1, len(netstat_new)-1):
             diff=int(netstat_new[i]) - int(netstat_old[i])
             if diff > 0:
-                print("%-25s: %d"%(netstat_name[i], diff))
+                report_dist[netstat_name[i]] = diff
+                #print("%-25s: %d"%(netstat_name[i], diff))
+
+        data_list=sorted(report_dist.items(), key=lambda x: x[1], reverse=True)
+        for i in data_list:
+            print("%-25s: %d"%(i[0], i[1]))
+
         netstat_old = netstat_new
 
 def snmp_report(mode):
@@ -62,4 +70,5 @@ if options.mode == "netstat":
     netstat_report()
 elif options.mode == "snmp":
     snmp_report("ip")
-
+else:
+    netstat_report()
