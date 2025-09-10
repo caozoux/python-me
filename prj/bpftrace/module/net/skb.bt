@@ -1,0 +1,13 @@
+kprobe:udp_tunnel_xmit_skb
+{
+        $skb = (struct sk_buff *)arg2;
+        $iph = (struct iphdr *) ((uint64)$skb->head + (uint64)$skb->network_header);
+        if ($skb->len != 59411) {
+                return;
+        }
+        $proto = $iph->protocol;
+        $saddr = ntop($iph->saddr);
+        $daddr = ntop($iph->daddr);
+        printf("len:%d mtu:%d pro:%d %s %s %d\n", $skb->len, arg3, $proto, $saddr, $daddr, $skb->vlan_proto);
+
+}
