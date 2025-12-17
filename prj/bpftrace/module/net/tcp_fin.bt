@@ -1,0 +1,24 @@
+#!/bin/bpftrace
+#include <linux/socket.h>
+#include <net/sock.h>
+#include <net/tcp.h>
+#include <net/ip.h>
+#include <net/protocol.h>
+
+kprobe:tcp_fin
+{
+    $sk =  (struct sock *)arg0;
+    if ($sk->__sk_common.skc_state == 1) {
+        $daddr = $sk->__sk_common.skc_daddr;
+        $saddr = $sk->__sk_common.skc_rcv_saddr;
+        $lport = $sk->__sk_common.skc_num;
+        $dport = ($lport >> 8) | (($lport << 8) & 0x00FF00);
+        $dport = $sk->__sk_common.skc_dport;
+        $dport = ($dport >> 8) | (($dport << 8) & 0x00FF00);
+        if ($saddr == 0x6c53842b && $lport == 443 ) {
+        printf("%s:%d %s:%d %lx:%d %lx\n", 
+                ntop($saddr), $lport, ntop($daddr),  $dport,
+                $sk, $sk->__sk_common.skc_state, $sk->__sk_common.skc_flags);
+        }
+    }
+}

@@ -1,0 +1,28 @@
+#!/bin/bpftrace
+#include <linux/socket.h>
+#include <net/sock.h>
+#include <net/tcp.h>
+#include <net/ip.h>
+#include <net/protocol.h>
+
+kprobe:tcp_v4_send_reset
+{
+
+    $sk =  (struct sock *)arg0;
+    $skb = (struct sk_buff *)arg1;
+    $now = nsecs;
+    $ih = (struct iphdr *)((uint64)$skb->head + (uint64)$skb->network_header);
+    $th = (struct tcphdr *)((uint64)$skb->head + (uint64)$skb->transport_header);
+    $proto = (uint8)$ih->protocol;
+    if ($proto == IPPROTO_TCP && $ih->daddr == 0x6c53842b && $th->dest == 0xbb01) {
+        //if ( $sk == 0) {
+        //      return;
+        //}
+        printf("%lx:%lx src: %s:%d dst: %s:%d %x %x\n", $sk, $sk->__sk_common.skc_state,
+                      ntop($ih->saddr), ($th->source >> 8) | (($th->source << 8) & 0x00ff00),
+                      ntop($ih->daddr), ($th->dest >> 8) | (($th->dest << 8) & 0x00FF00),
+                      $ih->daddr, $th->dest
+                      );
+                      print(kstack()); 
+        }
+}

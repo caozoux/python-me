@@ -1,0 +1,37 @@
+#!/bin/bpftrace
+#include <linux/socket.h>
+#include <net/sock.h>
+#include <net/tcp.h>
+#include <net/ip.h>
+#include <net/protocol.h>
+
+/*
+kprobe:tcp_v4_do_rcv
+{
+    $sk = (struct sock *)arg0;
+    $skb = (struct sk_buff *)arg1;
+    $saddr = ntop($sk->__sk_common.skc_rcv_saddr);
+    $now = nsecs;
+    $lport = $sk->__sk_common.skc_num;
+    $ih = (struct iphdr *)((uint64)$skb->head + (uint64)$skb->network_header);
+    $th = (struct tcphdr *)((uint64)$skb->head + (uint64)$skb->transport_header);
+    if ($lport == 40769) {
+      printf("%s %s:%-6d %s %ld\n",strftime("%H:%M:%S", $now), $saddr, $lport, ntop($ih->saddr), $skb->len);
+    }
+}
+*/
+kprobe:tcp_v4_rcv
+{
+    $skb = (struct sk_buff *)arg1;
+    $now = nsecs;
+    $ih = (struct iphdr *)((uint64)$skb->head + (uint64)$skb->network_header);
+    $th = (struct tcphdr *)((uint64)$skb->head + (uint64)$skb->transport_header);
+    //if ($lport == 40769) {
+          printf("src: %s:%d dst: %s:%d \n",
+                      ntop($ih->saddr),
+                      $th->source,
+                      ntop($ih->daddr),
+                      // Destination port is big endian, it must be flipped
+                      ($th->dest >> 8) | (($th->dest << 8) & 0x00FF00));
+    //}
+}

@@ -1,0 +1,26 @@
+#!/bin/bpftrace
+#include <linux/socket.h>
+#include <net/sock.h>
+#include <net/tcp.h>
+#include <net/ip.h>
+#include <net/protocol.h>
+
+kprobe:dev_hard_start_xmit
+{
+    $skb = (struct sk_buff *)arg0;
+    $now = nsecs;
+    $ih = (struct iphdr *)((uint64)$skb->head + (uint64)$skb->network_header);
+    $th = (struct tcphdr *)((uint64)$skb->head + (uint64)$skb->transport_header);
+    $proto = (uint8)$ih->protocol;
+    if ($proto == IPPROTO_TCP) {
+		$sport = ($th->source >> 8) | (($th->source << 8) & 0x00ff00);
+    	if ($sport == 36000) {
+     	printf("src: %s:%d dst: %s:%d \n",
+                      ntop($ih->saddr),
+                      ($th->source >> 8) | (($th->source << 8) & 0x00ff00),
+                      ntop($ih->daddr),
+                      // Destination port is big endian, it must be flipped
+                      ($th->dest >> 8) | (($th->dest << 8) & 0x00FF00));
+        }
+	}
+}
